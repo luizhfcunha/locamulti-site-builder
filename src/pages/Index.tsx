@@ -1,7 +1,10 @@
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { Button } from "@/components/ui/button";
-import { Card } from "@/components/ui/card";
+import { CategoryCarousel } from "@/components/CategoryCarousel";
+import { BrandCarousel } from "@/components/BrandCarousel";
+import { BenefitCard } from "@/components/BenefitCard";
+import { SegmentCard } from "@/components/SegmentCard";
 import { 
   Hammer, 
   Zap, 
@@ -21,59 +24,74 @@ import {
   Factory,
   TruckIcon,
   Warehouse,
-  Users
+  Users,
+  Sparkles
 } from "lucide-react";
 
 const Index = () => {
   const categories = [
-    { name: "Construção e Demolição", icon: Hammer },
-    { name: "Concretagem e Vibração", icon: Cog },
-    { name: "Energia e Geração", icon: Zap },
-    { name: "Soldagem Profissional", icon: Shield },
-    { name: "Movimentação de Cargas", icon: Package },
-    { name: "Pintura e Acabamento", icon: PaintBucket },
-    { name: "Ferramentas Hidráulicas", icon: Wrench },
-    { name: "Jardinagem e Limpeza", icon: Trees },
+    { id: "construcao", title: "Construção e Demolição", icon: Hammer },
+    { id: "concretagem", title: "Concretagem e Vibração", icon: Cog },
+    { id: "energia", title: "Energia e Geração", icon: Zap },
+    { id: "soldagem", title: "Soldagem Profissional", icon: Shield },
+    { id: "movimentacao", title: "Movimentação de Cargas", icon: Package },
+    { id: "pintura", title: "Pintura e Acabamento", icon: PaintBucket },
+    { id: "hidraulicas", title: "Ferramentas Hidráulicas", icon: Wrench },
+    { id: "jardinagem", title: "Jardinagem e Limpeza Técnica", icon: Trees },
+  ];
+
+  const brands = [
+    { id: "dewalt", name: "DeWalt" },
+    { id: "bosch", name: "Bosch" },
+    { id: "esab", name: "Esab" },
+    { id: "sumig", name: "Sumig" },
+    { id: "toyama", name: "Toyama" },
+    { id: "vibromak", name: "Vibromak" },
+    { id: "bovenau", name: "Bovenau" },
   ];
 
   const benefits = [
     {
       icon: CheckCircle2,
-      title: "Equipamentos Revisados",
-      description: "Todos os equipamentos são testados e revisados antes da locação"
+      title: "Equipamentos Revisados e Testados",
+      description: "Todos os equipamentos passam por rigorosa revisão e testes antes da locação, garantindo máxima confiabilidade."
     },
     {
-      icon: Clock,
-      title: "Troca Imediata",
-      description: "Garantimos substituição rápida em caso de falha técnica"
+      icon: Sparkles,
+      title: "Troca Imediata em Caso de Falha",
+      description: "Se houver qualquer problema técnico, substituímos o equipamento imediatamente sem custo adicional."
     },
     {
       icon: Truck,
-      title: "Entrega Programada",
-      description: "Entrega e retirada nos horários combinados"
+      title: "Entrega e Retirada Programada",
+      description: "Logística eficiente com horários flexíveis para entrega e retirada de equipamentos."
     },
     {
       icon: Headphones,
-      title: "Suporte Especializado",
-      description: "Equipe técnica disponível para orientações"
+      title: "Suporte Técnico Especializado",
+      description: "Equipe técnica qualificada disponível para orientações sobre uso e manutenção dos equipamentos."
     },
     {
       icon: MessageCircle,
-      title: "Atendimento WhatsApp",
-      description: "Resposta rápida e orçamento ágil pelo WhatsApp"
+      title: "Agilidade no WhatsApp",
+      description: "Atendimento rápido e orçamento ágil pelo WhatsApp, facilitando sua comunicação conosco."
     }
   ];
 
   const segments = [
-    { name: "Construtoras", icon: Building2 },
-    { name: "Engenheiros", icon: HardHat },
-    { name: "Indústrias", icon: Factory },
-    { name: "Logística", icon: TruckIcon },
-    { name: "Metalúrgicas", icon: Shield },
-    { name: "Agricultores", icon: Trees },
-    { name: "Serralherias", icon: Wrench },
-    { name: "Órgãos Públicos", icon: Users }
+    { title: "Construtoras", icon: Building2 },
+    { title: "Engenheiros", icon: HardHat },
+    { title: "Indústrias", icon: Factory },
+    { title: "Logística", icon: TruckIcon },
+    { title: "Metalúrgicas", icon: Shield },
+    { title: "Agricultores", icon: Trees },
+    { title: "Serralherias", icon: Wrench },
+    { title: "Órgãos Públicos", icon: Users }
   ];
+
+  const handleCategoryClick = (categoryId: string) => {
+    window.location.href = `/catalogo?categoria=${categoryId}`;
+  };
 
   return (
     <div className="min-h-screen flex flex-col">
@@ -82,149 +100,129 @@ const Index = () => {
       <main className="flex-1">
         {/* Hero Section */}
         <section className="relative bg-gradient-to-br from-lm-plum via-lm-plum/95 to-lm-ink min-h-[600px] flex items-center">
-          <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1504917595217-d4dc5ebe6122?q=80')] bg-cover bg-center opacity-20" />
-          <div className="container mx-auto px-4 relative z-10">
+          <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1504917595217-d4dc5ebe6122?q=80&w=2070')] bg-cover bg-center opacity-15" />
+          <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10 py-20">
             <div className="max-w-3xl">
               <h1 className="text-white mb-6 leading-tight">
                 Equipamentos Profissionais para Obra, Indústria e Manutenção
               </h1>
-              <p className="text-xl text-white/90 mb-8 leading-relaxed">
+              <p className="text-xl text-white/90 mb-8 leading-relaxed max-w-2xl">
                 Locação rápida, equipamentos revisados e suporte técnico especializado.
               </p>
               <div className="flex flex-col sm:flex-row gap-4">
                 <Button 
                   size="lg" 
-                  className="text-lg"
-                  onClick={() => window.open("https://wa.me/5511999999999", "_blank")}
+                  className="text-lg font-semibold"
+                  onClick={() => window.open("https://wa.me/5511999999999?text=Olá, gostaria de solicitar um orçamento.", "_blank")}
                 >
                   <MessageCircle className="mr-2 h-5 w-5" />
-                  Solicitar Orçamento
+                  Orçamento Rápido
                 </Button>
                 <Button 
                   size="lg" 
                   variant="outline" 
-                  className="text-lg bg-white hover:bg-white/90 border-2"
-                  onClick={() => document.getElementById('categorias')?.scrollIntoView({ behavior: 'smooth' })}
+                  className="text-lg font-semibold bg-white hover:bg-lm-muted text-lm-ink border-0"
+                  onClick={() => window.location.href = '/catalogo'}
                 >
-                  Ver Catálogo
+                  Ver Catálogo Completo
                 </Button>
               </div>
             </div>
           </div>
         </section>
 
-        {/* Categories Section */}
+        {/* Categories Section - Carrossel */}
         <section id="categorias" className="py-20 bg-secondary">
-          <div className="container mx-auto px-4">
+          <div className="container mx-auto px-4 sm:px-6 lg:px-8">
             <div className="text-center mb-12">
               <h2 className="mb-4">Principais Categorias</h2>
-              <p className="text-lg text-muted-foreground">
-                Equipamentos profissionais para todas as necessidades
+              <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
+                Equipamentos profissionais para todas as necessidades técnicas e industriais
               </p>
             </div>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-              {categories.map((category) => {
-                const Icon = category.icon;
-                return (
-                  <Card 
-                    key={category.name}
-                    className="p-6 hover:shadow-medium transition-all duration-300 cursor-pointer group border-2 hover:border-primary"
-                  >
-                    <div className="flex flex-col items-center text-center gap-4">
-                      <div className="w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center group-hover:bg-primary group-hover:scale-110 transition-all duration-300">
-                        <Icon className="h-8 w-8 text-primary group-hover:text-white transition-colors" />
-                      </div>
-                      <h3 className="font-heading text-lg font-semibold">{category.name}</h3>
-                      <Button variant="ghost" size="sm" className="text-primary hover:text-primary">
-                        Ver Equipamentos →
-                      </Button>
-                    </div>
-                  </Card>
-                );
-              })}
-            </div>
+            <CategoryCarousel 
+              categories={categories}
+              onCategoryClick={handleCategoryClick}
+            />
           </div>
         </section>
 
-        {/* Benefits Section */}
-        <section className="py-20 bg-background">
-          <div className="container mx-auto px-4">
+        {/* Brand Carousel Section */}
+        <section className="py-16 bg-background border-y border-border">
+          <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="text-center mb-10">
+              <h2 className="text-2xl font-heading font-bold text-foreground mb-2">
+                Marcas de Confiança
+              </h2>
+              <p className="text-muted-foreground">
+                Trabalhamos com as melhores marcas do mercado
+              </p>
+            </div>
+            <BrandCarousel brands={brands} />
+          </div>
+        </section>
+
+        {/* Benefits Section - Por que escolher a LocaMulti? */}
+        <section className="py-20 bg-secondary">
+          <div className="container mx-auto px-4 sm:px-6 lg:px-8">
             <div className="text-center mb-12">
               <h2 className="mb-4">Por Que Escolher a LocaMulti?</h2>
-              <p className="text-lg text-muted-foreground">
-                Confiança, qualidade e suporte em cada locação
+              <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
+                Confiança, qualidade e suporte técnico em cada locação
               </p>
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6">
-              {benefits.map((benefit) => {
-                const Icon = benefit.icon;
-                return (
-                  <Card 
-                    key={benefit.title}
-                    className="p-6 text-center hover:shadow-medium transition-all duration-300"
-                  >
-                    <div className="flex flex-col items-center gap-4">
-                      <div className="w-14 h-14 rounded-full bg-primary/10 flex items-center justify-center">
-                        <Icon className="h-7 w-7 text-primary" />
-                      </div>
-                      <div>
-                        <h3 className="font-heading text-base font-semibold mb-2">{benefit.title}</h3>
-                        <p className="text-sm text-muted-foreground">{benefit.description}</p>
-                      </div>
-                    </div>
-                  </Card>
-                );
-              })}
+              {benefits.map((benefit) => (
+                <BenefitCard
+                  key={benefit.title}
+                  title={benefit.title}
+                  description={benefit.description}
+                  icon={benefit.icon}
+                />
+              ))}
             </div>
           </div>
         </section>
 
-        {/* Segments Section */}
-        <section className="py-20 bg-secondary">
-          <div className="container mx-auto px-4">
+        {/* Segments Section - Segmentos Atendidos */}
+        <section className="py-20 bg-background">
+          <div className="container mx-auto px-4 sm:px-6 lg:px-8">
             <div className="text-center mb-12">
-              <h2 className="mb-4">Segmentos Atendidos</h2>
-              <p className="text-lg text-muted-foreground">
-                Soluções profissionais para diversos setores
+              <h2 className="mb-4">Segmentos que Atendemos</h2>
+              <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
+                Soluções profissionais para diversos setores da indústria e construção
               </p>
             </div>
-            <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-8 gap-4">
-              {segments.map((segment) => {
-                const Icon = segment.icon;
-                return (
-                  <div 
-                    key={segment.name}
-                    className="flex flex-col items-center gap-3 p-4 rounded-lg hover:bg-background transition-colors cursor-pointer"
-                  >
-                    <div className="w-12 h-12 rounded-full bg-background flex items-center justify-center">
-                      <Icon className="h-6 w-6 text-primary" />
-                    </div>
-                    <span className="text-sm font-medium text-center">{segment.name}</span>
-                  </div>
-                );
-              })}
+            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-4 gap-6 max-w-5xl mx-auto">
+              {segments.map((segment) => (
+                <SegmentCard
+                  key={segment.title}
+                  title={segment.title}
+                  icon={segment.icon}
+                />
+              ))}
             </div>
           </div>
         </section>
 
-        {/* CTA Section */}
-        <section className="py-16 bg-primary">
-          <div className="container mx-auto px-4">
+        {/* CTA Section - Orçamento Rápido */}
+        <section className="py-20 bg-gradient-to-br from-lm-plum to-lm-plum/90 relative overflow-hidden">
+          <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1581094271901-8022df4466f9?q=80')] bg-cover bg-center opacity-10" />
+          <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
             <div className="max-w-3xl mx-auto text-center">
-              <h2 className="text-white mb-4">
+              <h2 className="text-white mb-6">
                 Precisa de um Orçamento Imediato?
               </h2>
-              <p className="text-xl text-white/90 mb-8">
-                Fale agora com a equipe da LocaMulti pelo WhatsApp
+              <p className="text-xl text-white/90 mb-8 leading-relaxed">
+                Fale agora com a equipe da LocaMulti pelo WhatsApp e receba seu orçamento em minutos.
               </p>
               <Button 
                 size="lg" 
-                variant="secondary"
-                className="text-lg bg-white hover:bg-white/90 text-lm-ink"
-                onClick={() => window.open("https://wa.me/5511999999999", "_blank")}
+                className="text-lg font-semibold bg-white hover:bg-lm-muted text-lm-ink border-0 shadow-button"
+                onClick={() => window.open("https://wa.me/5511999999999?text=Olá, preciso de um orçamento imediato.", "_blank")}
               >
                 <MessageCircle className="mr-2 h-5 w-5" />
-                Falar pelo WhatsApp
+                Falar pelo WhatsApp Agora
               </Button>
             </div>
           </div>
