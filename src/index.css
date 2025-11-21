@@ -8,58 +8,116 @@ All colors MUST be HSL.
 
 @layer base {
   :root {
-    /* LocaMulti Brand Colors */
-    --lm-orange: 12 67% 53%;      /* #DB5A34 - Primary CTA */
-    --lm-terracota: 11 57% 47%;   /* #B94935 - Hover states */
-    --lm-plum: 347 28% 20%;       /* #3E2229 - Premium sections */
-    --lm-ink: 0 3% 21%;           /* #373435 - Text & icons */
-    --lm-white: 0 0% 100%;        /* #FFFFFF - Main background */
-    --lm-muted: 20 22% 96%;       /* #F6F3F2 - Alternate sections */
+    /* ============================================
+       LOCAMULTI BRAND COLORS (HSL)
+       ============================================ */
+    --lm-orange: 12 67% 53%;      /* #DB5A34 - Primary CTA, destaques, botões principais */
+    --lm-terracota: 11 57% 47%;   /* #B94935 - Hover states, estados ativos */
+    --lm-plum: 347 28% 20%;       /* #3E2229 - Títulos, seções premium, footer */
+    --lm-ink: 0 3% 21%;           /* #373435 - Textos, ícones, linhas */
+    --lm-white: 0 0% 100%;        /* #FFFFFF - Fundo geral, textos em fundos escuros */
+    --lm-muted: 20 22% 96%;       /* #F6F3F2 - Seções alternadas, cards, fundos suaves */
 
-    /* Semantic tokens mapped to LocaMulti colors */
-    --background: 0 0% 100%;
-    --foreground: 0 3% 21%;
+    /* ============================================
+       SEMANTIC TOKENS (Mapped to Brand Colors)
+       ============================================ */
+    --background: 0 0% 100%;           /* Fundo principal */
+    --foreground: 0 3% 21%;            /* Texto principal */
 
-    --card: 0 0% 100%;
-    --card-foreground: 0 3% 21%;
+    --card: 0 0% 100%;                 /* Fundo de cards */
+    --card-foreground: 0 3% 21%;       /* Texto em cards */
 
-    --popover: 0 0% 100%;
-    --popover-foreground: 0 3% 21%;
+    --popover: 0 0% 100%;              /* Fundo de popovers */
+    --popover-foreground: 0 3% 21%;    /* Texto em popovers */
 
-    --primary: 12 67% 53%;
-    --primary-foreground: 0 0% 100%;
+    --primary: 12 67% 53%;             /* Cor primária (Laranja LocaMulti) */
+    --primary-foreground: 0 0% 100%;   /* Texto em elementos primários */
 
-    --secondary: 20 22% 96%;
-    --secondary-foreground: 0 3% 21%;
+    --secondary: 20 22% 96%;           /* Cor secundária (Neutro Claro) */
+    --secondary-foreground: 0 3% 21%;  /* Texto em elementos secundários */
 
-    --muted: 20 22% 96%;
-    --muted-foreground: 0 3% 45%;
+    --muted: 20 22% 96%;               /* Fundo suave/muted */
+    --muted-foreground: 0 3% 45%;      /* Texto suave/muted */
 
-    --accent: 12 67% 53%;
-    --accent-foreground: 0 0% 100%;
+    --accent: 12 67% 53%;              /* Cor de acento (Laranja) */
+    --accent-foreground: 0 0% 100%;    /* Texto em elementos de acento */
 
-    --destructive: 0 84.2% 60.2%;
+    --destructive: 0 84.2% 60.2%;      /* Cor para ações destrutivas */
     --destructive-foreground: 0 0% 100%;
 
-    --border: 0 0% 90%;
-    --input: 0 0% 90%;
-    --ring: 12 67% 53%;
+    --border: 0 0% 90%;                /* Bordas */
+    --input: 0 0% 90%;                 /* Bordas de inputs */
+    --ring: 12 67% 53%;                /* Focus ring (Laranja) */
 
-    --radius: 1rem;
+    /* ============================================
+       BORDER RADIUS (Raio de Borda)
+       ============================================ */
+    --radius: 1rem;                    /* 16px - Padrão geral */
+    --radius-card: 0.875rem;           /* 14px - Cards */
+    --radius-button: 1rem;             /* 16px - Botões */
+    --radius-input: 0.75rem;           /* 12px - Inputs */
 
-    /* LocaMulti specific design tokens */
-    --card-radius: 0.875rem;
-    --button-radius: 1rem;
-    --shadow-soft: 0 2px 8px rgba(0, 0, 0, 0.08);
-    --shadow-medium: 0 4px 16px rgba(0, 0, 0, 0.12);
+    /* ============================================
+       SHADOWS (Sombras Leves)
+       ============================================ */
+    --shadow-soft: 0 2px 8px rgba(0, 0, 0, 0.08);      /* Sombra suave padrão */
+    --shadow-medium: 0 4px 16px rgba(0, 0, 0, 0.12);   /* Sombra média para cards elevados */
+    --shadow-card: 0 2px 8px rgba(0, 0, 0, 0.06);      /* Sombra específica de cards */
+    --shadow-button: 0 2px 6px rgba(219, 90, 52, 0.15); /* Sombra para botões primários */
 
-    /* Typography */
+    /* ============================================
+       SPACING (Espaçamentos Padrão)
+       ============================================ */
+    --spacing-xs: 0.5rem;    /* 8px */
+    --spacing-sm: 1rem;      /* 16px */
+    --spacing-md: 1.5rem;    /* 24px */
+    --spacing-lg: 2rem;      /* 32px */
+    --spacing-xl: 3rem;      /* 48px */
+    --spacing-2xl: 4rem;     /* 64px */
+    --spacing-3xl: 6rem;     /* 96px */
+
+    /* Container max-width */
+    --container-max: 1280px;
+    
+    /* Grid gaps */
+    --grid-gap: 1.5rem;      /* 24px - Gap padrão para grids */
+    --grid-gap-sm: 1rem;     /* 16px - Gap menor */
+
+    /* ============================================
+       TYPOGRAPHY
+       ============================================ */
     font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    
+    /* Font sizes */
+    --text-xs: 0.75rem;      /* 12px */
+    --text-sm: 0.875rem;     /* 14px */
+    --text-base: 1rem;       /* 16px */
+    --text-lg: 1.125rem;     /* 18px */
+    --text-xl: 1.25rem;      /* 20px */
+    --text-2xl: 1.5rem;      /* 24px */
+    --text-3xl: 1.875rem;    /* 30px */
+    --text-4xl: 2.25rem;     /* 36px */
+    --text-5xl: 3rem;        /* 48px */
+
+    /* Line heights */
+    --leading-tight: 1.25;
+    --leading-normal: 1.5;
+    --leading-relaxed: 1.75;
+
+    /* ============================================
+       TRANSITIONS (Transições Suaves)
+       ============================================ */
+    --transition-fast: 150ms ease-in-out;
+    --transition-base: 200ms ease-in-out;
+    --transition-slow: 300ms ease-in-out;
   }
 
+  /* ============================================
+     DARK MODE (Tema Escuro Industrial)
+     ============================================ */
   .dark {
-    --background: 347 28% 20%;
-    --foreground: 0 0% 100%;
+    --background: 347 28% 20%;           /* Vinho Industrial */
+    --foreground: 0 0% 100%;             /* Branco */
 
     --card: 347 28% 20%;
     --card-foreground: 0 0% 100%;
@@ -67,7 +125,7 @@ All colors MUST be HSL.
     --popover: 347 28% 20%;
     --popover-foreground: 0 0% 100%;
 
-    --primary: 12 67% 53%;
+    --primary: 12 67% 53%;               /* Laranja mantido */
     --primary-foreground: 0 0% 100%;
 
     --secondary: 0 3% 25%;
