@@ -1,10 +1,22 @@
 import { Link } from "react-router-dom";
 import { Mail, MapPin, Phone, Clock, Facebook, Instagram, Linkedin } from "lucide-react";
+import { LOGO_FOOTER } from "@/lib/constants";
 
 export const Footer = () => {
   return (
     <footer className="bg-lm-plum text-white">
       <div className="container mx-auto px-4 py-12">
+        {/* Logo */}
+        <div className="mb-10">
+          <Link to="/" className="inline-block">
+            <img 
+              src={LOGO_FOOTER.url} 
+              alt="Logo LocaMulti versão branca" 
+              className="h-auto w-full max-w-[110px] md:max-w-[150px] object-contain"
+            />
+          </Link>
+        </div>
+
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-8">
           {/* Institucional */}
           <div>
