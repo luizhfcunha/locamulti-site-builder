@@ -5,13 +5,21 @@ export interface CatalogFilters {
   subcategory?: string;
   brand?: string;
   search?: string;
+  page?: number;
+  pageSize?: number;
 }
 
 export async function getCatalog(filters?: CatalogFilters) {
+  const page = filters?.page || 1;
+  const pageSize = filters?.pageSize || 24;
+  const from = (page - 1) * pageSize;
+  const to = from + pageSize - 1;
+
   let query = supabase
     .from('catalog')
-    .select('*')
-    .order('name', { ascending: true });
+    .select('*', { count: 'exact' })
+    .order('name', { ascending: true })
+    .range(from, to);
 
   if (filters?.category) {
     query = query.eq('category', filters.category);
@@ -29,14 +37,14 @@ export async function getCatalog(filters?: CatalogFilters) {
     query = query.or(`name.ilike.%${filters.search}%,description.ilike.%${filters.search}%`);
   }
 
-  const { data, error } = await query;
+  const { data, error, count } = await query;
 
   if (error) {
     console.error('Error fetching catalog:', error);
     throw error;
   }
 
-  return data;
+  return { data, count };
 }
 
 export async function getCatalogCategories() {

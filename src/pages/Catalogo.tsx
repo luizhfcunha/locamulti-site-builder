@@ -6,9 +6,10 @@ import { EquipmentCard } from "@/components/EquipmentCard";
 import { WhatsappCTA } from "@/components/WhatsappCTA";
 import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Grid3x3, List, SlidersHorizontal } from "lucide-react";
+import { Grid3x3, List, SlidersHorizontal, ChevronLeft, ChevronRight } from "lucide-react";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { Skeleton } from "@/components/ui/skeleton";
+import { Pagination, PaginationContent, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious } from "@/components/ui/pagination";
 import { WHATSAPP } from "@/config/whatsapp";
 import { getCatalog, getCatalogCategories, getCatalogSubcategories, getCatalogBrands } from "@/lib/catalog";
 import { useToast } from "@/hooks/use-toast";
@@ -40,19 +41,23 @@ const Catalogo = () => {
   const [subcategories, setSubcategories] = useState<{ id: string; label: string; options: { id: string; label: string }[] }>({ id: "subcategories", label: "Subcategorias", options: [] });
   const [brands, setBrands] = useState<{ id: string; label: string; options: { id: string; label: string }[] }>({ id: "brands", label: "Marcas", options: [] });
   const [loading, setLoading] = useState(true);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalCount, setTotalCount] = useState(0);
+  const pageSize = 24;
 
   // Carregar dados iniciais
   useEffect(() => {
     const loadInitialData = async () => {
       try {
         setLoading(true);
-        const [catalogData, categoriesData, brandsData] = await Promise.all([
-          getCatalog(),
+        const [catalogResult, categoriesData, brandsData] = await Promise.all([
+          getCatalog({ page: 1, pageSize }),
           getCatalogCategories(),
           getCatalogBrands(),
         ]);
         
-        setEquipments(catalogData || []);
+        setEquipments(catalogResult.data || []);
+        setTotalCount(catalogResult.count || 0);
         setCategories({ id: "categories", label: "Categorias", options: categoriesData });
         setBrands({ id: "brands", label: "Marcas", options: brandsData });
       } catch (error) {
@@ -86,7 +91,10 @@ const Catalogo = () => {
   useEffect(() => {
     const applyFilters = async () => {
       try {
-        const catalogFilters: any = {};
+        const catalogFilters: any = {
+          page: currentPage,
+          pageSize,
+        };
         
         if (filters.categories?.[0]) {
           catalogFilters.category = filters.categories[0];
@@ -104,8 +112,9 @@ const Catalogo = () => {
           catalogFilters.search = searchQuery;
         }
 
-        const data = await getCatalog(catalogFilters);
-        setEquipments(data || []);
+        const result = await getCatalog(catalogFilters);
+        setEquipments(result.data || []);
+        setTotalCount(result.count || 0);
       } catch (error) {
         console.error("Erro ao filtrar catálogo:", error);
       }
@@ -114,7 +123,12 @@ const Catalogo = () => {
     if (!loading) {
       applyFilters();
     }
-  }, [filters, searchQuery, loading]);
+  }, [filters, searchQuery, loading, currentPage]);
+
+  // Reset para página 1 quando filtros mudarem
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [filters, searchQuery]);
 
   // Ordenar equipamentos
   const sortedEquipments = useMemo(() => {
@@ -157,7 +171,7 @@ const Catalogo = () => {
                       Catálogo de Equipamentos
                     </h1>
                     <p className="text-muted-foreground">
-                      {loading ? "Carregando..." : `${sortedEquipments.length} equipamentos disponíveis`}
+                      {loading ? "Carregando..." : `${totalCount} equipamentos disponíveis`}
                     </p>
                   </div>
 
@@ -304,6 +318,72 @@ const Catalogo = () => {
                     </div>
                   )}
                 </>
+              )}
+
+              {/* Paginação */}
+              {!loading && sortedEquipments.length > 0 && (
+                <div className="mt-12 flex justify-center">
+                  <Pagination>
+                    <PaginationContent>
+                      <PaginationItem>
+                        <Button
+                          variant="outline"
+                          size="icon"
+                          onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
+                          disabled={currentPage === 1}
+                          className="gap-1"
+                        >
+                          <ChevronLeft className="h-4 w-4" />
+                        </Button>
+                      </PaginationItem>
+
+                      {[...Array(Math.ceil(totalCount / pageSize))].map((_, i) => {
+                        const pageNum = i + 1;
+                        const totalPages = Math.ceil(totalCount / pageSize);
+                        
+                        // Mostrar apenas páginas próximas à atual
+                        if (
+                          pageNum === 1 ||
+                          pageNum === totalPages ||
+                          (pageNum >= currentPage - 1 && pageNum <= currentPage + 1)
+                        ) {
+                          return (
+                            <PaginationItem key={pageNum}>
+                              <PaginationLink
+                                onClick={() => setCurrentPage(pageNum)}
+                                isActive={currentPage === pageNum}
+                              >
+                                {pageNum}
+                              </PaginationLink>
+                            </PaginationItem>
+                          );
+                        } else if (
+                          pageNum === currentPage - 2 ||
+                          pageNum === currentPage + 2
+                        ) {
+                          return (
+                            <PaginationItem key={pageNum}>
+                              <span className="px-4">...</span>
+                            </PaginationItem>
+                          );
+                        }
+                        return null;
+                      })}
+
+                      <PaginationItem>
+                        <Button
+                          variant="outline"
+                          size="icon"
+                          onClick={() => setCurrentPage(p => Math.min(Math.ceil(totalCount / pageSize), p + 1))}
+                          disabled={currentPage >= Math.ceil(totalCount / pageSize)}
+                          className="gap-1"
+                        >
+                          <ChevronRight className="h-4 w-4" />
+                        </Button>
+                      </PaginationItem>
+                    </PaginationContent>
+                  </Pagination>
+                </div>
               )}
             </div>
           </div>
