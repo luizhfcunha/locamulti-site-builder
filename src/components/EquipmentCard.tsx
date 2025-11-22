@@ -1,7 +1,6 @@
-import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { MessageCircle } from "lucide-react";
+import { WhatsappCTA } from "@/components/WhatsappCTA";
 import { WHATSAPP } from "@/config/whatsapp";
 
 interface EquipmentCardProps {
@@ -19,11 +18,6 @@ export const EquipmentCard = ({
   specifications = [],
   brand 
 }: EquipmentCardProps) => {
-  const handleWhatsAppClick = () => {
-    const url = WHATSAPP.catalogoEquipamento.replace('[EQUIPAMENTO]', encodeURIComponent(name));
-    window.open(url, "_blank");
-  };
-
   return (
     <Card className="group overflow-hidden border-border hover:shadow-medium transition-all duration-base rounded-card h-full flex flex-col">
       <div className="relative h-56 bg-muted overflow-hidden">
@@ -70,14 +64,11 @@ export const EquipmentCard = ({
       </CardContent>
       
       <CardFooter className="pt-0">
-        <Button 
-          variant="default" 
-          className="w-full gap-2"
-          onClick={handleWhatsAppClick}
-        >
-          <MessageCircle className="h-4 w-4" />
-          Solicitar Orçamento
-        </Button>
+        <WhatsappCTA 
+          text="Solicitar Orçamento"
+          href={WHATSAPP.catalogoEquipamento.replace('[EQUIPAMENTO]', encodeURIComponent(name))}
+          fullWidth
+        />
       </CardFooter>
     </Card>
   );

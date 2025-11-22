@@ -1,8 +1,8 @@
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { ContactForm } from "@/components/ContactForm";
-import { MapPin, Phone, Mail, Clock, MessageCircle } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { WhatsappCTA } from "@/components/WhatsappCTA";
+import { MapPin, Phone, Mail, Clock } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import { WHATSAPP } from "@/config/whatsapp";
 
@@ -91,14 +91,12 @@ const Contato = () => {
 
             {/* WhatsApp CTA */}
             <div className="flex justify-center">
-              <Button
+              <WhatsappCTA 
+                text="Falar pelo WhatsApp"
+                href={WHATSAPP.contato}
                 size="lg"
                 className="gap-3 text-lg px-8 py-6 h-auto"
-                onClick={() => window.open(WHATSAPP.contato, "_blank")}
-              >
-                <MessageCircle className="h-6 w-6" />
-                Falar pelo WhatsApp
-              </Button>
+              />
             </div>
           </div>
         </section>
@@ -157,15 +155,13 @@ const Contato = () => {
               Nossa equipe está pronta para atender você agora mesmo pelo WhatsApp.
               Orçamentos rápidos e entrega programada.
             </p>
-            <Button
+            <WhatsappCTA 
+              text="Solicitar Orçamento Agora"
+              href={WHATSAPP.contato}
               size="lg"
               variant="outline"
               className="bg-white text-lm-orange hover:bg-white/90 border-white gap-3 text-lg px-8 py-6 h-auto"
-              onClick={() => window.open(WHATSAPP.contato, "_blank")}
-            >
-              <MessageCircle className="h-6 w-6" />
-              Solicitar Orçamento Agora
-            </Button>
+            />
           </div>
         </section>
       </main>

@@ -1,6 +1,7 @@
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { Button } from "@/components/ui/button";
+import { WhatsappCTA } from "@/components/WhatsappCTA";
 import { CategoryCarousel } from "@/components/CategoryCarousel";
 import { BrandCarousel } from "@/components/BrandCarousel";
 import { BenefitCard } from "@/components/BenefitCard";
@@ -103,14 +104,12 @@ const Index = () => {
                 Locação rápida, equipamentos revisados e suporte técnico especializado.
               </p>
               <div className="flex flex-col sm:flex-row gap-4">
-                <Button
+                <WhatsappCTA 
+                  text="Orçamento Rápido"
+                  href={WHATSAPP.homeHero}
                   size="lg"
                   className="text-lg font-semibold"
-                  onClick={() => window.open(WHATSAPP.homeHero, "_blank")}
-                >
-                  <MessageCircle className="mr-2 h-5 w-5" />
-                  Orçamento Rápido
-                </Button>
+                />
                 <Button
                   size="lg"
                   variant="outline"
@@ -196,14 +195,13 @@ const Index = () => {
               <p className="text-xl text-white/90 mb-8 leading-relaxed">
                 Fale agora com a equipe da LocaMulti pelo WhatsApp e receba seu orçamento em minutos.
               </p>
-              <Button
+              <WhatsappCTA 
+                text="Falar pelo WhatsApp Agora"
+                href={WHATSAPP.homeOrcamento}
                 size="lg"
+                variant="outline"
                 className="text-lg font-semibold bg-white hover:bg-lm-muted text-lm-ink border-0 shadow-button"
-                onClick={() => window.open(WHATSAPP.homeOrcamento, "_blank")}
-              >
-                <MessageCircle className="mr-2 h-5 w-5" />
-                Falar pelo WhatsApp Agora
-              </Button>
+              />
             </div>
           </div>
         </section>
