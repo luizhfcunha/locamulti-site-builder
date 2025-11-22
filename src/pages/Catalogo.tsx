@@ -130,6 +130,11 @@ const Catalogo = () => {
     setCurrentPage(1);
   }, [filters, searchQuery]);
 
+  // Scroll automático para o topo ao mudar de página
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }, [currentPage]);
+
   // Ordenar equipamentos
   const sortedEquipments = useMemo(() => {
     let result = [...equipments];
