@@ -2,7 +2,8 @@ import { Link } from "react-router-dom";
 import { Mail, MapPin, Phone, Clock, Facebook, Instagram, Linkedin } from "lucide-react";
 import { LOGO_FOOTER } from "@/lib/constants";
 export const Footer = () => {
-  return <footer className="bg-lm-plum text-white">
+  return (
+    <footer className="bg-lm-plum text-white">
       <div className="container mx-auto px-4 py-12">
         {/* Logo Centralizada */}
         <div className="flex justify-center w-full mb-8">
@@ -72,7 +73,9 @@ export const Footer = () => {
             <ul className="space-y-3">
               <li className="flex items-start gap-2">
                 <MapPin className="h-5 w-5 flex-shrink-0 mt-0.5" />
-                <span className="text-sm">JK Parque Industrial - Av. Juscelino Kubitscheck, 2058 - JK Nova Capital, Anápolis - GO, 75114-225</span>
+                <span className="text-sm">
+                  JK Parque Industrial - Av. Juscelino Kubitscheck, 2058 - JK Nova Capital, Anápolis - GO, 75114-225
+                </span>
               </li>
               <li className="flex items-center gap-2">
                 <Phone className="h-5 w-5 flex-shrink-0" />
@@ -88,8 +91,11 @@ export const Footer = () => {
               </li>
               <li className="flex items-start gap-2">
                 <Clock className="h-5 w-5 flex-shrink-0 mt-0.5" />
-                <span className="text-sm">Seg-Sex: 7:30h às 17h
-Sáb: 8h às 11:30h<br />Sáb: 8h às 12h</span>
+                <span className="text-sm">
+                  Seg-Sex: 7:30h às 17h Sáb: 8h às 11:30h
+                  <br />
+                  Sáb: 8h às 12h
+                </span>
               </li>
             </ul>
           </div>
@@ -98,13 +104,28 @@ Sáb: 8h às 11:30h<br />Sáb: 8h às 12h</span>
           <div>
             <h3 className="font-heading text-lg font-bold mb-4">Redes Sociais</h3>
             <div className="flex gap-4">
-              <a href="https://facebook.com" target="_blank" rel="noopener noreferrer" className="hover:text-primary transition-colors">
+              <a
+                href="https://www.facebook.com/locamulti"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="hover:text-primary transition-colors"
+              >
                 <Facebook className="h-6 w-6" />
               </a>
-              <a href="https://instagram.com" target="_blank" rel="noopener noreferrer" className="hover:text-primary transition-colors">
+              <a
+                href="https://www.instagram.com/locamulti"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="hover:text-primary transition-colors"
+              >
                 <Instagram className="h-6 w-6" />
               </a>
-              <a href="https://linkedin.com" target="_blank" rel="noopener noreferrer" className="hover:text-primary transition-colors">
+              <a
+                href="https://www.linkedin.com/company/locamulti/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="hover:text-primary transition-colors"
+              >
                 <Linkedin className="h-6 w-6" />
               </a>
             </div>
@@ -115,5 +136,6 @@ Sáb: 8h às 11:30h<br />Sáb: 8h às 12h</span>
           <p>&copy; {new Date().getFullYear()} LocaMulti. Todos os direitos reservados.</p>
         </div>
       </div>
-    </footer>;
+    </footer>
+  );
 };
