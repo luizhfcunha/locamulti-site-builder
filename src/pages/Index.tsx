@@ -6,6 +6,7 @@ import { BrandCarousel } from "@/components/BrandCarousel";
 import { BenefitCard } from "@/components/BenefitCard";
 import { SegmentCard } from "@/components/SegmentCard";
 import { BRANDS_CAROUSEL } from "@/config/brands";
+import { WHATSAPP } from "@/config/whatsapp";
 import {
   Hammer,
   Zap,
@@ -105,9 +106,7 @@ const Index = () => {
                 <Button
                   size="lg"
                   className="text-lg font-semibold"
-                  onClick={() =>
-                    window.open("https://wa.me/5562984194024?text=Olá, gostaria de solicitar um orçamento.", "_blank")
-                  }
+                  onClick={() => window.open(WHATSAPP.homeHero, "_blank")}
                 >
                   <MessageCircle className="mr-2 h-5 w-5" />
                   Orçamento Rápido
@@ -200,9 +199,7 @@ const Index = () => {
               <Button
                 size="lg"
                 className="text-lg font-semibold bg-white hover:bg-lm-muted text-lm-ink border-0 shadow-button"
-                onClick={() =>
-                  window.open("https://wa.me/5562984194024?text=Olá, preciso de um orçamento imediato.", "_blank")
-                }
+                onClick={() => window.open(WHATSAPP.homeOrcamento, "_blank")}
               >
                 <MessageCircle className="mr-2 h-5 w-5" />
                 Falar pelo WhatsApp Agora
