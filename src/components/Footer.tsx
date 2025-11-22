@@ -6,13 +6,13 @@ export const Footer = () => {
   return (
     <footer className="bg-lm-plum text-white">
       <div className="container mx-auto px-4 py-12">
-        {/* Logo */}
-        <div className="mb-10">
+        {/* Logo Centralizada */}
+        <div className="flex justify-center w-full mb-8">
           <Link to="/" className="inline-block">
             <img 
               src={LOGO_FOOTER.url} 
               alt="Logo LocaMulti versão branca" 
-              className="h-auto w-full max-w-[110px] md:max-w-[150px] object-contain"
+              className="h-auto w-[180px] object-contain"
             />
           </Link>
         </div>
