@@ -3,10 +3,12 @@ import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { CatalogSidebar } from "@/components/CatalogSidebar";
 import { EquipmentCard } from "@/components/EquipmentCard";
+import { WhatsappCTA } from "@/components/WhatsappCTA";
 import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Grid3x3, List, SlidersHorizontal } from "lucide-react";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
+import { WHATSAPP } from "@/config/whatsapp";
 
 // Mock data de equipamentos
 const mockEquipments = [
@@ -343,18 +345,11 @@ const Catalogo = () => {
                               </ul>
                             </div>
                             <div className="flex items-center gap-3">
-                              <Button
-                                variant="default"
-                                onClick={() => {
-                                  const message = encodeURIComponent(
-                                    `Olá! Gostaria de solicitar um orçamento para: ${equipment.name}`
-                                  );
-                                  window.open(`https://wa.me/5511999999999?text=${message}`, "_blank");
-                                }}
+                              <WhatsappCTA 
+                                text="Solicitar Orçamento"
+                                href={WHATSAPP.catalogoEquipamento.replace('[EQUIPAMENTO]', encodeURIComponent(equipment.name))}
                                 className="flex-1 sm:flex-none"
-                              >
-                                Solicitar Orçamento
-                              </Button>
+                              />
                             </div>
                           </div>
                         </div>

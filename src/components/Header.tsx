@@ -1,9 +1,10 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { NavLink } from "@/components/NavLink";
-import { Button } from "@/components/ui/button";
-import { MessageCircle, Menu, X } from "lucide-react";
+import { WhatsappCTA } from "@/components/WhatsappCTA";
+import { Menu, X } from "lucide-react";
 import { logoHeaderUrl } from "@/lib/constants";
+import { WHATSAPP } from "@/config/whatsapp";
 
 export const Header = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -56,14 +57,10 @@ export const Header = () => {
 
           {/* CTA Button */}
           <div className="hidden md:block">
-            <Button
-              variant="default"
-              className="gap-2"
-              onClick={() => window.open("https://wa.me/5511999999999", "_blank")}
-            >
-              <MessageCircle className="h-4 w-4" />
-              Orçamento Rápido
-            </Button>
+            <WhatsappCTA 
+              text="Orçamento Rápido"
+              href={WHATSAPP.geral}
+            />
           </div>
 
           {/* Mobile Menu Button */}
@@ -112,17 +109,13 @@ export const Header = () => {
               >
                 Contato
               </NavLink>
-              <Button
-                variant="default"
-                className="gap-2 w-full"
-                onClick={() => {
-                  window.open("https://wa.me/5511999999999", "_blank");
-                  setMobileMenuOpen(false);
-                }}
-              >
-                <MessageCircle className="h-4 w-4" />
-                Orçamento Rápido
-              </Button>
+              <div onClick={() => setMobileMenuOpen(false)}>
+                <WhatsappCTA 
+                  text="Orçamento Rápido"
+                  href={WHATSAPP.geral}
+                  fullWidth
+                />
+              </div>
             </div>
           </nav>
         )}

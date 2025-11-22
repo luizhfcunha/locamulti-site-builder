@@ -1,6 +1,8 @@
 import { Link } from "react-router-dom";
 import { Mail, MapPin, Phone, Clock, Facebook, Instagram, Linkedin } from "lucide-react";
+import { WhatsappCTA } from "@/components/WhatsappCTA";
 import { LOGO_FOOTER } from "@/lib/constants";
+import { WHATSAPP } from "@/config/whatsapp";
 export const Footer = () => {
   return (
     <footer className="bg-lm-plum text-white">
@@ -70,7 +72,7 @@ export const Footer = () => {
           {/* Contato */}
           <div>
             <h3 className="font-heading text-lg font-bold mb-4">Contato</h3>
-            <ul className="space-y-3">
+            <ul className="space-y-3 mb-4">
               <li className="flex items-start gap-2">
                 <MapPin className="h-5 w-5 flex-shrink-0 mt-0.5" />
                 <span className="text-sm">
@@ -79,7 +81,7 @@ export const Footer = () => {
               </li>
               <li className="flex items-center gap-2">
                 <Phone className="h-5 w-5 flex-shrink-0" />
-                <a href="tel:+551199999999" className="hover:text-primary transition-colors text-sm">
+                <a href="tel:+5562984194024" className="hover:text-primary transition-colors text-sm">
                   (62) 98419-4024
                 </a>
               </li>
@@ -92,12 +94,18 @@ export const Footer = () => {
               <li className="flex items-start gap-2">
                 <Clock className="h-5 w-5 flex-shrink-0 mt-0.5" />
                 <span className="text-sm">
-                  Seg-Sex: 7:30h às 17h Sáb: 8h às 11:30h
+                  Seg-Sex: 7:30h às 17h
                   <br />
                   Sáb: 8h às 12h
                 </span>
               </li>
             </ul>
+            <WhatsappCTA 
+              text="Falar no WhatsApp"
+              href={WHATSAPP.footer}
+              variant="outline"
+              className="bg-white/10 hover:bg-white/20 text-white border-white/20"
+            />
           </div>
 
           {/* Redes Sociais */}

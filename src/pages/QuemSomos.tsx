@@ -1,6 +1,6 @@
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
-import { Button } from "@/components/ui/button";
+import { WhatsappCTA } from "@/components/WhatsappCTA";
 import { WHATSAPP } from "@/config/whatsapp";
 import {
   Shield, 
@@ -19,9 +19,6 @@ import {
 } from "lucide-react";
 
 const QuemSomos = () => {
-  const handleWhatsApp = () => {
-    window.open(WHATSAPP.quemSomos, "_blank");
-  };
 
   const diferenciais = [
     {
@@ -305,14 +302,13 @@ const QuemSomos = () => {
                 Entre em contato agora e descubra como podemos ajudar seu projeto 
                 com equipamentos de qualidade e atendimento profissional.
               </p>
-              <Button 
-                variant="outline" 
+              <WhatsappCTA 
+                text="Falar com a Equipe"
+                href={WHATSAPP.quemSomos}
+                variant="outline"
                 size="lg"
-                onClick={handleWhatsApp}
                 className="bg-white text-lm-ink hover:bg-white/90 border-0 text-lg px-8"
-              >
-                Falar com a Equipe
-              </Button>
+              />
             </div>
           </div>
         </section>
