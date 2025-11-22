@@ -1,4 +1,4 @@
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { CatalogSidebar } from "@/components/CatalogSidebar";
@@ -8,190 +8,126 @@ import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Grid3x3, List, SlidersHorizontal } from "lucide-react";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
+import { Skeleton } from "@/components/ui/skeleton";
 import { WHATSAPP } from "@/config/whatsapp";
+import { getCatalog, getCatalogCategories, getCatalogSubcategories, getCatalogBrands } from "@/lib/catalog";
+import { useToast } from "@/hooks/use-toast";
 
-// Mock data de equipamentos
-const mockEquipments = [
-  {
-    id: "1",
-    name: "Martelo Demolidor 30kg SDS Max",
-    category: "Construção e Demolição",
-    brand: "Bosch",
-    imageUrl: "/placeholder.svg",
-    specifications: ["Potência: 1500W", "Impacto: 30 joules", "Tensão: 220V"],
-  },
-  {
-    id: "2",
-    name: "Betoneira 400L Profissional",
-    category: "Concretagem e Vibração",
-    brand: "Maqtron",
-    imageUrl: "/placeholder.svg",
-    specifications: ["Capacidade: 400L", "Motor: 2HP monofásico", "Tensão: 220V"],
-  },
-  {
-    id: "3",
-    name: "Gerador a Diesel 8kVA Silenciado",
-    category: "Energia e Geração",
-    brand: "Toyama",
-    imageUrl: "/placeholder.svg",
-    specifications: ["Potência: 8kVA", "Combustível: Diesel", "Partida elétrica"],
-  },
-  {
-    id: "4",
-    name: "Máquina de Solda Inversora MIG 250A",
-    category: "Soldagem Profissional",
-    brand: "ESAB",
-    imageUrl: "/placeholder.svg",
-    specifications: ["Corrente: 250A", "Processo: MIG/MAG", "Tensão: 220V/380V"],
-  },
-  {
-    id: "5",
-    name: "Empilhadeira Manual Hidráulica 2500kg",
-    category: "Movimentação de Cargas",
-    brand: "Paletrans",
-    imageUrl: "/placeholder.svg",
-    specifications: ["Capacidade: 2500kg", "Elevação: manual", "Garfos: 1150mm"],
-  },
-  {
-    id: "6",
-    name: "Compressor de Ar 10 Pés 100L",
-    category: "Pintura e Acabamento",
-    brand: "Schulz",
-    imageUrl: "/placeholder.svg",
-    specifications: ["Vazão: 10 pés³/min", "Reservatório: 100L", "Tensão: 220V"],
-  },
-  {
-    id: "7",
-    name: "Bomba Hidráulica 700 Bar",
-    category: "Ferramentas Hidráulicas",
-    brand: "Bovenau",
-    imageUrl: "/placeholder.svg",
-    specifications: ["Pressão: 700 bar", "Fluxo: 1,6L/min", "Acionamento: manual"],
-  },
-  {
-    id: "8",
-    name: "Roçadeira Costal 52cc",
-    category: "Jardinagem e Limpeza",
-    brand: "Stihl",
-    imageUrl: "/placeholder.svg",
-    specifications: ["Motor: 52cc 2 tempos", "Potência: 2,3HP", "Peso: 8,5kg"],
-  },
-  {
-    id: "9",
-    name: "Furadeira de Impacto 850W",
-    category: "Construção e Demolição",
-    brand: "DeWalt",
-    imageUrl: "/placeholder.svg",
-    specifications: ["Potência: 850W", "Mandril: 13mm", "Velocidade variável"],
-  },
-  {
-    id: "10",
-    name: "Vibrador de Concreto Elétrico 2200W",
-    category: "Concretagem e Vibração",
-    brand: "Vibromaq",
-    imageUrl: "/placeholder.svg",
-    specifications: ["Potência: 2200W", "Mangote: 4m", "Diâmetro: 45mm"],
-  },
-  {
-    id: "11",
-    name: "Gerador Gasolina 2,5kVA",
-    category: "Energia e Geração",
-    brand: "Honda",
-    imageUrl: "/placeholder.svg",
-    specifications: ["Potência: 2,5kVA", "Combustível: Gasolina", "Peso: 45kg"],
-  },
-  {
-    id: "12",
-    name: "Transformador de Solda 300A",
-    category: "Soldagem Profissional",
-    brand: "Sumig",
-    imageUrl: "/placeholder.svg",
-    specifications: ["Corrente: 300A", "Processo: Eletrodo", "Tensão: 220V/380V"],
-  },
-];
-
-const categories = {
-  id: "categories",
-  label: "Categorias",
-  options: [
-    { id: "construcao", label: "Construção e Demolição" },
-    { id: "concretagem", label: "Concretagem e Vibração" },
-    { id: "energia", label: "Energia e Geração" },
-    { id: "soldagem", label: "Soldagem Profissional" },
-    { id: "movimentacao", label: "Movimentação de Cargas" },
-    { id: "pintura", label: "Pintura e Acabamento" },
-    { id: "hidraulica", label: "Ferramentas Hidráulicas" },
-    { id: "jardinagem", label: "Jardinagem e Limpeza" },
-  ],
-};
-
-const brands = {
-  id: "brands",
-  label: "Marcas",
-  options: [
-    { id: "bosch", label: "Bosch" },
-    { id: "dewalt", label: "DeWalt" },
-    { id: "esab", label: "ESAB" },
-    { id: "sumig", label: "Sumig" },
-    { id: "toyama", label: "Toyama" },
-    { id: "vibromaq", label: "Vibromaq" },
-    { id: "bovenau", label: "Bovenau" },
-  ],
-};
-
-const voltages = {
-  id: "voltages",
-  label: "Tensão",
-  options: [
-    { id: "110v", label: "110V" },
-    { id: "220v", label: "220V" },
-    { id: "380v", label: "380V" },
-    { id: "bivolt", label: "Bivolt" },
-  ],
-};
-
-const applications = {
-  id: "applications",
-  label: "Aplicação",
-  options: [
-    { id: "construcao-civil", label: "Construção Civil" },
-    { id: "industria", label: "Indústria" },
-    { id: "manutencao", label: "Manutenção" },
-    { id: "agricultura", label: "Agricultura" },
-  ],
-};
+interface Equipment {
+  id: string;
+  name: string | null;
+  category: string | null;
+  subcategory: string | null;
+  brand: string | null;
+  image_url: string | null;
+  description: string | null;
+  supplier_code: string | null;
+}
 
 type ViewMode = "grid" | "list";
 type SortOption = "relevance" | "name" | "popular";
 
 const Catalogo = () => {
+  const { toast } = useToast();
   const [viewMode, setViewMode] = useState<ViewMode>("grid");
   const [sortBy, setSortBy] = useState<SortOption>("relevance");
   const [searchQuery, setSearchQuery] = useState("");
   const [filters, setFilters] = useState<Record<string, string[]>>({});
   const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
+  
+  const [equipments, setEquipments] = useState<Equipment[]>([]);
+  const [categories, setCategories] = useState<{ id: string; label: string; options: { id: string; label: string }[] }>({ id: "categories", label: "Categorias", options: [] });
+  const [subcategories, setSubcategories] = useState<{ id: string; label: string; options: { id: string; label: string }[] }>({ id: "subcategories", label: "Subcategorias", options: [] });
+  const [brands, setBrands] = useState<{ id: string; label: string; options: { id: string; label: string }[] }>({ id: "brands", label: "Marcas", options: [] });
+  const [loading, setLoading] = useState(true);
 
-  // Filtrar e ordenar equipamentos
-  const filteredEquipments = useMemo(() => {
-    let result = [...mockEquipments];
+  // Carregar dados iniciais
+  useEffect(() => {
+    const loadInitialData = async () => {
+      try {
+        setLoading(true);
+        const [catalogData, categoriesData, brandsData] = await Promise.all([
+          getCatalog(),
+          getCatalogCategories(),
+          getCatalogBrands(),
+        ]);
+        
+        setEquipments(catalogData || []);
+        setCategories({ id: "categories", label: "Categorias", options: categoriesData });
+        setBrands({ id: "brands", label: "Marcas", options: brandsData });
+      } catch (error) {
+        console.error("Erro ao carregar catálogo:", error);
+        toast({
+          title: "Erro ao carregar catálogo",
+          description: "Não foi possível carregar os equipamentos. Tente novamente.",
+          variant: "destructive",
+        });
+      } finally {
+        setLoading(false);
+      }
+    };
 
-    // Aplicar busca
-    if (searchQuery) {
-      result = result.filter((eq) =>
-        eq.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        eq.category.toLowerCase().includes(searchQuery.toLowerCase())
-      );
+    loadInitialData();
+  }, [toast]);
+
+  // Atualizar subcategorias quando categoria mudar
+  useEffect(() => {
+    const selectedCategory = filters.categories?.[0];
+    
+    const loadSubcategories = async () => {
+      const subcategoriesData = await getCatalogSubcategories(selectedCategory);
+      setSubcategories({ id: "subcategories", label: "Subcategorias", options: subcategoriesData });
+    };
+
+    loadSubcategories();
+  }, [filters.categories]);
+
+  // Aplicar filtros do Supabase
+  useEffect(() => {
+    const applyFilters = async () => {
+      try {
+        const catalogFilters: any = {};
+        
+        if (filters.categories?.[0]) {
+          catalogFilters.category = filters.categories[0];
+        }
+        
+        if (filters.subcategories?.[0]) {
+          catalogFilters.subcategory = filters.subcategories[0];
+        }
+        
+        if (filters.brands?.[0]) {
+          catalogFilters.brand = filters.brands[0];
+        }
+        
+        if (searchQuery) {
+          catalogFilters.search = searchQuery;
+        }
+
+        const data = await getCatalog(catalogFilters);
+        setEquipments(data || []);
+      } catch (error) {
+        console.error("Erro ao filtrar catálogo:", error);
+      }
+    };
+
+    if (!loading) {
+      applyFilters();
     }
+  }, [filters, searchQuery, loading]);
 
-    // Aplicar ordenação
+  // Ordenar equipamentos
+  const sortedEquipments = useMemo(() => {
+    let result = [...equipments];
+
     if (sortBy === "name") {
-      result.sort((a, b) => a.name.localeCompare(b.name));
+      result.sort((a, b) => (a.name || "").localeCompare(b.name || ""));
     } else if (sortBy === "popular") {
-      result.reverse(); // Mock: inverte a ordem
+      result.reverse();
     }
 
     return result;
-  }, [searchQuery, sortBy, filters]);
+  }, [equipments, sortBy]);
 
   return (
     <div className="min-h-screen flex flex-col">
@@ -203,9 +139,8 @@ const Catalogo = () => {
           <div className="hidden lg:block">
             <CatalogSidebar
               categories={categories}
+              subcategories={subcategories}
               brands={brands}
-              voltages={voltages}
-              applications={applications}
               onSearch={setSearchQuery}
               onFilterChange={setFilters}
             />
@@ -222,7 +157,7 @@ const Catalogo = () => {
                       Catálogo de Equipamentos
                     </h1>
                     <p className="text-muted-foreground">
-                      {filteredEquipments.length} equipamentos disponíveis
+                      {loading ? "Carregando..." : `${sortedEquipments.length} equipamentos disponíveis`}
                     </p>
                   </div>
 
@@ -238,9 +173,8 @@ const Catalogo = () => {
                       <SheetContent side="left" className="w-80 p-0">
                         <CatalogSidebar
                           categories={categories}
+                          subcategories={subcategories}
                           brands={brands}
-                          voltages={voltages}
-                          applications={applications}
                           onSearch={setSearchQuery}
                           onFilterChange={setFilters}
                         />
@@ -285,7 +219,17 @@ const Catalogo = () => {
 
             {/* Grid de Equipamentos */}
             <div className="container mx-auto px-4 py-8">
-              {filteredEquipments.length === 0 ? (
+              {loading ? (
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+                  {[...Array(8)].map((_, i) => (
+                    <div key={i} className="space-y-3">
+                      <Skeleton className="h-48 w-full rounded-card" />
+                      <Skeleton className="h-4 w-3/4" />
+                      <Skeleton className="h-4 w-1/2" />
+                    </div>
+                  ))}
+                </div>
+              ) : sortedEquipments.length === 0 ? (
                 <div className="text-center py-12">
                   <p className="text-lg text-muted-foreground">
                     Nenhum equipamento encontrado.
@@ -295,28 +239,29 @@ const Catalogo = () => {
                 <>
                   {viewMode === "grid" ? (
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-                      {filteredEquipments.map((equipment) => (
+                      {sortedEquipments.map((equipment) => (
                         <EquipmentCard
                           key={equipment.id}
-                          name={equipment.name}
-                          category={equipment.category}
-                          brand={equipment.brand}
-                          imageUrl={equipment.imageUrl}
-                          specifications={equipment.specifications}
+                          name={equipment.name || "Equipamento"}
+                          category={equipment.category || ""}
+                          subcategory={equipment.subcategory}
+                          brand={equipment.brand || ""}
+                          imageUrl={equipment.image_url || "/placeholder.svg"}
+                          specifications={equipment.description ? [equipment.description] : []}
                         />
                       ))}
                     </div>
                   ) : (
                     <div className="space-y-4">
-                      {filteredEquipments.map((equipment) => (
+                      {sortedEquipments.map((equipment) => (
                         <div
                           key={equipment.id}
                           className="flex flex-col sm:flex-row gap-4 p-4 border border-border rounded-card bg-card hover:shadow-medium transition-all duration-base"
                         >
                           <div className="w-full sm:w-48 h-48 bg-muted rounded-card overflow-hidden flex-shrink-0">
                             <img
-                              src={equipment.imageUrl}
-                              alt={equipment.name}
+                              src={equipment.image_url || "/placeholder.svg"}
+                              alt={equipment.name || "Equipamento"}
                               className="w-full h-full object-cover"
                             />
                           </div>
@@ -335,19 +280,21 @@ const Catalogo = () => {
                               <h3 className="font-heading text-xl font-bold text-foreground mb-3">
                                 {equipment.name}
                               </h3>
-                              <ul className="space-y-1 mb-4">
-                                {equipment.specifications.map((spec, index) => (
-                                  <li key={index} className="text-sm text-muted-foreground flex items-start gap-2">
-                                    <span className="text-primary mt-1">•</span>
-                                    <span>{spec}</span>
-                                  </li>
-                                ))}
-                              </ul>
+                              {equipment.description && (
+                                <p className="text-sm text-muted-foreground mb-4">
+                                  {equipment.description}
+                                </p>
+                              )}
+                              {equipment.subcategory && (
+                                <p className="text-xs text-muted-foreground">
+                                  <span className="font-medium">Subcategoria:</span> {equipment.subcategory}
+                                </p>
+                              )}
                             </div>
-                            <div className="flex items-center gap-3">
+                            <div className="flex items-center gap-3 mt-4">
                               <WhatsappCTA 
                                 text="Solicitar Orçamento"
-                                href={WHATSAPP.catalogoEquipamento.replace('[EQUIPAMENTO]', encodeURIComponent(equipment.name))}
+                                href={WHATSAPP.catalogoEquipamento.replace('[EQUIPAMENTO]', encodeURIComponent(equipment.name || "equipamento"))}
                                 className="flex-1 sm:flex-none"
                               />
                             </div>

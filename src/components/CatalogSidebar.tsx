@@ -13,27 +13,24 @@ interface FilterGroup {
 
 interface CatalogSidebarProps {
   categories?: FilterGroup;
+  subcategories?: FilterGroup;
   brands?: FilterGroup;
-  voltages?: FilterGroup;
-  applications?: FilterGroup;
   onSearch?: (query: string) => void;
   onFilterChange?: (filters: Record<string, string[]>) => void;
 }
 
 export const CatalogSidebar = ({
   categories,
+  subcategories,
   brands,
-  voltages,
-  applications,
   onSearch,
   onFilterChange,
 }: CatalogSidebarProps) => {
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedFilters, setSelectedFilters] = useState<Record<string, string[]>>({
     categories: [],
+    subcategories: [],
     brands: [],
-    voltages: [],
-    applications: [],
   });
 
   const handleSearch = (value: string) => {
@@ -106,37 +103,25 @@ export const CatalogSidebar = ({
               </>
             )}
 
+            {/* Subcategories */}
+            {subcategories && subcategories.options.length > 0 && (
+              <>
+                <FilterSection
+                  title="Subcategorias"
+                  groupId="subcategories"
+                  options={subcategories.options}
+                />
+                <Separator />
+              </>
+            )}
+
             {/* Brands */}
-            {brands && (
+            {brands && brands.options.length > 0 && (
               <>
                 <FilterSection
                   title="Marcas"
                   groupId="brands"
                   options={brands.options}
-                />
-                <Separator />
-              </>
-            )}
-
-            {/* Voltages */}
-            {voltages && (
-              <>
-                <FilterSection
-                  title="Tensão"
-                  groupId="voltages"
-                  options={voltages.options}
-                />
-                <Separator />
-              </>
-            )}
-
-            {/* Applications */}
-            {applications && (
-              <>
-                <FilterSection
-                  title="Aplicação"
-                  groupId="applications"
-                  options={applications.options}
                 />
               </>
             )}
