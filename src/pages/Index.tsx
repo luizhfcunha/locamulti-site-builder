@@ -5,6 +5,7 @@ import { CategoryCarousel } from "@/components/CategoryCarousel";
 import { BrandCarousel } from "@/components/BrandCarousel";
 import { BenefitCard } from "@/components/BenefitCard";
 import { SegmentCard } from "@/components/SegmentCard";
+import { BRANDS_CAROUSEL } from "@/config/brands";
 import { 
   Hammer, 
   Zap, 
@@ -40,15 +41,6 @@ const Index = () => {
     { id: "jardinagem", title: "Jardinagem e Limpeza Técnica", icon: Trees },
   ];
 
-  const brands = [
-    { id: "dewalt", name: "DeWalt" },
-    { id: "bosch", name: "Bosch" },
-    { id: "esab", name: "Esab" },
-    { id: "sumig", name: "Sumig" },
-    { id: "toyama", name: "Toyama" },
-    { id: "vibromak", name: "Vibromak" },
-    { id: "bovenau", name: "Bovenau" },
-  ];
 
   const benefits = [
     {
@@ -158,7 +150,7 @@ const Index = () => {
                 Trabalhamos com as melhores marcas do mercado
               </p>
             </div>
-            <BrandCarousel brands={brands} />
+            <BrandCarousel brands={BRANDS_CAROUSEL} />
           </div>
         </section>
 
