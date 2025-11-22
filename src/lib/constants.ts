@@ -44,7 +44,3 @@ export const BRAND_COLORS = {
   white: '#FFFFFF',
   muted: '#F6F3F2',
 } as const;
-
-// Contact Information
-export const WHATSAPP_NUMBER = '5511999999999'; // Update with actual WhatsApp number
-export const WHATSAPP_MESSAGE = 'Olá! Gostaria de solicitar um orçamento.';

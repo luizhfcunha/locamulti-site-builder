@@ -1,7 +1,8 @@
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { Button } from "@/components/ui/button";
-import { 
+import { WHATSAPP } from "@/config/whatsapp";
+import {
   Shield, 
   Zap, 
   Wrench, 
@@ -19,8 +20,7 @@ import {
 
 const QuemSomos = () => {
   const handleWhatsApp = () => {
-    const message = encodeURIComponent("Olá! Gostaria de conhecer mais sobre a LocaMulti.");
-    window.open(`https://wa.me/5511999999999?text=${message}`, "_blank");
+    window.open(WHATSAPP.quemSomos, "_blank");
   };
 
   const diferenciais = [

@@ -4,13 +4,9 @@ import { ContactForm } from "@/components/ContactForm";
 import { MapPin, Phone, Mail, Clock, MessageCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
+import { WHATSAPP } from "@/config/whatsapp";
 
 const Contato = () => {
-  const whatsappNumber = "5511999999999";
-  const whatsappMessage = encodeURIComponent(
-    "Olá! Gostaria de solicitar um orçamento."
-  );
-
   const contactInfo = [
     {
       icon: MapPin,
@@ -98,12 +94,7 @@ const Contato = () => {
               <Button
                 size="lg"
                 className="gap-3 text-lg px-8 py-6 h-auto"
-                onClick={() =>
-                  window.open(
-                    `https://wa.me/${whatsappNumber}?text=${whatsappMessage}`,
-                    "_blank"
-                  )
-                }
+                onClick={() => window.open(WHATSAPP.contato, "_blank")}
               >
                 <MessageCircle className="h-6 w-6" />
                 Falar pelo WhatsApp
@@ -170,12 +161,7 @@ const Contato = () => {
               size="lg"
               variant="outline"
               className="bg-white text-lm-orange hover:bg-white/90 border-white gap-3 text-lg px-8 py-6 h-auto"
-              onClick={() =>
-                window.open(
-                  `https://wa.me/${whatsappNumber}?text=${whatsappMessage}`,
-                  "_blank"
-                )
-              }
+              onClick={() => window.open(WHATSAPP.contato, "_blank")}
             >
               <MessageCircle className="h-6 w-6" />
               Solicitar Orçamento Agora

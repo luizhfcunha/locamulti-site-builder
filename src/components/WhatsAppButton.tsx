@@ -1,5 +1,5 @@
 import { MessageCircle } from "lucide-react";
-import { WHATSAPP_NUMBER, WHATSAPP_MESSAGE } from "@/lib/constants";
+import { WHATSAPP } from "@/config/whatsapp";
 import {
   Tooltip,
   TooltipContent,
@@ -8,9 +8,7 @@ import {
 
 const WhatsAppButton = () => {
   const handleClick = () => {
-    const encodedMessage = encodeURIComponent(WHATSAPP_MESSAGE);
-    const whatsappUrl = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodedMessage}`;
-    window.open(whatsappUrl, '_blank');
+    window.open(WHATSAPP.floating, '_blank');
   };
 
   return (

@@ -2,6 +2,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { MessageCircle } from "lucide-react";
+import { WHATSAPP } from "@/config/whatsapp";
 
 interface EquipmentCardProps {
   name: string;
@@ -19,8 +20,8 @@ export const EquipmentCard = ({
   brand 
 }: EquipmentCardProps) => {
   const handleWhatsAppClick = () => {
-    const message = encodeURIComponent(`Olá! Gostaria de solicitar um orçamento para: ${name}`);
-    window.open(`https://wa.me/5511999999999?text=${message}`, "_blank");
+    const url = WHATSAPP.catalogoEquipamento.replace('[EQUIPAMENTO]', encodeURIComponent(name));
+    window.open(url, "_blank");
   };
 
   return (
