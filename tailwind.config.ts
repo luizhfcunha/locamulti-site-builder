@@ -62,6 +62,7 @@ export default {
       fontFamily: {
         sans: ['Inter', 'system-ui', '-apple-system', 'sans-serif'],
         heading: ['Montserrat', 'system-ui', '-apple-system', 'sans-serif'],
+        display: ['Montserrat', 'system-ui', '-apple-system', 'sans-serif'], // Alias para consistência
       },
       fontSize: {
         xs: 'var(--text-xs)',
