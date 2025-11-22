@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { NavLink } from "@/components/NavLink";
 import { Button } from "@/components/ui/button";
 import { MessageCircle, Menu, X } from "lucide-react";
+import { logoHeaderUrl } from "@/lib/constants";
 
 export const Header = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -12,10 +13,12 @@ export const Header = () => {
       <div className="container mx-auto px-4">
         <div className="flex h-20 items-center justify-between">
           {/* Logo */}
-          <Link to="/" className="flex items-center gap-2">
-            <div className="font-heading text-2xl font-bold text-lm-plum">
-              Loca<span className="text-primary">Multi</span>
-            </div>
+          <Link to="/" className="flex items-center">
+            <img 
+              src={logoHeaderUrl} 
+              alt="LocaMulti - Equipamentos Profissionais" 
+              className="h-12 w-auto"
+            />
           </Link>
 
           {/* Desktop Navigation */}
