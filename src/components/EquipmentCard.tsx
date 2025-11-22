@@ -6,6 +6,7 @@ import { WHATSAPP } from "@/config/whatsapp";
 interface EquipmentCardProps {
   name: string;
   category: string;
+  subcategory?: string | null;
   imageUrl?: string;
   specifications?: string[];
   brand?: string;
@@ -13,7 +14,8 @@ interface EquipmentCardProps {
 
 export const EquipmentCard = ({ 
   name, 
-  category, 
+  category,
+  subcategory,
   imageUrl, 
   specifications = [],
   brand 
