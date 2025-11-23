@@ -1,79 +1,26 @@
 import { useState } from "react";
 import { SearchInput } from "@/components/SearchInput";
-import { Label } from "@/components/ui/label";
-import { Checkbox } from "@/components/ui/checkbox";
+import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Separator } from "@/components/ui/separator";
 
-interface FilterGroup {
-  id: string;
-  label: string;
-  options: { id: string; label: string }[];
-}
-
 interface CatalogSidebarProps {
-  categories?: FilterGroup;
-  subcategories?: FilterGroup;
-  brands?: FilterGroup;
+  categories: { id: string; label: string }[];
   onSearch?: (query: string) => void;
-  onFilterChange?: (filters: Record<string, string[]>) => void;
+  onCategoryClick?: (categoryId: string) => void;
 }
 
 export const CatalogSidebar = ({
   categories,
-  subcategories,
-  brands,
   onSearch,
-  onFilterChange,
+  onCategoryClick,
 }: CatalogSidebarProps) => {
   const [searchQuery, setSearchQuery] = useState("");
-  const [selectedFilters, setSelectedFilters] = useState<Record<string, string[]>>({
-    categories: [],
-    subcategories: [],
-    brands: [],
-  });
 
-  const handleSearch = (value: string) => {
-    setSearchQuery(value);
-    onSearch?.(value);
+  const handleSearch = (query: string) => {
+    setSearchQuery(query);
+    onSearch?.(query);
   };
-
-  const handleFilterToggle = (groupId: string, optionId: string) => {
-    const newFilters = { ...selectedFilters };
-    const group = newFilters[groupId] || [];
-    
-    if (group.includes(optionId)) {
-      newFilters[groupId] = group.filter((id) => id !== optionId);
-    } else {
-      newFilters[groupId] = [...group, optionId];
-    }
-    
-    setSelectedFilters(newFilters);
-    onFilterChange?.(newFilters);
-  };
-
-  const FilterSection = ({ title, groupId, options }: { title: string; groupId: string; options: { id: string; label: string }[] }) => (
-    <div className="space-y-3">
-      <Label className="font-heading font-bold text-base text-foreground">{title}</Label>
-      <div className="space-y-2">
-        {options.map((option) => (
-          <div key={option.id} className="flex items-center gap-2">
-            <Checkbox
-              id={`${groupId}-${option.id}`}
-              checked={selectedFilters[groupId]?.includes(option.id)}
-              onCheckedChange={() => handleFilterToggle(groupId, option.id)}
-            />
-            <label
-              htmlFor={`${groupId}-${option.id}`}
-              className="text-sm text-foreground cursor-pointer hover:text-primary transition-colors"
-            >
-              {option.label}
-            </label>
-          </div>
-        ))}
-      </div>
-    </div>
-  );
 
   return (
     <aside className="w-full lg:w-80 bg-background border-r border-border">
@@ -92,39 +39,21 @@ export const CatalogSidebar = ({
             <Separator />
 
             {/* Categories */}
-            {categories && (
-              <>
-                <FilterSection
-                  title="Categorias"
-                  groupId="categories"
-                  options={categories.options}
-                />
-                <Separator />
-              </>
-            )}
-
-            {/* Subcategories */}
-            {subcategories && subcategories.options.length > 0 && (
-              <>
-                <FilterSection
-                  title="Subcategorias"
-                  groupId="subcategories"
-                  options={subcategories.options}
-                />
-                <Separator />
-              </>
-            )}
-
-            {/* Brands */}
-            {brands && brands.options.length > 0 && (
-              <>
-                <FilterSection
-                  title="Marcas"
-                  groupId="brands"
-                  options={brands.options}
-                />
-              </>
-            )}
+            <div className="space-y-3">
+              <h3 className="font-heading font-semibold text-foreground">Categorias</h3>
+              <div className="space-y-2">
+                {categories.map((category) => (
+                  <Button
+                    key={category.id}
+                    variant="ghost"
+                    className="w-full justify-start text-sm text-muted-foreground hover:text-foreground hover:bg-muted transition-colors"
+                    onClick={() => onCategoryClick?.(category.id)}
+                  >
+                    {category.label}
+                  </Button>
+                ))}
+              </div>
+            </div>
           </div>
         </ScrollArea>
       </div>

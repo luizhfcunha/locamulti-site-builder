@@ -4,6 +4,7 @@ import { Footer } from "@/components/Footer";
 import { CatalogSidebar } from "@/components/CatalogSidebar";
 import { EquipmentCard } from "@/components/EquipmentCard";
 import { WhatsappCTA } from "@/components/WhatsappCTA";
+import { SubcategoryModal } from "@/components/SubcategoryModal";
 import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Grid3x3, List, SlidersHorizontal, ChevronLeft, ChevronRight } from "lucide-react";
@@ -11,7 +12,7 @@ import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Pagination, PaginationContent, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious } from "@/components/ui/pagination";
 import { WHATSAPP } from "@/config/whatsapp";
-import { getCatalog, getCatalogCategories, getCatalogSubcategories, getCatalogBrands } from "@/lib/catalog";
+import { getCatalog, getCatalogCategories, getCatalogSubcategories } from "@/lib/catalog";
 import { useToast } from "@/hooks/use-toast";
 
 interface Equipment {
@@ -33,79 +34,74 @@ const Catalogo = () => {
   const [viewMode, setViewMode] = useState<ViewMode>("grid");
   const [sortBy, setSortBy] = useState<SortOption>("relevance");
   const [searchQuery, setSearchQuery] = useState("");
-  const [filters, setFilters] = useState<Record<string, string[]>>({});
   const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
   
   const [equipments, setEquipments] = useState<Equipment[]>([]);
-  const [categories, setCategories] = useState<{ id: string; label: string; options: { id: string; label: string }[] }>({ id: "categories", label: "Categorias", options: [] });
-  const [subcategories, setSubcategories] = useState<{ id: string; label: string; options: { id: string; label: string }[] }>({ id: "subcategories", label: "Subcategorias", options: [] });
-  const [brands, setBrands] = useState<{ id: string; label: string; options: { id: string; label: string }[] }>({ id: "brands", label: "Marcas", options: [] });
+  const [categories, setCategories] = useState<{ id: string; label: string }[]>([]);
   const [loading, setLoading] = useState(true);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalCount, setTotalCount] = useState(0);
   const pageSize = 24;
 
-  // Carregar dados iniciais
+  // Estados para o fluxo de categoria → subcategoria
+  const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
+  const [selectedSubcategory, setSelectedSubcategory] = useState<string | null>(null);
+  const [isSubcategoryModalOpen, setIsSubcategoryModalOpen] = useState(false);
+  const [subcategoriesForCategory, setSubcategoriesForCategory] = useState<string[]>([]);
+
+  // Carregar categorias iniciais
   useEffect(() => {
-    const loadInitialData = async () => {
+    const loadCategories = async () => {
       try {
-        setLoading(true);
-        const [catalogResult, categoriesData, brandsData] = await Promise.all([
-          getCatalog({ page: 1, pageSize }),
-          getCatalogCategories(),
-          getCatalogBrands(),
-        ]);
-        
-        setEquipments(catalogResult.data || []);
-        setTotalCount(catalogResult.count || 0);
-        setCategories({ id: "categories", label: "Categorias", options: categoriesData });
-        setBrands({ id: "brands", label: "Marcas", options: brandsData });
+        const categoriesData = await getCatalogCategories();
+        setCategories(categoriesData);
       } catch (error) {
-        console.error("Erro ao carregar catálogo:", error);
-        toast({
-          title: "Erro ao carregar catálogo",
-          description: "Não foi possível carregar os equipamentos. Tente novamente.",
-          variant: "destructive",
-        });
-      } finally {
-        setLoading(false);
+        console.error("Erro ao carregar categorias:", error);
       }
     };
 
-    loadInitialData();
-  }, [toast]);
+    loadCategories();
+  }, []);
 
-  // Atualizar subcategorias quando categoria mudar
-  useEffect(() => {
-    const selectedCategory = filters.categories?.[0];
-    
-    const loadSubcategories = async () => {
-      const subcategoriesData = await getCatalogSubcategories(selectedCategory);
-      setSubcategories({ id: "subcategories", label: "Subcategorias", options: subcategoriesData });
-    };
+  // Handler para abrir modal de subcategorias
+  const handleCategoryClick = async (categoryId: string) => {
+    setSelectedCategory(categoryId);
+    try {
+      const subcategoriesData = await getCatalogSubcategories(categoryId);
+      setSubcategoriesForCategory(subcategoriesData.map(sub => sub.label));
+      setIsSubcategoryModalOpen(true);
+    } catch (error) {
+      console.error("Erro ao carregar subcategorias:", error);
+      toast({
+        title: "Erro ao carregar subcategorias",
+        description: "Não foi possível carregar as subcategorias.",
+        variant: "destructive",
+      });
+    }
+  };
 
-    loadSubcategories();
-  }, [filters.categories]);
+  // Handler para selecionar subcategoria
+  const handleSelectSubcategory = (subcategory: string) => {
+    setSelectedSubcategory(subcategory);
+    setCurrentPage(1); // Reset para primeira página ao aplicar novo filtro
+  };
 
   // Aplicar filtros do Supabase
   useEffect(() => {
     const applyFilters = async () => {
       try {
+        setLoading(true);
         const catalogFilters: any = {
           page: currentPage,
           pageSize,
         };
         
-        if (filters.categories?.[0]) {
-          catalogFilters.category = filters.categories[0];
+        if (selectedCategory) {
+          catalogFilters.category = selectedCategory;
         }
         
-        if (filters.subcategories?.[0]) {
-          catalogFilters.subcategory = filters.subcategories[0];
-        }
-        
-        if (filters.brands?.[0]) {
-          catalogFilters.brand = filters.brands[0];
+        if (selectedSubcategory) {
+          catalogFilters.subcategory = selectedSubcategory;
         }
         
         if (searchQuery) {
@@ -117,18 +113,23 @@ const Catalogo = () => {
         setTotalCount(result.count || 0);
       } catch (error) {
         console.error("Erro ao filtrar catálogo:", error);
+        toast({
+          title: "Erro ao filtrar catálogo",
+          description: "Não foi possível filtrar os equipamentos.",
+          variant: "destructive",
+        });
+      } finally {
+        setLoading(false);
       }
     };
 
-    if (!loading) {
-      applyFilters();
-    }
-  }, [filters, searchQuery, loading, currentPage]);
+    applyFilters();
+  }, [selectedCategory, selectedSubcategory, searchQuery, currentPage, toast]);
 
-  // Reset para página 1 quando filtros mudarem
+  // Reset para página 1 quando busca mudar
   useEffect(() => {
     setCurrentPage(1);
-  }, [filters, searchQuery]);
+  }, [searchQuery]);
 
   // Scroll automático para o topo ao mudar de página
   useEffect(() => {
@@ -158,10 +159,8 @@ const Catalogo = () => {
           <div className="hidden lg:block">
             <CatalogSidebar
               categories={categories}
-              subcategories={subcategories}
-              brands={brands}
               onSearch={setSearchQuery}
-              onFilterChange={setFilters}
+              onCategoryClick={handleCategoryClick}
             />
           </div>
 
@@ -192,10 +191,8 @@ const Catalogo = () => {
                       <SheetContent side="left" className="w-80 p-0">
                         <CatalogSidebar
                           categories={categories}
-                          subcategories={subcategories}
-                          brands={brands}
                           onSearch={setSearchQuery}
-                          onFilterChange={setFilters}
+                          onCategoryClick={handleCategoryClick}
                         />
                       </SheetContent>
                     </Sheet>
@@ -394,6 +391,15 @@ const Catalogo = () => {
           </div>
         </div>
       </main>
+
+      {/* Modal de Subcategorias */}
+      <SubcategoryModal
+        isOpen={isSubcategoryModalOpen}
+        category={selectedCategory || ""}
+        subcategories={subcategoriesForCategory}
+        onClose={() => setIsSubcategoryModalOpen(false)}
+        onSelectSubcategory={handleSelectSubcategory}
+      />
 
       <Footer />
     </div>
