@@ -10,6 +10,14 @@ import { Grid3x3, List, SlidersHorizontal, ChevronLeft, ChevronRight, X } from "
 import { Drawer, DrawerContent, DrawerHeader, DrawerTitle, DrawerClose } from "@/components/ui/drawer";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Pagination, PaginationContent, PaginationItem, PaginationLink } from "@/components/ui/pagination";
+import {
+  Breadcrumb,
+  BreadcrumbItem,
+  BreadcrumbLink,
+  BreadcrumbList,
+  BreadcrumbPage,
+  BreadcrumbSeparator,
+} from "@/components/ui/breadcrumb";
 import { WHATSAPP } from "@/config/whatsapp";
 import { getCatalog, getCategoriesWithSubcategories } from "@/lib/catalog";
 import { useToast } from "@/hooks/use-toast";
@@ -244,6 +252,60 @@ const Catalogo = () => {
 
             {/* Grid de Equipamentos */}
             <div className="container mx-auto px-4 py-8">
+              {/* Breadcrumb */}
+              <div className="mb-6 flex items-center justify-between">
+                <Breadcrumb>
+                  <BreadcrumbList>
+                    {!selectedCategory && !selectedSubcategory ? (
+                      <BreadcrumbItem>
+                        <BreadcrumbPage className="text-sm text-muted-foreground">
+                          Todos os equipamentos
+                        </BreadcrumbPage>
+                      </BreadcrumbItem>
+                    ) : (
+                      <>
+                        <BreadcrumbItem>
+                          {selectedSubcategory ? (
+                            <BreadcrumbLink
+                              asChild
+                              className="text-sm cursor-pointer"
+                            >
+                              <button onClick={() => setSelectedSubcategory(null)}>
+                                {selectedCategory}
+                              </button>
+                            </BreadcrumbLink>
+                          ) : (
+                            <BreadcrumbPage className="text-sm">
+                              {selectedCategory}
+                            </BreadcrumbPage>
+                          )}
+                        </BreadcrumbItem>
+                        {selectedSubcategory && (
+                          <>
+                            <BreadcrumbSeparator />
+                            <BreadcrumbItem>
+                              <BreadcrumbPage className="text-sm">
+                                {selectedSubcategory}
+                              </BreadcrumbPage>
+                            </BreadcrumbItem>
+                          </>
+                        )}
+                      </>
+                    )}
+                  </BreadcrumbList>
+                </Breadcrumb>
+                {(selectedCategory || selectedSubcategory) && (
+                  <Button
+                    variant="link"
+                    size="sm"
+                    onClick={handleClearFilters}
+                    className="text-xs h-auto p-0"
+                  >
+                    Limpar filtros
+                  </Button>
+                )}
+              </div>
+
               {loading ? (
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
                   {[...Array(8)].map((_, i) => (
