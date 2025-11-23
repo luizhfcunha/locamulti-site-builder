@@ -99,3 +99,35 @@ export async function getCatalogBrands() {
   const uniqueBrands = [...new Set(data.map(item => item.brand))];
   return uniqueBrands.map(brand => ({ id: brand, label: brand }));
 }
+
+export async function getCategoriesWithSubcategories() {
+  const { data, error } = await supabase
+    .from('catalog')
+    .select('category, subcategory')
+    .not('category', 'is', null)
+    .not('subcategory', 'is', null)
+    .order('category')
+    .order('subcategory');
+
+  if (error) {
+    console.error('Error fetching categories with subcategories:', error);
+    return [];
+  }
+
+  // Agrupar subcategorias por categoria
+  const grouped = data.reduce((acc, item) => {
+    const category = item.category;
+    if (!acc[category]) {
+      acc[category] = [];
+    }
+    if (!acc[category].includes(item.subcategory)) {
+      acc[category].push(item.subcategory);
+    }
+    return acc;
+  }, {} as Record<string, string[]>);
+
+  return Object.entries(grouped).map(([category, subcategories]) => ({
+    category,
+    subcategories: subcategories.sort(),
+  }));
+}
