@@ -4,15 +4,14 @@ import { Footer } from "@/components/Footer";
 import { CatalogSidebar } from "@/components/CatalogSidebar";
 import { EquipmentCard } from "@/components/EquipmentCard";
 import { WhatsappCTA } from "@/components/WhatsappCTA";
-import { SubcategoryModal } from "@/components/SubcategoryModal";
 import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Grid3x3, List, SlidersHorizontal, ChevronLeft, ChevronRight } from "lucide-react";
-import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
+import { Grid3x3, List, SlidersHorizontal, ChevronLeft, ChevronRight, X } from "lucide-react";
+import { Drawer, DrawerContent, DrawerHeader, DrawerTitle, DrawerClose } from "@/components/ui/drawer";
 import { Skeleton } from "@/components/ui/skeleton";
-import { Pagination, PaginationContent, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious } from "@/components/ui/pagination";
+import { Pagination, PaginationContent, PaginationItem, PaginationLink } from "@/components/ui/pagination";
 import { WHATSAPP } from "@/config/whatsapp";
-import { getCatalog, getCatalogCategories, getCatalogSubcategories } from "@/lib/catalog";
+import { getCatalog, getCategoriesWithSubcategories } from "@/lib/catalog";
 import { useToast } from "@/hooks/use-toast";
 
 interface Equipment {
@@ -34,26 +33,25 @@ const Catalogo = () => {
   const [viewMode, setViewMode] = useState<ViewMode>("grid");
   const [sortBy, setSortBy] = useState<SortOption>("relevance");
   const [searchQuery, setSearchQuery] = useState("");
-  const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
   
   const [equipments, setEquipments] = useState<Equipment[]>([]);
-  const [categories, setCategories] = useState<{ id: string; label: string }[]>([]);
+  const [categories, setCategories] = useState<{ category: string; subcategories: string[] }[]>([]);
   const [loading, setLoading] = useState(true);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalCount, setTotalCount] = useState(0);
   const pageSize = 24;
 
-  // Estados para o fluxo de categoria → subcategoria
+  // Estados para filtros com accordion
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const [selectedSubcategory, setSelectedSubcategory] = useState<string | null>(null);
-  const [isSubcategoryModalOpen, setIsSubcategoryModalOpen] = useState(false);
-  const [subcategoriesForCategory, setSubcategoriesForCategory] = useState<string[]>([]);
+  const [expandedCategory, setExpandedCategory] = useState<string | null>(null);
+  const [isFilterOpen, setIsFilterOpen] = useState(false);
 
-  // Carregar categorias iniciais
+  // Carregar categorias e subcategorias agrupadas
   useEffect(() => {
     const loadCategories = async () => {
       try {
-        const categoriesData = await getCatalogCategories();
+        const categoriesData = await getCategoriesWithSubcategories();
         setCategories(categoriesData);
       } catch (error) {
         console.error("Erro ao carregar categorias:", error);
@@ -63,27 +61,20 @@ const Catalogo = () => {
     loadCategories();
   }, []);
 
-  // Handler para abrir modal de subcategorias
-  const handleCategoryClick = async (categoryId: string) => {
-    setSelectedCategory(categoryId);
-    try {
-      const subcategoriesData = await getCatalogSubcategories(categoryId);
-      setSubcategoriesForCategory(subcategoriesData.map(sub => sub.label));
-      setIsSubcategoryModalOpen(true);
-    } catch (error) {
-      console.error("Erro ao carregar subcategorias:", error);
-      toast({
-        title: "Erro ao carregar subcategorias",
-        description: "Não foi possível carregar as subcategorias.",
-        variant: "destructive",
-      });
-    }
+  // Handler para selecionar subcategoria
+  const handleSubcategoryClick = (category: string, subcategory: string) => {
+    setSelectedCategory(category);
+    setSelectedSubcategory(subcategory);
+    setCurrentPage(1);
+    setIsFilterOpen(false); // Fechar drawer no mobile
   };
 
-  // Handler para selecionar subcategoria
-  const handleSelectSubcategory = (subcategory: string) => {
-    setSelectedSubcategory(subcategory);
-    setCurrentPage(1); // Reset para primeira página ao aplicar novo filtro
+  // Limpar filtros
+  const handleClearFilters = () => {
+    setSelectedCategory(null);
+    setSelectedSubcategory(null);
+    setExpandedCategory(null);
+    setCurrentPage(1);
   };
 
   // Aplicar filtros do Supabase
@@ -160,7 +151,11 @@ const Catalogo = () => {
             <CatalogSidebar
               categories={categories}
               onSearch={setSearchQuery}
-              onCategoryClick={handleCategoryClick}
+              onSubcategoryClick={handleSubcategoryClick}
+              selectedCategory={selectedCategory}
+              selectedSubcategory={selectedSubcategory}
+              expandedCategory={expandedCategory}
+              onExpandedChange={setExpandedCategory}
             />
           </div>
 
@@ -181,21 +176,14 @@ const Catalogo = () => {
 
                   <div className="flex items-center gap-3 flex-wrap">
                     {/* Filtros Mobile */}
-                    <Sheet open={mobileFiltersOpen} onOpenChange={setMobileFiltersOpen}>
-                      <SheetTrigger asChild>
-                        <Button variant="outline" className="lg:hidden gap-2">
-                          <SlidersHorizontal className="h-4 w-4" />
-                          Filtros
-                        </Button>
-                      </SheetTrigger>
-                      <SheetContent side="left" className="w-80 p-0">
-                        <CatalogSidebar
-                          categories={categories}
-                          onSearch={setSearchQuery}
-                          onCategoryClick={handleCategoryClick}
-                        />
-                      </SheetContent>
-                    </Sheet>
+                    <Button 
+                      variant="outline" 
+                      className="lg:hidden gap-2"
+                      onClick={() => setIsFilterOpen(true)}
+                    >
+                      <SlidersHorizontal className="h-4 w-4" />
+                      Filtrar
+                    </Button>
 
                     {/* Ordenação */}
                     <Select value={sortBy} onValueChange={(value) => setSortBy(value as SortOption)}>
@@ -230,6 +218,27 @@ const Catalogo = () => {
                     </div>
                   </div>
                 </div>
+
+                {/* Badge de filtros ativos */}
+                {(selectedCategory || selectedSubcategory) && (
+                  <div className="mt-4 flex items-center gap-2 flex-wrap">
+                    <span className="text-sm text-muted-foreground">Filtros ativos:</span>
+                    {selectedCategory && selectedSubcategory && (
+                      <div className="inline-flex items-center gap-2 px-3 py-1 bg-primary/10 text-primary rounded-full text-sm">
+                        {selectedCategory} → {selectedSubcategory}
+                      </div>
+                    )}
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={handleClearFilters}
+                      className="h-8 text-xs"
+                    >
+                      <X className="h-3 w-3 mr-1" />
+                      Limpar
+                    </Button>
+                  </div>
+                )}
               </div>
             </div>
 
@@ -392,14 +401,30 @@ const Catalogo = () => {
         </div>
       </main>
 
-      {/* Modal de Subcategorias */}
-      <SubcategoryModal
-        isOpen={isSubcategoryModalOpen}
-        category={selectedCategory || ""}
-        subcategories={subcategoriesForCategory}
-        onClose={() => setIsSubcategoryModalOpen(false)}
-        onSelectSubcategory={handleSelectSubcategory}
-      />
+      {/* Drawer Mobile */}
+      <Drawer open={isFilterOpen} onOpenChange={setIsFilterOpen}>
+        <DrawerContent className="max-h-[85vh]">
+          <DrawerHeader className="text-left">
+            <DrawerTitle className="font-heading text-xl">Filtrar Equipamentos</DrawerTitle>
+            <DrawerClose asChild>
+              <Button variant="ghost" size="icon" className="absolute right-4 top-4">
+                <X className="h-4 w-4" />
+              </Button>
+            </DrawerClose>
+          </DrawerHeader>
+          <div className="px-4 pb-4 overflow-y-auto">
+            <CatalogSidebar
+              categories={categories}
+              onSearch={setSearchQuery}
+              onSubcategoryClick={handleSubcategoryClick}
+              selectedCategory={selectedCategory}
+              selectedSubcategory={selectedSubcategory}
+              expandedCategory={expandedCategory}
+              onExpandedChange={setExpandedCategory}
+            />
+          </div>
+        </DrawerContent>
+      </Drawer>
 
       <Footer />
     </div>
