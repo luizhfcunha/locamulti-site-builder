@@ -11,7 +11,7 @@ const Contato = () => {
     {
       icon: MapPin,
       title: "Endereço",
-      content: "Rua Industrial, 1234 - Distrito Industrial\nSão Paulo, SP - CEP 01234-567",
+      content: "JK Parque Industrial - Av. Juscelino Kubitscheck, 2058 - JK Nova Capital, Anápolis - GO, 75114-225",
     },
     {
       icon: Phone,
