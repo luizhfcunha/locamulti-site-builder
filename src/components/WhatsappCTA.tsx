@@ -21,7 +21,7 @@ export const WhatsappCTA = ({
     window.open(href, "_blank");
   };
   return <Button variant={variant} size={size} onClick={handleClick} className={cn("gap-2 items-center justify-center", fullWidth && "w-full", className)}>
-      <img alt="WhatsApp" src="/lovable-uploads/55104d41-8a23-4d8f-894a-474704e43b9a.png" className="w-5 h-5 md:w-5 md:h-5 flex-shrink-0 object-fill rounded-full" />
+      <img alt="WhatsApp" className="w-5 h-5 md:w-5 md:h-5 flex-shrink-0 object-fill rounded-full" src="/lovable-uploads/c5861fea-0072-4651-9ee0-c32e148f0e85.png" />
       <span>{text}</span>
     </Button>;
 };
