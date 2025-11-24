@@ -16,17 +16,14 @@ const WhatsAppButton = () => {
       <TooltipTrigger asChild>
         <button
           onClick={handleClick}
-          className="fixed bottom-6 right-6 z-50 flex h-14 w-14 items-center justify-center rounded-full bg-[#25D366] shadow-lg transition-all duration-300 hover:scale-110 hover:shadow-xl focus:outline-none focus:ring-4 focus:ring-[#25D366]/50 animate-fade-in"
+          className="fixed bottom-6 right-6 z-50 w-16 h-16 md:w-16 md:h-16 rounded-full bg-transparent overflow-hidden transition-all duration-300 hover:scale-110 focus:outline-none focus:ring-4 focus:ring-[#25D366]/30 animate-fade-in shadow-[0_4px_12px_rgba(0,0,0,0.3)]"
           aria-label="Fale conosco no WhatsApp"
         >
           <img 
             src={WHATSAPP_ICON_URL} 
             alt="WhatsApp" 
-            className="h-9 w-9 object-contain"
+            className="w-full h-full object-contain"
           />
-          
-          {/* Pulse animation ring */}
-          <span className="absolute inset-0 rounded-full bg-[#25D366] animate-ping opacity-20"></span>
         </button>
       </TooltipTrigger>
       <TooltipContent side="left" className="bg-lm-ink text-white border-lm-ink">
