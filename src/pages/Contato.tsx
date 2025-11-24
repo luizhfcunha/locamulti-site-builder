@@ -11,13 +11,13 @@ const Contato = () => {
     {
       icon: MapPin,
       title: "Endereço",
-      content: "JK Parque Industrial - Av. Juscelino Kubitscheck, 2058 - JK Nova Capital, Anápolis - GO, 75114-225",
+      content: "Av. Juscelino Kubitscheck, 2058 - JK Nova Capital, Anápolis - GO, 75114-225",
     },
     {
       icon: Phone,
       title: "Telefone",
-      content: "(11) 4002-8922",
-      link: "tel:+551140028922",
+      content: "(62) 98419-4024",
+      link: "tel:+5562984194024",
     },
     {
       icon: Mail,
@@ -28,7 +28,7 @@ const Contato = () => {
     {
       icon: Clock,
       title: "Horário de Atendimento",
-      content: "Segunda a Sexta: 7h às 18h\nSábado: 7h às 12h",
+      content: "Segunda a Sexta: 7h às 18h\nSábado: 7h às 11:30h",
     },
   ];
 
@@ -40,12 +40,10 @@ const Contato = () => {
         <section className="bg-lm-plum text-white py-16 md:py-24">
           <div className="container mx-auto px-4">
             <div className="max-w-3xl">
-              <h1 className="text-4xl md:text-5xl font-display font-bold mb-4">
-                Entre em Contato
-              </h1>
+              <h1 className="text-4xl md:text-5xl font-display font-bold mb-4">Entre em Contato</h1>
               <p className="text-lg md:text-xl text-white/90">
-                Estamos prontos para atender sua necessidade de equipamentos profissionais.
-                Fale com nossa equipe técnica especializada.
+                Estamos prontos para atender sua necessidade de equipamentos profissionais. Fale com nossa equipe
+                técnica especializada.
               </p>
             </div>
           </div>
@@ -58,10 +56,7 @@ const Contato = () => {
               {contactInfo.map((info, index) => {
                 const Icon = info.icon;
                 const content = info.link ? (
-                  <a
-                    href={info.link}
-                    className="text-lm-orange hover:text-lm-terracota transition-colors"
-                  >
+                  <a href={info.link} className="text-lm-orange hover:text-lm-terracota transition-colors">
                     {info.content}
                   </a>
                 ) : (
@@ -78,9 +73,7 @@ const Contato = () => {
                         <Icon className="h-6 w-6 text-lm-orange" />
                       </div>
                       <div>
-                        <h3 className="font-display font-semibold text-lm-plum mb-2">
-                          {info.title}
-                        </h3>
+                        <h3 className="font-display font-semibold text-lm-plum mb-2">{info.title}</h3>
                         {content}
                       </div>
                     </div>
@@ -91,7 +84,7 @@ const Contato = () => {
 
             {/* WhatsApp CTA */}
             <div className="flex justify-center">
-              <WhatsappCTA 
+              <WhatsappCTA
                 text="Falar pelo WhatsApp"
                 href={WHATSAPP.contato}
                 size="lg"
@@ -108,9 +101,7 @@ const Contato = () => {
               {/* Contact Form */}
               <div>
                 <div className="mb-8">
-                  <h2 className="text-3xl font-display font-bold text-lm-plum mb-4">
-                    Envie sua Mensagem
-                  </h2>
+                  <h2 className="text-3xl font-display font-bold text-lm-plum mb-4">Envie sua Mensagem</h2>
                   <p className="text-lm-ink/70">
                     Preencha o formulário abaixo e nossa equipe entrará em contato em breve.
                   </p>
@@ -121,12 +112,8 @@ const Contato = () => {
               {/* Google Maps */}
               <div>
                 <div className="mb-8">
-                  <h2 className="text-3xl font-display font-bold text-lm-plum mb-4">
-                    Nossa Localização
-                  </h2>
-                  <p className="text-lm-ink/70">
-                    Visite nossa loja física e conheça nossos equipamentos pessoalmente.
-                  </p>
+                  <h2 className="text-3xl font-display font-bold text-lm-plum mb-4">Nossa Localização</h2>
+                  <p className="text-lm-ink/70">Visite nossa loja física e conheça nossos equipamentos pessoalmente.</p>
                 </div>
                 <Card className="overflow-hidden border-none shadow-button h-[400px] lg:h-[500px]">
                   <iframe
@@ -152,10 +139,10 @@ const Contato = () => {
               Precisa de Equipamentos com Urgência?
             </h2>
             <p className="text-lg text-white/90 mb-8 max-w-2xl mx-auto">
-              Nossa equipe está pronta para atender você agora mesmo pelo WhatsApp.
-              Orçamentos rápidos e entrega programada.
+              Nossa equipe está pronta para atender você agora mesmo pelo WhatsApp. Orçamentos rápidos e entrega
+              programada.
             </p>
-            <WhatsappCTA 
+            <WhatsappCTA
               text="Solicitar Orçamento Agora"
               href={WHATSAPP.contato}
               size="lg"
