@@ -93,7 +93,7 @@ export const Footer = () => {
               <li className="flex items-start gap-2">
                 <Clock className="h-5 w-5 flex-shrink-0 mt-0.5" />
                 <span className="text-sm">
-                  Seg-Sex: 7:30h às 17h
+                  Seg-Sex: 7:30h às 17h Sáb: 8h às 11:30h
 Sáb: 8h às 11:30h
                   <br />
                   Sáb: 8h às 12h
