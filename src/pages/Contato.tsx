@@ -117,7 +117,7 @@ const Contato = () => {
                 </div>
                 <Card className="overflow-hidden border-none shadow-button h-[400px] lg:h-[500px]">
                   <iframe
-                    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3657.1976283525754!2d-46.63341208502203!3d-23.561684684682!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x94ce59c8da0aa315%3A0xd59f9431f2c9776a!2sSão%20Paulo%2C%20SP!5e0!3m2!1spt-BR!2sbr!4v1234567890123!5m2!1spt-BR!2sbr"
+                    src="https://www.google.com/maps?q=Av.+Juscelino+Kubitscheck,+2058,+Anápolis+GO+75114-225&output=embed"
                     width="100%"
                     height="100%"
                     style={{ border: 0 }}
