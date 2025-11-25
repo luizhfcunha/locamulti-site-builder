@@ -29,9 +29,9 @@ const ProductList = ({ onEdit }: ProductListProps) => {
   
   // Filter states
   const [searchTerm, setSearchTerm] = useState("");
-  const [selectedCategory, setSelectedCategory] = useState<string>("");
-  const [selectedSubcategory, setSelectedSubcategory] = useState<string>("");
-  const [selectedBrand, setSelectedBrand] = useState<string>("");
+  const [selectedCategory, setSelectedCategory] = useState<string>("_all");
+  const [selectedSubcategory, setSelectedSubcategory] = useState<string>("_all");
+  const [selectedBrand, setSelectedBrand] = useState<string>("_all");
   const [selectedStatus, setSelectedStatus] = useState<string>("all");
   
   // Data for filters
@@ -45,11 +45,11 @@ const ProductList = ({ onEdit }: ProductListProps) => {
   }, []);
 
   useEffect(() => {
-    if (selectedCategory) {
+    if (selectedCategory && selectedCategory !== "_all") {
       fetchSubcategories(selectedCategory);
     } else {
       setSubcategories([]);
-      setSelectedSubcategory("");
+      setSelectedSubcategory("_all");
     }
   }, [selectedCategory]);
 
@@ -92,15 +92,15 @@ const ProductList = ({ onEdit }: ProductListProps) => {
       query = query.or(`name.ilike.%${searchTerm}%,description.ilike.%${searchTerm}%,brand.ilike.%${searchTerm}%,supplier_code.ilike.%${searchTerm}%`);
     }
 
-    if (selectedCategory) {
+    if (selectedCategory && selectedCategory !== "_all") {
       query = query.eq("category_id", selectedCategory);
     }
 
-    if (selectedSubcategory) {
+    if (selectedSubcategory && selectedSubcategory !== "_all") {
       query = query.eq("subcategory_id", selectedSubcategory);
     }
 
-    if (selectedBrand) {
+    if (selectedBrand && selectedBrand !== "_all") {
       query = query.eq("brand", selectedBrand);
     }
 
@@ -159,13 +159,13 @@ const ProductList = ({ onEdit }: ProductListProps) => {
 
   const clearFilters = () => {
     setSearchTerm("");
-    setSelectedCategory("");
-    setSelectedSubcategory("");
-    setSelectedBrand("");
+    setSelectedCategory("_all");
+    setSelectedSubcategory("_all");
+    setSelectedBrand("_all");
     setSelectedStatus("all");
   };
 
-  const hasActiveFilters = searchTerm || selectedCategory || selectedSubcategory || selectedBrand || selectedStatus !== "all";
+  const hasActiveFilters = searchTerm || selectedCategory !== "_all" || selectedSubcategory !== "_all" || selectedBrand !== "_all" || selectedStatus !== "all";
 
   if (loading) {
     return (
@@ -222,7 +222,7 @@ const ProductList = ({ onEdit }: ProductListProps) => {
                   <SelectValue placeholder="Todas" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="">Todas</SelectItem>
+                  <SelectItem value="_all">Todas</SelectItem>
                   {categories.map((cat) => (
                     <SelectItem key={cat.id} value={cat.id}>
                       {cat.name}
@@ -238,13 +238,13 @@ const ProductList = ({ onEdit }: ProductListProps) => {
               <Select
                 value={selectedSubcategory}
                 onValueChange={setSelectedSubcategory}
-                disabled={!selectedCategory}
+                disabled={selectedCategory === "_all"}
               >
                 <SelectTrigger id="subcategory">
                   <SelectValue placeholder="Todas" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="">Todas</SelectItem>
+                  <SelectItem value="_all">Todas</SelectItem>
                   {subcategories.map((sub) => (
                     <SelectItem key={sub.id} value={sub.id}>
                       {sub.name}
@@ -265,7 +265,7 @@ const ProductList = ({ onEdit }: ProductListProps) => {
                   <SelectValue placeholder="Todas" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="">Todas</SelectItem>
+                  <SelectItem value="_all">Todas</SelectItem>
                   {brands.map((brand) => (
                     <SelectItem key={brand} value={brand}>
                       {brand}
