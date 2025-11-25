@@ -77,6 +77,66 @@ export type Database = {
         }
         Relationships: []
       }
+      products: {
+        Row: {
+          active: boolean | null
+          brand: string | null
+          category_id: string | null
+          created_at: string | null
+          description: string | null
+          id: string
+          image_url: string | null
+          name: string
+          price: number | null
+          subcategory_id: string | null
+          supplier_code: string | null
+          updated_at: string | null
+        }
+        Insert: {
+          active?: boolean | null
+          brand?: string | null
+          category_id?: string | null
+          created_at?: string | null
+          description?: string | null
+          id?: string
+          image_url?: string | null
+          name: string
+          price?: number | null
+          subcategory_id?: string | null
+          supplier_code?: string | null
+          updated_at?: string | null
+        }
+        Update: {
+          active?: boolean | null
+          brand?: string | null
+          category_id?: string | null
+          created_at?: string | null
+          description?: string | null
+          id?: string
+          image_url?: string | null
+          name?: string
+          price?: number | null
+          subcategory_id?: string | null
+          supplier_code?: string | null
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "products_category_id_fkey"
+            columns: ["category_id"]
+            isOneToOne: false
+            referencedRelation: "categories"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "products_subcategory_id_fkey"
+            columns: ["subcategory_id"]
+            isOneToOne: false
+            referencedRelation: "subcategories"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       subcategories: {
         Row: {
           category_id: string
