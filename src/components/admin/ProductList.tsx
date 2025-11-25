@@ -2,7 +2,10 @@ import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { Edit, Trash2 } from "lucide-react";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Edit, Trash2, Search, X } from "lucide-react";
 import { toast } from "@/hooks/use-toast";
 import {
   AlertDialog,
@@ -23,22 +26,91 @@ const ProductList = ({ onEdit }: ProductListProps) => {
   const [products, setProducts] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [deleteId, setDeleteId] = useState<string | null>(null);
+  
+  // Filter states
+  const [searchTerm, setSearchTerm] = useState("");
+  const [selectedCategory, setSelectedCategory] = useState<string>("");
+  const [selectedSubcategory, setSelectedSubcategory] = useState<string>("");
+  const [selectedBrand, setSelectedBrand] = useState<string>("");
+  const [selectedStatus, setSelectedStatus] = useState<string>("all");
+  
+  // Data for filters
+  const [categories, setCategories] = useState<any[]>([]);
+  const [subcategories, setSubcategories] = useState<any[]>([]);
+  const [brands, setBrands] = useState<string[]>([]);
+
+  useEffect(() => {
+    fetchCategories();
+    fetchProducts();
+  }, []);
+
+  useEffect(() => {
+    if (selectedCategory) {
+      fetchSubcategories(selectedCategory);
+    } else {
+      setSubcategories([]);
+      setSelectedSubcategory("");
+    }
+  }, [selectedCategory]);
 
   useEffect(() => {
     fetchProducts();
-  }, []);
+  }, [searchTerm, selectedCategory, selectedSubcategory, selectedBrand, selectedStatus]);
+
+  const fetchCategories = async () => {
+    const { data } = await supabase
+      .from("categories")
+      .select("*")
+      .order("display_order");
+    
+    if (data) setCategories(data);
+  };
+
+  const fetchSubcategories = async (categoryId: string) => {
+    const { data } = await supabase
+      .from("subcategories")
+      .select("*")
+      .eq("category_id", categoryId)
+      .order("display_order");
+    
+    if (data) setSubcategories(data);
+  };
 
   const fetchProducts = async () => {
     setLoading(true);
     
-    const { data, error } = await supabase
+    let query = supabase
       .from("products")
       .select(`
         *,
         categories (name),
         subcategories (name)
-      `)
-      .order("created_at", { ascending: false });
+      `);
+
+    // Apply filters
+    if (searchTerm) {
+      query = query.or(`name.ilike.%${searchTerm}%,description.ilike.%${searchTerm}%,brand.ilike.%${searchTerm}%,supplier_code.ilike.%${searchTerm}%`);
+    }
+
+    if (selectedCategory) {
+      query = query.eq("category_id", selectedCategory);
+    }
+
+    if (selectedSubcategory) {
+      query = query.eq("subcategory_id", selectedSubcategory);
+    }
+
+    if (selectedBrand) {
+      query = query.eq("brand", selectedBrand);
+    }
+
+    if (selectedStatus !== "all") {
+      query = query.eq("active", selectedStatus === "active");
+    }
+
+    query = query.order("created_at", { ascending: false });
+
+    const { data, error } = await query;
 
     if (error) {
       toast({
@@ -48,6 +120,10 @@ const ProductList = ({ onEdit }: ProductListProps) => {
       });
     } else {
       setProducts(data || []);
+      
+      // Extract unique brands
+      const uniqueBrands = [...new Set(data?.map(p => p.brand).filter(Boolean) as string[])];
+      setBrands(uniqueBrands.sort());
     }
     
     setLoading(false);
@@ -81,6 +157,16 @@ const ProductList = ({ onEdit }: ProductListProps) => {
     }
   };
 
+  const clearFilters = () => {
+    setSearchTerm("");
+    setSelectedCategory("");
+    setSelectedSubcategory("");
+    setSelectedBrand("");
+    setSelectedStatus("all");
+  };
+
+  const hasActiveFilters = searchTerm || selectedCategory || selectedSubcategory || selectedBrand || selectedStatus !== "all";
+
   if (loading) {
     return (
       <div className="text-center py-8">
@@ -91,6 +177,131 @@ const ProductList = ({ onEdit }: ProductListProps) => {
 
   return (
     <>
+      {/* Filters Section */}
+      <Card className="p-4 mb-6">
+        <div className="space-y-4">
+          <div className="flex items-center justify-between">
+            <h2 className="font-heading text-lg text-lm-plum">Filtros</h2>
+            {hasActiveFilters && (
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={clearFilters}
+                className="gap-2"
+              >
+                <X className="w-4 h-4" />
+                Limpar filtros
+              </Button>
+            )}
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
+            {/* Search */}
+            <div className="lg:col-span-2 space-y-2">
+              <Label htmlFor="search">Buscar</Label>
+              <div className="relative">
+                <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+                <Input
+                  id="search"
+                  placeholder="Nome, marca, código..."
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                  className="pl-9"
+                />
+              </div>
+            </div>
+
+            {/* Category Filter */}
+            <div className="space-y-2">
+              <Label htmlFor="category">Categoria</Label>
+              <Select
+                value={selectedCategory}
+                onValueChange={setSelectedCategory}
+              >
+                <SelectTrigger id="category">
+                  <SelectValue placeholder="Todas" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="">Todas</SelectItem>
+                  {categories.map((cat) => (
+                    <SelectItem key={cat.id} value={cat.id}>
+                      {cat.name}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+
+            {/* Subcategory Filter */}
+            <div className="space-y-2">
+              <Label htmlFor="subcategory">Subcategoria</Label>
+              <Select
+                value={selectedSubcategory}
+                onValueChange={setSelectedSubcategory}
+                disabled={!selectedCategory}
+              >
+                <SelectTrigger id="subcategory">
+                  <SelectValue placeholder="Todas" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="">Todas</SelectItem>
+                  {subcategories.map((sub) => (
+                    <SelectItem key={sub.id} value={sub.id}>
+                      {sub.name}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+
+            {/* Brand Filter */}
+            <div className="space-y-2">
+              <Label htmlFor="brand">Marca</Label>
+              <Select
+                value={selectedBrand}
+                onValueChange={setSelectedBrand}
+              >
+                <SelectTrigger id="brand">
+                  <SelectValue placeholder="Todas" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="">Todas</SelectItem>
+                  {brands.map((brand) => (
+                    <SelectItem key={brand} value={brand}>
+                      {brand}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+
+            {/* Status Filter */}
+            <div className="space-y-2">
+              <Label htmlFor="status">Status</Label>
+              <Select
+                value={selectedStatus}
+                onValueChange={setSelectedStatus}
+              >
+                <SelectTrigger id="status">
+                  <SelectValue placeholder="Todos" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">Todos</SelectItem>
+                  <SelectItem value="active">Ativos</SelectItem>
+                  <SelectItem value="inactive">Inativos</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+          </div>
+
+          {/* Results count */}
+          <div className="text-sm text-muted-foreground">
+            {products.length} {products.length === 1 ? "produto encontrado" : "produtos encontrados"}
+          </div>
+        </div>
+      </Card>
+
+      {/* Products Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         {products.map((product) => (
           <Card key={product.id} className="overflow-hidden">
