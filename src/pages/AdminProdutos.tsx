@@ -1,43 +1,13 @@
-import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { supabase } from "@/integrations/supabase/client";
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { Plus, LogOut, BarChart3 } from "lucide-react";
-import { toast } from "@/hooks/use-toast";
-import { Header } from "@/components/Header";
-import { Footer } from "@/components/Footer";
+import { Plus } from "lucide-react";
+import { AdminLayout } from "@/components/admin/AdminLayout";
 import ProductForm from "@/components/admin/ProductForm";
 import ProductList from "@/components/admin/ProductList";
 
 const AdminProdutos = () => {
-  const navigate = useNavigate();
   const [showForm, setShowForm] = useState(false);
   const [editingProduct, setEditingProduct] = useState<any>(null);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    checkAuth();
-  }, []);
-
-  const checkAuth = async () => {
-    const { data: { session } } = await supabase.auth.getSession();
-    
-    if (!session) {
-      navigate("/login");
-      return;
-    }
-    
-    setLoading(false);
-  };
-
-  const handleLogout = async () => {
-    await supabase.auth.signOut();
-    toast({
-      title: "Logout realizado",
-      description: "Você foi desconectado",
-    });
-    navigate("/login");
-  };
 
   const handleEdit = (product: any) => {
     setEditingProduct(product);
@@ -49,48 +19,20 @@ const AdminProdutos = () => {
     setEditingProduct(null);
   };
 
-  if (loading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center">
-        <p>Carregando...</p>
-      </div>
-    );
-  }
-
   return (
-    <div className="min-h-screen flex flex-col">
-      <Header />
-      
-      <main className="flex-1 container mx-auto px-4 py-8">
-        <div className="flex justify-between items-center mb-8">
-          <h1 className="font-heading text-3xl text-lm-plum">
-            Administração de Produtos
+    <AdminLayout>
+      <div className="space-y-6">
+        <div className="flex justify-between items-center">
+          <h1 className="font-heading text-3xl font-bold text-lm-plum">
+            Produtos
           </h1>
-          <div className="flex gap-2">
-            <Button
-              onClick={() => navigate("/admin/dashboard")}
-              variant="outline"
-              className="gap-2"
-            >
-              <BarChart3 className="w-4 h-4" />
-              Dashboard
-            </Button>
-            <Button
-              onClick={() => setShowForm(true)}
-              className="gap-2"
-            >
-              <Plus className="w-4 h-4" />
-              Novo Produto
-            </Button>
-            <Button
-              onClick={handleLogout}
-              variant="outline"
-              className="gap-2"
-            >
-              <LogOut className="w-4 h-4" />
-              Sair
-            </Button>
-          </div>
+          <Button
+            onClick={() => setShowForm(true)}
+            className="gap-2 bg-lm-orange hover:bg-lm-terrac"
+          >
+            <Plus className="w-4 h-4" />
+            Novo Produto
+          </Button>
         </div>
 
         {showForm ? (
@@ -101,10 +43,8 @@ const AdminProdutos = () => {
         ) : (
           <ProductList onEdit={handleEdit} />
         )}
-      </main>
-
-      <Footer />
-    </div>
+      </div>
+    </AdminLayout>
   );
 };
 
