@@ -20,57 +20,43 @@ const Login = () => {
     setLoading(true);
 
     try {
-      const { error } = await supabase.auth.signInWithPassword({
+      // 1. Fazer login
+      const { data, error } = await supabase.auth.signInWithPassword({
         email,
         password,
       });
 
       if (error) throw error;
 
+      // 2. Verificar se é admin
+      const { data: roles } = await supabase
+        .from("user_roles")
+        .select("role")
+        .eq("user_id", data.user.id)
+        .eq("role", "admin")
+        .maybeSingle();
+
+      if (!roles) {
+        // Não é admin -> fazer logout e mostrar erro
+        await supabase.auth.signOut();
+        toast({
+          title: "Acesso negado",
+          description: "Você não tem permissão para acessar esta área administrativa",
+          variant: "destructive",
+        });
+        return;
+      }
+
+      // 3. É admin -> redirecionar
       toast({
         title: "Login realizado com sucesso",
-        description: "Redirecionando para administração...",
+        description: "Bem-vindo ao painel administrativo",
       });
 
-      navigate("/admin/produtos");
+      navigate("/admin/dashboard");
     } catch (error: any) {
       toast({
         title: "Erro no login",
-        description: error.message,
-        variant: "destructive",
-      });
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const handleSignup = async () => {
-    if (!email || !password) {
-      toast({
-        title: "Preencha os campos",
-        description: "Email e senha são obrigatórios",
-        variant: "destructive",
-      });
-      return;
-    }
-
-    setLoading(true);
-
-    try {
-      const { error } = await supabase.auth.signUp({
-        email,
-        password,
-      });
-
-      if (error) throw error;
-
-      toast({
-        title: "Cadastro realizado",
-        description: "Faça login para continuar",
-      });
-    } catch (error: any) {
-      toast({
-        title: "Erro no cadastro",
         description: error.message,
         variant: "destructive",
       });
@@ -117,23 +103,13 @@ const Login = () => {
                 />
               </div>
 
-              <div className="flex gap-2">
-                <Button
-                  type="submit"
-                  className="flex-1"
-                  disabled={loading}
-                >
-                  {loading ? "Entrando..." : "Entrar"}
-                </Button>
-                <Button
-                  type="button"
-                  variant="outline"
-                  onClick={handleSignup}
-                  disabled={loading}
-                >
-                  Cadastrar
-                </Button>
-              </div>
+              <Button
+                type="submit"
+                className="w-full"
+                disabled={loading}
+              >
+                {loading ? "Entrando..." : "Entrar"}
+              </Button>
             </form>
           </CardContent>
         </Card>

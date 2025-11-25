@@ -4,6 +4,7 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import WhatsAppButton from "@/components/WhatsAppButton";
+import { AdminRoute } from "@/components/admin/AdminRoute";
 import Index from "./pages/Index";
 import Catalogo from "./pages/Catalogo";
 import QuemSomos from "./pages/QuemSomos";
@@ -23,13 +24,31 @@ const App = () => (
       <WhatsAppButton />
       <BrowserRouter>
         <Routes>
+          {/* Rotas públicas */}
           <Route path="/" element={<Index />} />
           <Route path="/catalogo" element={<Catalogo />} />
           <Route path="/quem-somos" element={<QuemSomos />} />
           <Route path="/contato" element={<Contato />} />
           <Route path="/login" element={<Login />} />
-          <Route path="/admin/produtos" element={<AdminProdutos />} />
-          <Route path="/admin/dashboard" element={<AdminDashboard />} />
+          
+          {/* Rotas protegidas (apenas admins) */}
+          <Route 
+            path="/admin/produtos" 
+            element={
+              <AdminRoute>
+                <AdminProdutos />
+              </AdminRoute>
+            } 
+          />
+          <Route 
+            path="/admin/dashboard" 
+            element={
+              <AdminRoute>
+                <AdminDashboard />
+              </AdminRoute>
+            } 
+          />
+          
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
