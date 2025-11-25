@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
-import { Plus, LogOut } from "lucide-react";
+import { Plus, LogOut, BarChart3 } from "lucide-react";
 import { toast } from "@/hooks/use-toast";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
@@ -67,6 +67,14 @@ const AdminProdutos = () => {
             Administração de Produtos
           </h1>
           <div className="flex gap-2">
+            <Button
+              onClick={() => navigate("/admin/dashboard")}
+              variant="outline"
+              className="gap-2"
+            >
+              <BarChart3 className="w-4 h-4" />
+              Dashboard
+            </Button>
             <Button
               onClick={() => setShowForm(true)}
               className="gap-2"
