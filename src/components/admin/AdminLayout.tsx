@@ -11,13 +11,14 @@ import {
   SidebarMenuButton,
   SidebarProvider,
 } from "@/components/ui/sidebar";
-import { BarChart3, Package, LogOut } from "lucide-react";
+import { BarChart3, Package, LogOut, FolderTree } from "lucide-react";
 import logoHeader from "@/assets/logo-locamulti-header-horizontal.png";
 import { toast } from "@/hooks/use-toast";
 
 const menuItems = [
   { title: "Dashboard", url: "/admin/dashboard", icon: BarChart3 },
   { title: "Produtos", url: "/admin/produtos", icon: Package },
+  { title: "Categorias", url: "/admin/categories", icon: FolderTree },
 ];
 
 interface AdminLayoutProps {
@@ -46,9 +47,9 @@ export function AdminLayout({ children }: AdminLayoutProps) {
           <SidebarContent>
             {/* Logo */}
             <div className="p-6 border-b border-border">
-              <img 
-                src={logoHeader} 
-                alt="LocaMulti" 
+              <img
+                src={logoHeader}
+                alt="LocaMulti"
                 className="w-full h-auto"
               />
             </div>
@@ -61,11 +62,10 @@ export function AdminLayout({ children }: AdminLayoutProps) {
                     <SidebarMenuItem key={item.title}>
                       <SidebarMenuButton
                         onClick={() => navigate(item.url)}
-                        className={`w-full justify-start gap-3 ${
-                          isActive(item.url)
-                            ? "bg-lm-orange text-white hover:bg-lm-terrac"
-                            : "hover:bg-muted"
-                        }`}
+                        className={`w-full justify-start gap-3 ${isActive(item.url)
+                          ? "bg-lm-orange text-white hover:bg-lm-terrac"
+                          : "hover:bg-muted"
+                          }`}
                       >
                         <item.icon className="w-5 h-5" />
                         <span className="font-body">{item.title}</span>

@@ -15,18 +15,31 @@ export async function getCatalog(filters?: CatalogFilters) {
   const from = (page - 1) * pageSize;
   const to = from + pageSize - 1;
 
+  // Construct select string based on filters to ensure correct joins
+  let selectString = '*, categories(name), subcategories(name)';
+
+  // If filtering by category/subcategory name, we need !inner join to filter on the joined table
+  if (filters?.category && filters?.subcategory) {
+    selectString = '*, categories!inner(name), subcategories!inner(name)';
+  } else if (filters?.category) {
+    selectString = '*, categories!inner(name), subcategories(name)';
+  } else if (filters?.subcategory) {
+    selectString = '*, categories(name), subcategories!inner(name)';
+  }
+
   let query = supabase
-    .from('catalog')
-    .select('*', { count: 'exact' })
-    .order('name', { ascending: true })
+    .from('products')
+    .select(selectString, { count: 'exact' })
+    .eq('active', true)
     .range(from, to);
 
+  // Apply filters
   if (filters?.category) {
-    query = query.eq('category', filters.category);
+    query = query.eq('categories.name', filters.category);
   }
 
   if (filters?.subcategory) {
-    query = query.eq('subcategory', filters.subcategory);
+    query = query.eq('subcategories.name', filters.subcategory);
   }
 
   if (filters?.brand) {
@@ -34,8 +47,12 @@ export async function getCatalog(filters?: CatalogFilters) {
   }
 
   if (filters?.search) {
-    query = query.or(`name.ilike.%${filters.search}%,description.ilike.%${filters.search}%`);
+    // Search in product name, description, brand, or supplier code
+    query = query.or(`name.ilike.%${filters.search}%,description.ilike.%${filters.search}%,brand.ilike.%${filters.search}%`);
   }
+
+  // Default sort by name
+  query = query.order('name', { ascending: true });
 
   const { data, error, count } = await query;
 
@@ -44,50 +61,55 @@ export async function getCatalog(filters?: CatalogFilters) {
     throw error;
   }
 
-  return { data, count };
+  // Map the result to flatten category and subcategory names
+  const mappedData = data.map((item: any) => ({
+    ...item,
+    category: item.categories?.name || null,
+    subcategory: item.subcategories?.name || null,
+  }));
+
+  return { data: mappedData, count };
 }
 
 export async function getCatalogCategories() {
   const { data, error } = await supabase
-    .from('catalog')
-    .select('category')
-    .not('category', 'is', null)
-    .order('category');
+    .from('categories')
+    .select('name')
+    .order('display_order');
 
   if (error) {
     console.error('Error fetching categories:', error);
     return [];
   }
 
-  const uniqueCategories = [...new Set(data.map(item => item.category))];
-  return uniqueCategories.map(cat => ({ id: cat, label: cat }));
+  return data.map(cat => ({ id: cat.name, label: cat.name }));
 }
 
-export async function getCatalogSubcategories(category?: string) {
+export async function getCatalogSubcategories(categoryName?: string) {
   let query = supabase
-    .from('catalog')
-    .select('subcategory')
-    .not('subcategory', 'is', null);
+    .from('subcategories')
+    .select('name, categories!inner(name)')
+    .order('display_order');
 
-  if (category) {
-    query = query.eq('category', category);
+  if (categoryName) {
+    query = query.eq('categories.name', categoryName);
   }
 
-  const { data, error } = await query.order('subcategory');
+  const { data, error } = await query;
 
   if (error) {
     console.error('Error fetching subcategories:', error);
     return [];
   }
 
-  const uniqueSubcategories = [...new Set(data.map(item => item.subcategory))];
-  return uniqueSubcategories.map(sub => ({ id: sub, label: sub }));
+  return data.map((sub: any) => ({ id: sub.name, label: sub.name }));
 }
 
 export async function getCatalogBrands() {
   const { data, error } = await supabase
-    .from('catalog')
+    .from('products')
     .select('brand')
+    .eq('active', true)
     .not('brand', 'is', null)
     .order('brand');
 
@@ -101,33 +123,19 @@ export async function getCatalogBrands() {
 }
 
 export async function getCategoriesWithSubcategories() {
+  // Fetch categories and their subcategories directly from the source tables
   const { data, error } = await supabase
-    .from('catalog')
-    .select('category, subcategory')
-    .not('category', 'is', null)
-    .not('subcategory', 'is', null)
-    .order('category')
-    .order('subcategory');
+    .from('categories')
+    .select('name, subcategories(name)')
+    .order('display_order');
 
   if (error) {
     console.error('Error fetching categories with subcategories:', error);
     return [];
   }
 
-  // Agrupar subcategorias por categoria
-  const grouped = data.reduce((acc, item) => {
-    const category = item.category;
-    if (!acc[category]) {
-      acc[category] = [];
-    }
-    if (!acc[category].includes(item.subcategory)) {
-      acc[category].push(item.subcategory);
-    }
-    return acc;
-  }, {} as Record<string, string[]>);
-
-  return Object.entries(grouped).map(([category, subcategories]) => ({
-    category,
-    subcategories: subcategories.sort(),
+  return data.map((cat: any) => ({
+    category: cat.name,
+    subcategories: cat.subcategories?.map((sub: any) => sub.name).sort() || [],
   }));
 }

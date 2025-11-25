@@ -12,6 +12,7 @@ import Contato from "./pages/Contato";
 import Login from "./pages/Login";
 import AdminProdutos from "./pages/AdminProdutos";
 import AdminDashboard from "./pages/AdminDashboard";
+import Categories from "./pages/admin/Categories";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -30,25 +31,33 @@ const App = () => (
           <Route path="/quem-somos" element={<QuemSomos />} />
           <Route path="/contato" element={<Contato />} />
           <Route path="/login" element={<Login />} />
-          
+
           {/* Rotas protegidas (apenas admins) */}
-          <Route 
-            path="/admin/produtos" 
+          <Route
+            path="/admin/produtos"
             element={
               <AdminRoute>
                 <AdminProdutos />
               </AdminRoute>
-            } 
+            }
           />
-          <Route 
-            path="/admin/dashboard" 
+          <Route
+            path="/admin/dashboard"
             element={
               <AdminRoute>
                 <AdminDashboard />
               </AdminRoute>
-            } 
+            }
           />
-          
+          <Route
+            path="/admin/categories"
+            element={
+              <AdminRoute>
+                <Categories />
+              </AdminRoute>
+            }
+          />
+
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>

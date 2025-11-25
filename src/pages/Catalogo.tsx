@@ -34,14 +34,14 @@ interface Equipment {
 }
 
 type ViewMode = "grid" | "list";
-type SortOption = "relevance" | "name" | "popular";
+type SortOption = "relevance" | "name" | "name_desc" | "popular";
 
 const Catalogo = () => {
   const { toast } = useToast();
   const [viewMode, setViewMode] = useState<ViewMode>("grid");
   const [sortBy, setSortBy] = useState<SortOption>("relevance");
   const [searchQuery, setSearchQuery] = useState("");
-  
+
   const [equipments, setEquipments] = useState<Equipment[]>([]);
   const [categories, setCategories] = useState<{ category: string; subcategories: string[] }[]>([]);
   const [loading, setLoading] = useState(true);
@@ -94,15 +94,15 @@ const Catalogo = () => {
           page: currentPage,
           pageSize,
         };
-        
+
         if (selectedCategory) {
           catalogFilters.category = selectedCategory;
         }
-        
+
         if (selectedSubcategory) {
           catalogFilters.subcategory = selectedSubcategory;
         }
-        
+
         if (searchQuery) {
           catalogFilters.search = searchQuery;
         }
@@ -141,6 +141,8 @@ const Catalogo = () => {
 
     if (sortBy === "name") {
       result.sort((a, b) => (a.name || "").localeCompare(b.name || ""));
+    } else if (sortBy === "name_desc") {
+      result.sort((a, b) => (b.name || "").localeCompare(a.name || ""));
     } else if (sortBy === "popular") {
       result.reverse();
     }
@@ -151,7 +153,7 @@ const Catalogo = () => {
   return (
     <div className="min-h-screen flex flex-col">
       <Header />
-      
+
       <main className="flex-1">
         <div className="flex">
           {/* Sidebar Desktop */}
@@ -184,8 +186,8 @@ const Catalogo = () => {
 
                   <div className="flex items-center gap-3 flex-wrap">
                     {/* Filtros Mobile */}
-                    <Button 
-                      variant="outline" 
+                    <Button
+                      variant="outline"
                       className="lg:hidden gap-2"
                       onClick={() => setIsFilterOpen(true)}
                     >
@@ -200,7 +202,8 @@ const Catalogo = () => {
                       </SelectTrigger>
                       <SelectContent>
                         <SelectItem value="relevance">Relevância</SelectItem>
-                        <SelectItem value="name">Nome</SelectItem>
+                        <SelectItem value="name">Nome (A-Z)</SelectItem>
+                        <SelectItem value="name_desc">Nome (Z-A)</SelectItem>
                         <SelectItem value="popular">Mais Locados</SelectItem>
                       </SelectContent>
                     </Select>
@@ -379,7 +382,7 @@ const Catalogo = () => {
                               )}
                             </div>
                             <div className="flex items-center gap-3 mt-4">
-                              <WhatsappCTA 
+                              <WhatsappCTA
                                 text="Solicitar Orçamento"
                                 href={WHATSAPP.catalogoEquipamento.replace('[EQUIPAMENTO]', encodeURIComponent(equipment.name || "equipamento"))}
                                 className="flex-1 sm:flex-none"
@@ -413,7 +416,7 @@ const Catalogo = () => {
                       {[...Array(Math.ceil(totalCount / pageSize))].map((_, i) => {
                         const pageNum = i + 1;
                         const totalPages = Math.ceil(totalCount / pageSize);
-                        
+
                         // Mostrar apenas páginas próximas à atual
                         if (
                           pageNum === 1 ||
