@@ -60,7 +60,7 @@ const AdminProdutos = () => {
             onClose={handleFormClose}
           />
         ) : (
-          <ProductList key={refreshKey} onEdit={handleEdit} />
+          <ProductList refreshTrigger={refreshKey} onEdit={handleEdit} />
         )}
 
         <Dialog open={showBulkUpload} onOpenChange={setShowBulkUpload}>

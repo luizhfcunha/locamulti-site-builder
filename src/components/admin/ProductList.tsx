@@ -35,13 +35,14 @@ import { Skeleton } from "@/components/ui/skeleton";
 
 interface ProductListProps {
   onEdit: (product: any) => void;
+  refreshTrigger?: number;
 }
 
-const ProductList = ({ onEdit }: ProductListProps) => {
+const ProductList = ({ onEdit, refreshTrigger }: ProductListProps) => {
   const [products, setProducts] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [deleteId, setDeleteId] = useState<string | null>(null);
-  
+
   // Filter states
   const [searchTerm, setSearchTerm] = useState("");
   const [debouncedSearchTerm, setDebouncedSearchTerm] = useState("");
@@ -49,13 +50,13 @@ const ProductList = ({ onEdit }: ProductListProps) => {
   const [selectedSubcategory, setSelectedSubcategory] = useState<string>("_all");
   const [selectedBrand, setSelectedBrand] = useState<string>("_all");
   const [selectedStatus, setSelectedStatus] = useState<string>("all");
-  const [sortOrder, setSortOrder] = useState<string>("date_desc");
-  
+  const [sortOrder, setSortOrder] = useState<string>("name_asc");
+
   // Pagination states
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(12);
   const [totalCount, setTotalCount] = useState(0);
-  
+
   // Data for filters
   const [categories, setCategories] = useState<any[]>([]);
   const [subcategories, setSubcategories] = useState<any[]>([]);
@@ -93,12 +94,19 @@ const ProductList = ({ onEdit }: ProductListProps) => {
     fetchProducts();
   }, [debouncedSearchTerm, selectedCategory, selectedSubcategory, selectedBrand, selectedStatus, sortOrder, currentPage, itemsPerPage]);
 
+  // Refresh when refreshTrigger changes (after edits/bulk uploads)
+  useEffect(() => {
+    if (refreshTrigger !== undefined && refreshTrigger > 0) {
+      fetchProducts();
+    }
+  }, [refreshTrigger]);
+
   const fetchCategories = async () => {
     const { data } = await supabase
       .from("categories")
       .select("*")
       .order("display_order");
-    
+
     if (data) setCategories(data);
   };
 
@@ -108,7 +116,7 @@ const ProductList = ({ onEdit }: ProductListProps) => {
       .select("*")
       .eq("category_id", categoryId)
       .order("display_order");
-    
+
     if (data) setSubcategories(data);
   };
 
@@ -198,12 +206,12 @@ const ProductList = ({ onEdit }: ProductListProps) => {
 
       setProducts(data || []);
       setTotalCount(count || 0);
-      
+
       // Extract unique brands from all products (not just current page)
       const { data: allProducts } = await supabase
         .from("products")
         .select("brand");
-      
+
       const uniqueBrands = [...new Set((allProducts || []).map(p => p.brand).filter(Boolean))];
       setBrands(uniqueBrands.sort());
     } catch (error) {
@@ -253,11 +261,11 @@ const ProductList = ({ onEdit }: ProductListProps) => {
     setSelectedSubcategory("_all");
     setSelectedBrand("_all");
     setSelectedStatus("all");
-    setSortOrder("date_desc");
+    setSortOrder("name_asc");
     setCurrentPage(1);
   };
 
-  const hasActiveFilters = searchTerm || selectedCategory !== "_all" || selectedSubcategory !== "_all" || selectedBrand !== "_all" || selectedStatus !== "all" || sortOrder !== "date_desc";
+  const hasActiveFilters = searchTerm || selectedCategory !== "_all" || selectedSubcategory !== "_all" || selectedBrand !== "_all" || selectedStatus !== "all" || sortOrder !== "name_asc";
 
   const totalPages = Math.ceil(totalCount / itemsPerPage);
   const startItem = totalCount === 0 ? 0 : (currentPage - 1) * itemsPerPage + 1;
@@ -266,14 +274,14 @@ const ProductList = ({ onEdit }: ProductListProps) => {
   const renderPaginationItems = () => {
     const items = [];
     const maxVisiblePages = 5;
-    
+
     let startPage = Math.max(1, currentPage - Math.floor(maxVisiblePages / 2));
     let endPage = Math.min(totalPages, startPage + maxVisiblePages - 1);
-    
+
     if (endPage - startPage < maxVisiblePages - 1) {
       startPage = Math.max(1, endPage - maxVisiblePages + 1);
     }
-    
+
     if (startPage > 1) {
       items.push(
         <PaginationItem key="ellipsis-start">
@@ -281,7 +289,7 @@ const ProductList = ({ onEdit }: ProductListProps) => {
         </PaginationItem>
       );
     }
-    
+
     for (let i = startPage; i <= endPage; i++) {
       items.push(
         <PaginationItem key={i}>
@@ -295,7 +303,7 @@ const ProductList = ({ onEdit }: ProductListProps) => {
         </PaginationItem>
       );
     }
-    
+
     if (endPage < totalPages) {
       items.push(
         <PaginationItem key="ellipsis-end">
@@ -303,7 +311,7 @@ const ProductList = ({ onEdit }: ProductListProps) => {
         </PaginationItem>
       );
     }
-    
+
     return items;
   };
 
@@ -455,13 +463,13 @@ const ProductList = ({ onEdit }: ProductListProps) => {
           <p className="text-sm text-muted-foreground">
             Mostrando {startItem}-{endItem} de {totalCount} {totalCount === 1 ? "produto" : "produtos"}
           </p>
-          
+
           <div className="flex items-center gap-2">
             <Label htmlFor="items-per-page" className="text-sm whitespace-nowrap">
               Itens por página:
             </Label>
-            <Select 
-              value={itemsPerPage.toString()} 
+            <Select
+              value={itemsPerPage.toString()}
               onValueChange={(value) => {
                 setItemsPerPage(Number(value));
                 setCurrentPage(1);
@@ -520,7 +528,7 @@ const ProductList = ({ onEdit }: ProductListProps) => {
                     <h3 className="font-heading text-lg text-lm-plum line-clamp-2">
                       {product.name}
                     </h3>
-                    
+
                     <div className="space-y-1 text-sm text-muted-foreground">
                       {product.categories && (
                         <p className="line-clamp-1">
@@ -577,9 +585,9 @@ const ProductList = ({ onEdit }: ProductListProps) => {
                         className={currentPage === 1 ? "pointer-events-none opacity-50" : "cursor-pointer"}
                       />
                     </PaginationItem>
-                    
+
                     {renderPaginationItems()}
-                    
+
                     <PaginationItem>
                       <PaginationNext
                         onClick={() => setCurrentPage(prev => Math.min(totalPages, prev + 1))}
