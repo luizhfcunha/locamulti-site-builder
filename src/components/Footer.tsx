@@ -4,9 +4,8 @@ import { WhatsappCTA } from "@/components/WhatsappCTA";
 import { LOGO_FOOTER } from "@/lib/constants";
 import { WHATSAPP } from "@/config/whatsapp";
 export const Footer = () => {
-  return (
-    <footer className="bg-lm-plum text-white">
-      <div className="container mx-auto px-4 py-12">
+  return <footer className="bg-lm-plum text-white">
+      <div className="container mx-auto px-4 py-12 bg-primary">
         {/* Logo Centralizada */}
         <div className="flex justify-center w-full mb-8">
           <Link to="/" className="inline-block">
@@ -96,40 +95,20 @@ export const Footer = () => {
                 <span className="text-sm">Seg-Sex: 7:30h às 17h Sáb: 8h às 11:30h</span>
               </li>
             </ul>
-            <WhatsappCTA
-              text="Falar no WhatsApp"
-              href={WHATSAPP.footer}
-              variant="outline"
-              className="bg-white/10 hover:bg-white/20 text-white border-white/20"
-            />
+            <WhatsappCTA text="Falar no WhatsApp" href={WHATSAPP.footer} variant="outline" className="bg-white/10 hover:bg-white/20 text-white border-white/20" />
           </div>
 
           {/* Redes Sociais */}
           <div>
             <h3 className="font-heading text-lg font-bold mb-4">Redes Sociais</h3>
             <div className="flex gap-4">
-              <a
-                href="https://www.facebook.com/locamulti"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="hover:text-primary transition-colors"
-              >
+              <a href="https://www.facebook.com/locamulti" target="_blank" rel="noopener noreferrer" className="hover:text-primary transition-colors">
                 <Facebook className="h-6 w-6" />
               </a>
-              <a
-                href="https://www.instagram.com/locamulti"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="hover:text-primary transition-colors"
-              >
+              <a href="https://www.instagram.com/locamulti" target="_blank" rel="noopener noreferrer" className="hover:text-primary transition-colors">
                 <Instagram className="h-6 w-6" />
               </a>
-              <a
-                href="https://www.linkedin.com/company/locamulti/"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="hover:text-primary transition-colors"
-              >
+              <a href="https://www.linkedin.com/company/locamulti/" target="_blank" rel="noopener noreferrer" className="hover:text-primary transition-colors">
                 <Linkedin className="h-6 w-6" />
               </a>
             </div>
@@ -140,6 +119,5 @@ export const Footer = () => {
           <p>&copy; {new Date().getFullYear()} LocaMulti. Todos os direitos reservados.</p>
         </div>
       </div>
-    </footer>
-  );
+    </footer>;
 };
