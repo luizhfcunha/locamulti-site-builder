@@ -15,9 +15,9 @@ export const Header = () => {
         <div className="flex h-20 items-center justify-between">
           {/* Logo */}
           <Link to="/" className="flex items-center">
-            <img 
-              src={logoHeaderUrl} 
-              alt="LocaMulti - Equipamentos Profissionais" 
+            <img
+              src={logoHeaderUrl}
+              alt="LocaMulti - Equipamentos Profissionais"
               className="h-12 w-auto"
             />
           </Link>
@@ -53,11 +53,17 @@ export const Header = () => {
             >
               Contato
             </NavLink>
+            <a
+              href="https://admin.locamulti.com"
+              className="text-foreground hover:text-primary transition-colors font-medium"
+            >
+              Login
+            </a>
           </nav>
 
           {/* CTA Button */}
           <div className="hidden md:block">
-            <WhatsappCTA 
+            <WhatsappCTA
               text="Orçamento Rápido"
               href={WHATSAPP.geral}
             />
@@ -109,8 +115,15 @@ export const Header = () => {
               >
                 Contato
               </NavLink>
+              <a
+                href="https://admin.locamulti.com"
+                className="text-foreground hover:text-primary transition-colors font-medium py-2"
+                onClick={() => setMobileMenuOpen(false)}
+              >
+                Login
+              </a>
               <div onClick={() => setMobileMenuOpen(false)}>
-                <WhatsappCTA 
+                <WhatsappCTA
                   text="Orçamento Rápido"
                   href={WHATSAPP.geral}
                   fullWidth
