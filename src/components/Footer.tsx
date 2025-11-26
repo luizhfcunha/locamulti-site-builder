@@ -7,7 +7,7 @@ export const Footer = () => {
   return <footer className="bg-lm-plum text-white">
       <div className="container mx-auto px-4 py-12 bg-primary">
         {/* Logo Centralizada */}
-        <div className="flex justify-center w-full mb-8">
+        <div className="w-full mb-8 flex items-center justify-center">
           <Link to="/" className="inline-block">
             <img src={LOGO_FOOTER.url} alt="Logo LocaMulti versão branca" className="h-auto w-[180px] object-contain" />
           </Link>
