@@ -9,50 +9,95 @@ import { WHATSAPP } from "@/config/whatsapp";
 export const Header = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
+  const hostname = window.location.hostname;
+  const isAdminSubdomain = hostname.startsWith("admin.");
+  const mainDomain = "https://locamulti.com";
+
+  const renderLink = (path: string, label: string, end = false) => {
+    const className = "text-foreground hover:text-primary transition-colors font-medium";
+
+    if (isAdminSubdomain) {
+      return (
+        <a
+          href={`${mainDomain}${path}`}
+          className={className}
+        >
+          {label}
+        </a>
+      );
+    }
+
+    return (
+      <NavLink
+        to={path}
+        end={end}
+        className={className}
+        activeClassName="text-primary"
+      >
+        {label}
+      </NavLink>
+    );
+  };
+
+  const renderMobileLink = (path: string, label: string, end = false) => {
+    const className = "text-foreground hover:text-primary transition-colors font-medium py-2";
+
+    if (isAdminSubdomain) {
+      return (
+        <a
+          href={`${mainDomain}${path}`}
+          className={className}
+          onClick={() => setMobileMenuOpen(false)}
+        >
+          {label}
+        </a>
+      );
+    }
+
+    return (
+      <NavLink
+        to={path}
+        end={end}
+        className={className}
+        activeClassName="text-primary"
+        onClick={() => setMobileMenuOpen(false)}
+      >
+        {label}
+      </NavLink>
+    );
+  };
+
   return (
     <header className="sticky top-0 z-50 w-full bg-background border-b border-border shadow-soft">
       <div className="container mx-auto px-4">
         <div className="flex h-20 items-center justify-between">
           {/* Logo */}
-          <Link to="/" className="flex items-center">
-            <img
-              src={logoHeaderUrl}
-              alt="LocaMulti - Equipamentos Profissionais"
-              className="h-12 w-auto"
-            />
-          </Link>
+          {isAdminSubdomain ? (
+            <a href={mainDomain} className="flex items-center">
+              <img
+                src={logoHeaderUrl}
+                alt="LocaMulti - Equipamentos Profissionais"
+                className="h-12 w-auto"
+              />
+            </a>
+          ) : (
+            <Link to="/" className="flex items-center">
+              <img
+                src={logoHeaderUrl}
+                alt="LocaMulti - Equipamentos Profissionais"
+                className="h-12 w-auto"
+              />
+            </Link>
+          )}
 
           {/* Desktop Navigation */}
           <nav className="hidden md:flex items-center gap-8">
-            <NavLink
-              to="/"
-              end
-              className="text-foreground hover:text-primary transition-colors font-medium"
-              activeClassName="text-primary"
-            >
-              Home
-            </NavLink>
-            <NavLink
-              to="/catalogo"
-              className="text-foreground hover:text-primary transition-colors font-medium"
-              activeClassName="text-primary"
-            >
-              Catálogo
-            </NavLink>
-            <NavLink
-              to="/quem-somos"
-              className="text-foreground hover:text-primary transition-colors font-medium"
-              activeClassName="text-primary"
-            >
-              Quem Somos
-            </NavLink>
-            <NavLink
-              to="/contato"
-              className="text-foreground hover:text-primary transition-colors font-medium"
-              activeClassName="text-primary"
-            >
-              Contato
-            </NavLink>
+            {renderLink("/", "Home", true)}
+            {renderLink("/catalogo", "Catálogo")}
+            {renderLink("/quem-somos", "Quem Somos")}
+            {renderLink("/contato", "Contato")}
+
+            {/* Login Link - Always points to admin subdomain */}
             <a
               href="https://admin.locamulti.com"
               className="text-foreground hover:text-primary transition-colors font-medium"
@@ -82,39 +127,11 @@ export const Header = () => {
         {mobileMenuOpen && (
           <nav className="md:hidden py-4 border-t border-border">
             <div className="flex flex-col gap-4">
-              <NavLink
-                to="/"
-                end
-                className="text-foreground hover:text-primary transition-colors font-medium py-2"
-                activeClassName="text-primary"
-                onClick={() => setMobileMenuOpen(false)}
-              >
-                Home
-              </NavLink>
-              <NavLink
-                to="/catalogo"
-                className="text-foreground hover:text-primary transition-colors font-medium py-2"
-                activeClassName="text-primary"
-                onClick={() => setMobileMenuOpen(false)}
-              >
-                Catálogo
-              </NavLink>
-              <NavLink
-                to="/quem-somos"
-                className="text-foreground hover:text-primary transition-colors font-medium py-2"
-                activeClassName="text-primary"
-                onClick={() => setMobileMenuOpen(false)}
-              >
-                Quem Somos
-              </NavLink>
-              <NavLink
-                to="/contato"
-                className="text-foreground hover:text-primary transition-colors font-medium py-2"
-                activeClassName="text-primary"
-                onClick={() => setMobileMenuOpen(false)}
-              >
-                Contato
-              </NavLink>
+              {renderMobileLink("/", "Home", true)}
+              {renderMobileLink("/catalogo", "Catálogo")}
+              {renderMobileLink("/quem-somos", "Quem Somos")}
+              {renderMobileLink("/contato", "Contato")}
+
               <a
                 href="https://admin.locamulti.com"
                 className="text-foreground hover:text-primary transition-colors font-medium py-2"
