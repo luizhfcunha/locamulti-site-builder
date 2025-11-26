@@ -1,0 +1,14 @@
+{
+  "name": "locamulti-scripts",
+  "version": "1.0.0",
+  "description": "Scripts para importação de dados em massa no catálogo LocaMulti",
+  "main": "upload-images.js",
+  "scripts": {
+    "upload": "node upload-images.js"
+  },
+  "dependencies": {
+    "@supabase/supabase-js": "^2.39.3",
+    "form-data": "^4.0.0",
+    "node-fetch": "^2.7.0"
+  }
+}

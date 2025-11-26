@@ -1,0 +1,13 @@
+# Dependências
+node_modules/
+package-lock.json
+
+# Imagens (não versionar arquivos grandes)
+imagens/*
+!imagens/.gitkeep
+
+# Configurações locais com credenciais
+upload-images.js
+
+# Logs
+*.log
