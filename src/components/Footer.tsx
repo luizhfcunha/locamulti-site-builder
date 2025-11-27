@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { Mail, MapPin, Phone, Clock, Facebook, Instagram, Linkedin } from "lucide-react";
+import { Mail, MapPin, Phone, Clock, Facebook, Instagram } from "lucide-react";
 import { WhatsappCTA } from "@/components/WhatsappCTA";
 import { LOGO_FOOTER } from "@/lib/constants";
 import { WHATSAPP } from "@/config/whatsapp";
@@ -10,7 +10,7 @@ export const Footer = () => {
       {/* Logo Centralizada */}
       <div className="w-full mb-8 flex items-center justify-center">
         <Link to="/" className="inline-block">
-          <img src={LOGO_FOOTER.url} alt="Logo LocaMulti versão branca" className="h-auto w-[180px] object-contain" />
+          <img src={LOGO_FOOTER.url} alt="Logo LocaMulti versão branca" className="h-auto w-[240px] object-contain" />
         </Link>
       </div>
 
@@ -72,7 +72,7 @@ export const Footer = () => {
         {/* Contato */}
         <div>
           <h3 className="font-heading text-lg font-bold mb-4">Contato</h3>
-          <ul className="space-y-3 mb-4">
+          <ul className="space-y-3">
             <li className="flex items-start gap-2">
               <MapPin className="h-5 w-5 flex-shrink-0 mt-0.5" />
               <span className="text-sm">
@@ -96,23 +96,20 @@ export const Footer = () => {
               <span className="text-sm">Seg-Sex: 7:30h às 17h Sáb: 8h às 11:30h</span>
             </li>
           </ul>
-          <WhatsappCTA text="Falar no WhatsApp" href={WHATSAPP.footer} variant="outline" className="bg-white/10 hover:bg-white/20 text-white border-white/20" />
         </div>
 
         {/* Redes Sociais */}
         <div>
           <h3 className="font-heading text-lg font-bold mb-4">Redes Sociais</h3>
-          <div className="flex gap-4">
+          <div className="flex gap-4 mb-4">
             <a href="https://www.facebook.com/locamulti" target="_blank" rel="noopener noreferrer" className="hover:text-lm-plum transition-colors">
               <Facebook className="h-6 w-6" />
             </a>
             <a href="https://www.instagram.com/locamulti" target="_blank" rel="noopener noreferrer" className="hover:text-lm-plum transition-colors">
               <Instagram className="h-6 w-6" />
             </a>
-            <a href="https://www.linkedin.com/company/locamulti/" target="_blank" rel="noopener noreferrer" className="hover:text-lm-plum transition-colors">
-              <Linkedin className="h-6 w-6" />
-            </a>
           </div>
+          <WhatsappCTA text="Falar no WhatsApp" href={WHATSAPP.footer} variant="outline" className="bg-white/10 hover:bg-white/20 text-white border-white/20" />
         </div>
       </div>
 
