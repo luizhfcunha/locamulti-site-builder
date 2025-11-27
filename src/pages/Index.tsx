@@ -182,7 +182,7 @@ const Index = () => {
         </section>
       </main>
 
-      <Footer />
+      <Footer className="bg-primary" />
     </div>;
 };
 export default Index;
