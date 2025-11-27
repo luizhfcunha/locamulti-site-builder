@@ -168,7 +168,7 @@ const Index = () => {
         </section>
 
         {/* CTA Section - Orçamento Rápido */}
-        <section className="py-20 bg-gradient-to-br from-lm-plum to-lm-plum/90 relative overflow-hidden">
+        <section className="py-20 bg-gradient-to-br from-lm-plum to-lm-plum/90 relative overflow-hidden bg-primary-foreground">
           <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1581094271901-8022df4466f9?q=80')] bg-cover bg-center opacity-10" />
           <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
             <div className="max-w-3xl mx-auto text-center">
@@ -182,7 +182,7 @@ const Index = () => {
         </section>
       </main>
 
-      <Footer className="bg-primary" />
+      <Footer className="text-primary-foreground bg-primary" />
     </div>;
 };
 export default Index;
