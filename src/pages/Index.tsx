@@ -97,7 +97,7 @@ const Index = () => {
 
       <main className="flex-1">
         {/* Hero Section */}
-        <section className="relative bg-gradient-to-br from-lm-plum via-lm-plum/95 to-lm-ink min-h-[600px] flex items-center">
+        <section className="relative bg-gradient-to-br from-lm-plum via-lm-plum/95 to-lm-ink min-h-[600px] flex items-center bg-primary">
           <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1504917595217-d4dc5ebe6122?q=80&w=2070')] bg-cover bg-center opacity-15" />
           <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10 py-20">
             <div className="max-w-3xl">
