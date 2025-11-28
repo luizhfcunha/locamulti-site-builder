@@ -16,6 +16,16 @@ import Categories from "./pages/admin/Categories";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
+
+const App = () => {
+  // Check if we are on the admin subdomain
+  const hostname = window.location.hostname;
+  const isAdminSubdomain = hostname.startsWith("admin.");
+
+  return (
+    <QueryClientProvider client={queryClient}>
+      <TooltipProvider>
+        <Toaster />
         <Sonner />
         <BrowserRouter>
           {/* WhatsApp button only on public site */}
@@ -73,8 +83,8 @@ const queryClient = new QueryClient();
             )}
           </Routes>
         </BrowserRouter>
-      </TooltipProvider >
-    </QueryClientProvider >
+      </TooltipProvider>
+    </QueryClientProvider>
   );
 };
 
