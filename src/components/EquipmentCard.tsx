@@ -15,19 +15,23 @@ interface EquipmentCardProps {
   brand?: string;
 }
 
-export const EquipmentCard = ({ 
+export const EquipmentCard = ({
   id,
-  name, 
+  name,
   category,
   subcategory,
-  imageUrl, 
+  imageUrl,
   specifications = [],
-  brand 
+  brand
 }: EquipmentCardProps) => {
   // Track product view on mount
   useEffect(() => {
     if (id) {
-      trackEvent({ event_type: 'product_view', product_id: id });
+      // Use a small timeout to avoid blocking render and to debounce rapid scrolls if needed in future
+      const timer = setTimeout(() => {
+        trackEvent({ event_type: 'product_view', product_id: id });
+      }, 1000);
+      return () => clearTimeout(timer);
     }
   }, [id]);
 
@@ -52,7 +56,7 @@ export const EquipmentCard = ({
           </div>
         )}
       </div>
-      
+
       <CardHeader className="pb-3">
         <div className="flex items-start justify-between gap-2 mb-2">
           <Badge variant="secondary" className="text-xs">
@@ -68,7 +72,7 @@ export const EquipmentCard = ({
           {name}
         </h3>
       </CardHeader>
-      
+
       <CardContent className="flex-1 pb-3">
         {specifications.length > 0 && (
           <ul className="space-y-1">
@@ -81,9 +85,9 @@ export const EquipmentCard = ({
           </ul>
         )}
       </CardContent>
-      
+
       <CardFooter className="pt-0">
-        <WhatsappCTA 
+        <WhatsappCTA
           text="Solicitar Orçamento"
           href={WHATSAPP.catalogoEquipamento.replace('[EQUIPAMENTO]', encodeURIComponent(name))}
           fullWidth

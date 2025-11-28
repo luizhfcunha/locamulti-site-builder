@@ -35,7 +35,7 @@ export const AnalyticsDashboard = () => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetchAnalytics();
+    refreshMaterializedView();
   }, []);
 
   const fetchAnalytics = async () => {
@@ -72,17 +72,17 @@ export const AnalyticsDashboard = () => {
 
       // Agrupar por dia
       const dailyMap = new Map<string, { views: number; conversions: number }>();
-      
+
       (eventsData || []).forEach(event => {
         const date = new Date(event.created_at).toISOString().split('T')[0];
         const current = dailyMap.get(date) || { views: 0, conversions: 0 };
-        
+
         if (event.event_type === 'product_view') {
           current.views++;
         } else if (event.event_type === 'whatsapp_click') {
           current.conversions++;
         }
-        
+
         dailyMap.set(date, current);
       });
 
@@ -106,10 +106,12 @@ export const AnalyticsDashboard = () => {
 
   const refreshMaterializedView = async () => {
     try {
+      setLoading(true);
       await supabase.rpc('refresh_product_analytics_summary');
       await fetchAnalytics();
     } catch (error) {
       console.error('Error refreshing analytics:', error);
+      setLoading(false);
     }
   };
 
@@ -123,6 +125,16 @@ export const AnalyticsDashboard = () => {
 
   return (
     <div className="space-y-6">
+      <div className="flex justify-end">
+        <button
+          onClick={refreshMaterializedView}
+          className="text-sm text-primary hover:underline flex items-center gap-2"
+        >
+          <Activity className="h-4 w-4" />
+          Atualizar Dados
+        </button>
+      </div>
+
       {/* Cards de métricas principais */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         <Card>
@@ -191,8 +203,8 @@ export const AnalyticsDashboard = () => {
                     <TableRow key={product.product_id}>
                       <TableCell>
                         {product.image_url ? (
-                          <img 
-                            src={product.image_url} 
+                          <img
+                            src={product.image_url}
                             alt={product.product_name}
                             className="w-10 h-10 object-cover rounded"
                           />
@@ -216,7 +228,7 @@ export const AnalyticsDashboard = () => {
                         {product.total_conversions}
                       </TableCell>
                       <TableCell className="text-right">
-                        <Badge 
+                        <Badge
                           variant={product.conversion_rate > 10 ? "default" : "secondary"}
                           className={product.conversion_rate > 10 ? "bg-green-600" : ""}
                         >
@@ -240,26 +252,26 @@ export const AnalyticsDashboard = () => {
               <ResponsiveContainer width="100%" height={300}>
                 <LineChart data={dailyStats}>
                   <CartesianGrid strokeDasharray="3 3" />
-                  <XAxis 
-                    dataKey="date" 
+                  <XAxis
+                    dataKey="date"
                     tickFormatter={(date) => new Date(date).toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit' })}
                   />
                   <YAxis />
-                  <Tooltip 
+                  <Tooltip
                     labelFormatter={(date) => new Date(date).toLocaleDateString('pt-BR')}
                   />
                   <Legend />
-                  <Line 
-                    type="monotone" 
-                    dataKey="views" 
-                    stroke="#DB5A34" 
+                  <Line
+                    type="monotone"
+                    dataKey="views"
+                    stroke="#DB5A34"
                     name="Visualizações"
                     strokeWidth={2}
                   />
-                  <Line 
-                    type="monotone" 
-                    dataKey="conversions" 
-                    stroke="#10b981" 
+                  <Line
+                    type="monotone"
+                    dataKey="conversions"
+                    stroke="#10b981"
                     name="Conversões"
                     strokeWidth={2}
                   />
@@ -276,18 +288,18 @@ export const AnalyticsDashboard = () => {
               <ResponsiveContainer width="100%" height={300}>
                 <BarChart data={dailyStats}>
                   <CartesianGrid strokeDasharray="3 3" />
-                  <XAxis 
-                    dataKey="date" 
+                  <XAxis
+                    dataKey="date"
                     tickFormatter={(date) => new Date(date).toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit' })}
                   />
                   <YAxis />
-                  <Tooltip 
+                  <Tooltip
                     labelFormatter={(date) => new Date(date).toLocaleDateString('pt-BR')}
                     formatter={(value: number) => `${value.toFixed(2)}%`}
                   />
-                  <Bar 
-                    dataKey="conversion_rate" 
-                    fill="#3E2229" 
+                  <Bar
+                    dataKey="conversion_rate"
+                    fill="#3E2229"
                     name="Taxa de Conversão (%)"
                   />
                 </BarChart>
