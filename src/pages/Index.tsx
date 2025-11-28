@@ -20,7 +20,7 @@ const Index = () => {
     id: "concretagem",
     title: "Concretagem e Vibração",
     icon: Cog,
-    imageUrl: "https://images.unsplash.com/photo-1518709268805-4e9042af9f23?q=80&w=800&auto=format&fit=crop"
+    imageUrl: "/images/concretagem-vibracao.jpg"
   }, {
     id: "energia",
     title: "Energia e Geração",
@@ -196,7 +196,7 @@ const Index = () => {
         </section>
       </main>
 
-      <Footer className="text-primary-foreground bg-primary" />
+      <Footer />
     </div>
   );
 };
