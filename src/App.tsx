@@ -22,6 +22,10 @@ const App = () => {
   const hostname = window.location.hostname;
   const isAdminSubdomain = hostname.startsWith("admin.");
 
+  // Debug log (remove after testing)
+  console.log('🔍 Debug Info:', { hostname, isAdminSubdomain });
+
+
   return (
     <QueryClientProvider client={queryClient}>
       <TooltipProvider>
