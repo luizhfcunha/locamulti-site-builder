@@ -21,7 +21,7 @@ import {
 import { WHATSAPP } from "@/config/whatsapp";
 import { getCatalog, getCategoriesWithSubcategories } from "@/lib/catalog";
 import { useToast } from "@/hooks/use-toast";
-import { trackEvent, trackWhatsAppClick } from "@/lib/analytics";
+import { trackWhatsAppClick } from "@/lib/analytics";
 
 interface Equipment {
   id: string;
@@ -345,17 +345,11 @@ const Catalogo = () => {
                     </div>
                   ) : (
                     <div className="space-y-4">
-                      {sortedEquipments.map((equipment) => {
-                        // Track view on render
-                        useEffect(() => {
-                          trackEvent({ event_type: 'product_view', product_id: equipment.id });
-                        }, [equipment.id]);
-
-                        return (
-                          <div
-                            key={equipment.id}
-                            className="flex flex-col sm:flex-row gap-4 p-4 border border-border rounded-card bg-card hover:shadow-medium transition-all duration-base"
-                          >
+                      {sortedEquipments.map((equipment) => (
+                        <div
+                          key={equipment.id}
+                          className="flex flex-col sm:flex-row gap-4 p-4 border border-border rounded-card bg-card hover:shadow-medium transition-all duration-base"
+                        >
                           <div className="w-full sm:w-48 h-48 bg-muted rounded-card overflow-hidden flex-shrink-0">
                             <img
                               src={equipment.image_url || "/placeholder.svg"}
@@ -399,8 +393,7 @@ const Catalogo = () => {
                             </div>
                           </div>
                         </div>
-                        );
-                      })}
+                      ))}
                     </div>
                   )}
                 </>
