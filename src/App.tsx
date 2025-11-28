@@ -27,7 +27,6 @@ const App = () => {
       <TooltipProvider>
         <Toaster />
         <Sonner />
-        <WhatsAppButton />
         <BrowserRouter>
           <Routes>
             {isAdminSubdomain ? (
@@ -65,6 +64,7 @@ const App = () => {
             ) : (
               // Public Site Routes
               <>
+                <WhatsAppButton />
                 <Route path="/" element={<Index />} />
                 <Route path="/catalogo" element={<Catalogo />} />
                 <Route path="/quem-somos" element={<QuemSomos />} />
