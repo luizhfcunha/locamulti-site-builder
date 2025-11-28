@@ -28,6 +28,9 @@ const App = () => {
         <Toaster />
         <Sonner />
         <BrowserRouter>
+          {/* WhatsApp button only on public site */}
+          {!isAdminSubdomain && <WhatsAppButton />}
+
           <Routes>
             {isAdminSubdomain ? (
               // Admin Subdomain Routes
@@ -64,7 +67,6 @@ const App = () => {
             ) : (
               // Public Site Routes
               <>
-                <WhatsAppButton />
                 <Route path="/" element={<Index />} />
                 <Route path="/catalogo" element={<Catalogo />} />
                 <Route path="/quem-somos" element={<QuemSomos />} />
