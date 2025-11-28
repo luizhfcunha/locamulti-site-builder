@@ -1,9 +1,12 @@
+import { useEffect } from "react";
 import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { WhatsappCTA } from "@/components/WhatsappCTA";
 import { WHATSAPP } from "@/config/whatsapp";
+import { trackEvent, trackWhatsAppClick } from "@/lib/analytics";
 
 interface EquipmentCardProps {
+  id?: string;
   name: string;
   category: string;
   subcategory?: string | null;
@@ -13,6 +16,7 @@ interface EquipmentCardProps {
 }
 
 export const EquipmentCard = ({ 
+  id,
   name, 
   category,
   subcategory,
@@ -20,6 +24,19 @@ export const EquipmentCard = ({
   specifications = [],
   brand 
 }: EquipmentCardProps) => {
+  // Track product view on mount
+  useEffect(() => {
+    if (id) {
+      trackEvent({ event_type: 'product_view', product_id: id });
+    }
+  }, [id]);
+
+  const handleWhatsAppClick = () => {
+    if (id) {
+      trackWhatsAppClick(id);
+    }
+  };
+
   return (
     <Card className="group overflow-hidden border-border hover:shadow-medium transition-all duration-base rounded-card h-full flex flex-col">
       <div className="relative h-56 bg-muted overflow-hidden">
@@ -70,6 +87,7 @@ export const EquipmentCard = ({
           text="Solicitar Orçamento"
           href={WHATSAPP.catalogoEquipamento.replace('[EQUIPAMENTO]', encodeURIComponent(name))}
           fullWidth
+          onClick={handleWhatsAppClick}
         />
       </CardFooter>
     </Card>

@@ -14,6 +14,83 @@ export type Database = {
   }
   public: {
     Tables: {
+      analytics_events: {
+        Row: {
+          category_id: string | null
+          created_at: string | null
+          event_type: string
+          id: string
+          product_id: string | null
+          referrer: string | null
+          session_id: string | null
+          subcategory_id: string | null
+          user_agent: string | null
+          utm_campaign: string | null
+          utm_content: string | null
+          utm_medium: string | null
+          utm_source: string | null
+        }
+        Insert: {
+          category_id?: string | null
+          created_at?: string | null
+          event_type: string
+          id?: string
+          product_id?: string | null
+          referrer?: string | null
+          session_id?: string | null
+          subcategory_id?: string | null
+          user_agent?: string | null
+          utm_campaign?: string | null
+          utm_content?: string | null
+          utm_medium?: string | null
+          utm_source?: string | null
+        }
+        Update: {
+          category_id?: string | null
+          created_at?: string | null
+          event_type?: string
+          id?: string
+          product_id?: string | null
+          referrer?: string | null
+          session_id?: string | null
+          subcategory_id?: string | null
+          user_agent?: string | null
+          utm_campaign?: string | null
+          utm_content?: string | null
+          utm_medium?: string | null
+          utm_source?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "analytics_events_category_id_fkey"
+            columns: ["category_id"]
+            isOneToOne: false
+            referencedRelation: "categories"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "analytics_events_product_id_fkey"
+            columns: ["product_id"]
+            isOneToOne: false
+            referencedRelation: "product_analytics_summary"
+            referencedColumns: ["product_id"]
+          },
+          {
+            foreignKeyName: "analytics_events_product_id_fkey"
+            columns: ["product_id"]
+            isOneToOne: false
+            referencedRelation: "products"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "analytics_events_subcategory_id_fkey"
+            columns: ["subcategory_id"]
+            isOneToOne: false
+            referencedRelation: "subcategories"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       catalog: {
         Row: {
           brand: string | null
@@ -198,7 +275,20 @@ export type Database = {
       }
     }
     Views: {
-      [_ in never]: never
+      product_analytics_summary: {
+        Row: {
+          category_name: string | null
+          conversion_rate: number | null
+          image_url: string | null
+          last_activity: string | null
+          product_id: string | null
+          product_name: string | null
+          supplier_code: string | null
+          total_conversions: number | null
+          total_views: number | null
+        }
+        Relationships: []
+      }
     }
     Functions: {
       has_role: {
@@ -208,6 +298,7 @@ export type Database = {
         }
         Returns: boolean
       }
+      refresh_product_analytics_summary: { Args: never; Returns: undefined }
     }
     Enums: {
       app_role: "admin"

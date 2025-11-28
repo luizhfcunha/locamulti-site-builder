@@ -8,6 +8,7 @@ interface WhatsappCTAProps {
   size?: "default" | "sm" | "lg";
   className?: string;
   fullWidth?: boolean;
+  onClick?: () => void;
 }
 export const WhatsappCTA = ({
   text,
@@ -15,9 +16,13 @@ export const WhatsappCTA = ({
   variant = "default",
   size = "default",
   className,
-  fullWidth = false
+  fullWidth = false,
+  onClick
 }: WhatsappCTAProps) => {
   const handleClick = () => {
+    if (onClick) {
+      onClick();
+    }
     window.open(href, "_blank");
   };
   return <Button variant={variant} size={size} onClick={handleClick} className={cn("gap-2 items-center justify-center", fullWidth && "w-full", className)}>

@@ -2,7 +2,8 @@ import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { AdminLayout } from "@/components/admin/AdminLayout";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Package, FolderTree, CheckCircle, XCircle, Calendar } from "lucide-react";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Package, FolderTree, CheckCircle, XCircle, Calendar, TrendingUp } from "lucide-react";
 import { toast } from "@/hooks/use-toast";
 import {
   BarChart,
@@ -16,6 +17,7 @@ import {
   Legend,
   ResponsiveContainer,
 } from "recharts";
+import { AnalyticsDashboard } from "@/components/admin/AnalyticsDashboard";
 
 interface DashboardStats {
   totalProducts: number;
@@ -171,15 +173,20 @@ const AdminDashboard = () => {
 
   return (
     <AdminLayout>
-      <div className="space-y-6">
+      <Tabs defaultValue="products" className="space-y-6">
         <div>
           <h1 className="font-heading text-3xl font-bold text-lm-plum mb-2">
-            Dashboard de Produtos
+            Dashboard
           </h1>
-          <p className="text-lm-ink">Visão geral dos produtos e estatísticas</p>
+          <p className="text-lm-ink mb-4">Visão geral dos produtos e analytics</p>
+          
+          <TabsList>
+            <TabsTrigger value="products">Produtos</TabsTrigger>
+            <TabsTrigger value="analytics">Analytics e Conversões</TabsTrigger>
+          </TabsList>
         </div>
 
-        {/* Stats Cards */}
+        <TabsContent value="products" className="space-y-6">{/* Stats Cards */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
           <Card>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
@@ -308,7 +315,12 @@ const AdminDashboard = () => {
             </CardContent>
           </Card>
         </div>
-      </div>
+        </TabsContent>
+
+        <TabsContent value="analytics">
+          <AnalyticsDashboard />
+        </TabsContent>
+      </Tabs>
     </AdminLayout>
   );
 };

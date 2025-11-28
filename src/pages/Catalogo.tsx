@@ -21,6 +21,7 @@ import {
 import { WHATSAPP } from "@/config/whatsapp";
 import { getCatalog, getCategoriesWithSubcategories } from "@/lib/catalog";
 import { useToast } from "@/hooks/use-toast";
+import { trackEvent, trackWhatsAppClick } from "@/lib/analytics";
 
 interface Equipment {
   id: string;
@@ -332,6 +333,7 @@ const Catalogo = () => {
                       {sortedEquipments.map((equipment) => (
                         <EquipmentCard
                           key={equipment.id}
+                          id={equipment.id}
                           name={equipment.name || "Equipamento"}
                           category={equipment.category || ""}
                           subcategory={equipment.subcategory}
@@ -343,11 +345,17 @@ const Catalogo = () => {
                     </div>
                   ) : (
                     <div className="space-y-4">
-                      {sortedEquipments.map((equipment) => (
-                        <div
-                          key={equipment.id}
-                          className="flex flex-col sm:flex-row gap-4 p-4 border border-border rounded-card bg-card hover:shadow-medium transition-all duration-base"
-                        >
+                      {sortedEquipments.map((equipment) => {
+                        // Track view on render
+                        useEffect(() => {
+                          trackEvent({ event_type: 'product_view', product_id: equipment.id });
+                        }, [equipment.id]);
+
+                        return (
+                          <div
+                            key={equipment.id}
+                            className="flex flex-col sm:flex-row gap-4 p-4 border border-border rounded-card bg-card hover:shadow-medium transition-all duration-base"
+                          >
                           <div className="w-full sm:w-48 h-48 bg-muted rounded-card overflow-hidden flex-shrink-0">
                             <img
                               src={equipment.image_url || "/placeholder.svg"}
@@ -386,11 +394,13 @@ const Catalogo = () => {
                                 text="Solicitar Orçamento"
                                 href={WHATSAPP.catalogoEquipamento.replace('[EQUIPAMENTO]', encodeURIComponent(equipment.name || "equipamento"))}
                                 className="flex-1 sm:flex-none"
+                                onClick={() => trackWhatsAppClick(equipment.id)}
                               />
                             </div>
                           </div>
                         </div>
-                      ))}
+                        );
+                      })}
                     </div>
                   )}
                 </>
