@@ -149,7 +149,7 @@ const Index = () => {
         <section className="py-20 bg-secondary">
           <div className="container mx-auto px-4 sm:px-6 lg:px-8">
             <div className="text-center mb-12">
-              <h2 className="mb-4">Por Que Escolher a LOCAMULTI?</h2>
+              <h2 className="mb-4">Por Que Escolher a <span className="font-bold text-primary">LOCAMULTI</span>?</h2>
               <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
                 Confiança, qualidade e suporte técnico em cada locação
               </p>
