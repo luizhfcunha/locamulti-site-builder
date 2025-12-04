@@ -9,7 +9,6 @@ import { SegmentCard } from "@/components/SegmentCard";
 import { BRANDS_CAROUSEL } from "@/config/brands";
 import { WHATSAPP } from "@/config/whatsapp";
 import { Hammer, Zap, Wrench, Package, PaintBucket, Cog, Trees, Shield, Headphones, Truck, CheckCircle2, MessageCircle, Building2, HardHat, Factory, TruckIcon, Users, Sparkles } from "lucide-react";
-
 const Index = () => {
   const categories = [{
     id: "construcao",
@@ -52,7 +51,6 @@ const Index = () => {
     icon: Trees,
     imageUrl: "https://images.unsplash.com/photo-1558904541-efa843a96f01?q=80&w=800&auto=format&fit=crop"
   }];
-
   const benefits = [{
     icon: CheckCircle2,
     title: "Equipamentos Revisados e Testados",
@@ -74,7 +72,6 @@ const Index = () => {
     title: "Agilidade no WhatsApp",
     description: "Atendimento rápido e orçamento ágil pelo WhatsApp, facilitando sua comunicação conosco."
   }];
-
   const segments = [{
     title: "Construtoras",
     icon: Building2
@@ -100,13 +97,10 @@ const Index = () => {
     title: "Órgãos Públicos",
     icon: Users
   }];
-
   const handleCategoryClick = (categoryId: string) => {
     window.location.href = `/catalogo?categoria=${categoryId}`;
   };
-
-  return (
-    <div className="min-h-screen flex flex-col">
+  return <div className="min-h-screen flex flex-col">
       <Header />
 
       <main className="flex-1">
@@ -155,7 +149,7 @@ const Index = () => {
         <section className="py-20 bg-secondary">
           <div className="container mx-auto px-4 sm:px-6 lg:px-8">
             <div className="text-center mb-12">
-              <h2 className="mb-4">Por Que Escolher a LocaMulti?</h2>
+              <h2 className="mb-4">Por Que Escolher a LOCAMULTI?</h2>
               <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
                 Confiança, qualidade e suporte técnico em cada locação
               </p>
@@ -197,8 +191,6 @@ const Index = () => {
       </main>
 
       <Footer />
-    </div>
-  );
+    </div>;
 };
-
 export default Index;
