@@ -92,7 +92,7 @@ export const Header = () => {
 
           {/* Desktop Navigation */}
           <nav className="hidden md:flex items-center gap-8">
-            {renderLink("/", "Home", true)}
+            {renderLink("/", "Início", true)}
             {renderLink("/catalogo", "Catálogo")}
             {renderLink("/quem-somos", "Quem Somos")}
             {renderLink("/contato", "Contato")}
@@ -127,7 +127,7 @@ export const Header = () => {
         {mobileMenuOpen && (
           <nav className="md:hidden py-4 border-t border-border">
             <div className="flex flex-col gap-4">
-              {renderMobileLink("/", "Home", true)}
+              {renderMobileLink("/", "Início", true)}
               {renderMobileLink("/catalogo", "Catálogo")}
               {renderMobileLink("/quem-somos", "Quem Somos")}
               {renderMobileLink("/contato", "Contato")}
