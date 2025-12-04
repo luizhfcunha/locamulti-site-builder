@@ -21,7 +21,7 @@ export const Footer = () => {
           <ul className="space-y-2">
             <li>
               <Link to="/" className="hover:text-lm-plum transition-colors">
-                Home
+                Início
               </Link>
             </li>
             <li>
