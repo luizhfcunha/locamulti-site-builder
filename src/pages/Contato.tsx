@@ -103,7 +103,7 @@ const Contato = () => {
         </section>
 
         {/* Final CTA Section */}
-        <section className="bg-lm-orange py-12 md:py-16">
+        <section className="py-12 md:py-16 bg-zinc-950">
           <div className="container mx-auto px-4 text-center">
             <h2 className="text-3xl md:text-4xl font-display font-bold text-white mb-4">
               Precisa de Equipamentos com Urgência?
