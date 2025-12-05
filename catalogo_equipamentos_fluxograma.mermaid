@@ -1,0 +1,322 @@
+%%{init: {'theme': 'base', 'themeVariables': { 'primaryColor': '#1e3a5f', 'primaryTextColor': '#fff', 'primaryBorderColor': '#0d1f33', 'lineColor': '#5c8ab5', 'secondaryColor': '#2d5a87', 'tertiaryColor': '#e8f4fc'}}}%%
+
+flowchart LR
+
+    CATALOGO["🏭 CATÁLOGO DE<br/>EQUIPAMENTOS"]
+    
+    %% ═══════════════════════════════════════════════════════════
+    %% CATEGORIA 1: ACESSÓRIOS DE MONTAGEM
+    %% ═══════════════════════════════════════════════════════════
+    
+    CAT1["🔧 ACESSÓRIOS DE<br/>MONTAGEM"]
+    
+    SUB1_1["Andaimes de Painel NR18"]
+    SUB1_2["Carros de Transporte"]
+    SUB1_3["Cintos de Segurança"]
+    SUB1_4["Escadas Extensíveis"]
+    SUB1_5["Escadas Tesoura"]
+    SUB1_6["Extensões Monofásicas"]
+    SUB1_7["Morças de Bancada"]
+    SUB1_8["Pistolas de Pintura"]
+    
+    CATALOGO --> CAT1
+    CAT1 --> SUB1_1
+    CAT1 --> SUB1_2
+    CAT1 --> SUB1_3
+    CAT1 --> SUB1_4
+    CAT1 --> SUB1_5
+    CAT1 --> SUB1_6
+    CAT1 --> SUB1_7
+    CAT1 --> SUB1_8
+    
+    %% ═══════════════════════════════════════════════════════════
+    %% CATEGORIA 2: BOMBAS E GERADORES
+    %% ═══════════════════════════════════════════════════════════
+    
+    CAT2["⚡ BOMBAS E<br/>GERADORES"]
+    
+    SUB2_1["Bombas de Mangote"]
+    SUB2_2["Bombas Submersíveis Elétricas"]
+    SUB2_3["Geradores de Energia"]
+    SUB2_4["Motobombas Diesel"]
+    SUB2_5["Motores Gasolina"]
+    
+    CATALOGO --> CAT2
+    CAT2 --> SUB2_1
+    CAT2 --> SUB2_2
+    CAT2 --> SUB2_3
+    CAT2 --> SUB2_4
+    CAT2 --> SUB2_5
+    
+    %% ═══════════════════════════════════════════════════════════
+    %% CATEGORIA 3: COMPRESSORES DE AR
+    %% ═══════════════════════════════════════════════════════════
+    
+    CAT3["💨 COMPRESSORES<br/>DE AR"]
+    
+    SUB3_1["Compressores c/ Reservatório"]
+    SUB3_2["Compressores Ar Direto"]
+    
+    CATALOGO --> CAT3
+    CAT3 --> SUB3_1
+    CAT3 --> SUB3_2
+    
+    %% ═══════════════════════════════════════════════════════════
+    %% CATEGORIA 4: ELEVAÇÃO E MOVIMENTAÇÃO DE CARGAS
+    %% ═══════════════════════════════════════════════════════════
+    
+    CAT4["🏗️ ELEVAÇÃO E<br/>MOVIMENTAÇÃO"]
+    
+    SUB4_1["Acessórios Elevação"]
+    SUB4_2["Bombas Hidráulicas"]
+    SUB4_3["Carros Alavanca"]
+    SUB4_4["Carros Trolley"]
+    SUB4_5["Catracas Amarração"]
+    SUB4_6["Cavaletes Mecânicos"]
+    SUB4_7["Cilindros Hidráulicos"]
+    SUB4_8["Cintas Elevação"]
+    SUB4_9["Empilhadeiras Manuais"]
+    SUB4_10["Guinchos Tirfor"]
+    SUB4_11["Macacos Hidráulicos"]
+    SUB4_12["Macacos Tipo Unha"]
+    SUB4_13["Prensas Hidráulicas"]
+    SUB4_14["Talhas de Corrente"]
+    SUB4_15["Tartarugas Direcionais"]
+    SUB4_16["Tartarugas Fixas"]
+    SUB4_17["Transpaletes Manuais"]
+    
+    CATALOGO --> CAT4
+    CAT4 --> SUB4_1
+    CAT4 --> SUB4_2
+    CAT4 --> SUB4_3
+    CAT4 --> SUB4_4
+    CAT4 --> SUB4_5
+    CAT4 --> SUB4_6
+    CAT4 --> SUB4_7
+    CAT4 --> SUB4_8
+    CAT4 --> SUB4_9
+    CAT4 --> SUB4_10
+    CAT4 --> SUB4_11
+    CAT4 --> SUB4_12
+    CAT4 --> SUB4_13
+    CAT4 --> SUB4_14
+    CAT4 --> SUB4_15
+    CAT4 --> SUB4_16
+    CAT4 --> SUB4_17
+    
+    %% ═══════════════════════════════════════════════════════════
+    %% CATEGORIA 5: EQUIPAMENTOS AGRÍCOLAS
+    %% ═══════════════════════════════════════════════════════════
+    
+    CAT5["🌿 EQUIPAMENTOS<br/>AGRÍCOLAS"]
+    
+    SUB5_1["Cortadores de Grama"]
+    SUB5_2["Furadeiras de Mourão"]
+    SUB5_3["Motosserras Gasolina"]
+    SUB5_4["Perfuradores de Solo"]
+    SUB5_5["Podadores Cerca Viva"]
+    SUB5_6["Roçadeiras Lateral"]
+    SUB5_7["Sopradores de Folha"]
+    
+    CATALOGO --> CAT5
+    CAT5 --> SUB5_1
+    CAT5 --> SUB5_2
+    CAT5 --> SUB5_3
+    CAT5 --> SUB5_4
+    CAT5 --> SUB5_5
+    CAT5 --> SUB5_6
+    CAT5 --> SUB5_7
+    
+    %% ═══════════════════════════════════════════════════════════
+    %% CATEGORIA 6: EQUIPAMENTOS CIVIS
+    %% ═══════════════════════════════════════════════════════════
+    
+    CAT6["🏗️ EQUIPAMENTOS<br/>CIVIS"]
+    
+    SUB6_1["Alisadoras de Piso"]
+    SUB6_2["Betoneiras"]
+    SUB6_3["Compactadores Percussão"]
+    SUB6_4["Cortadores Azulejo/Piso"]
+    SUB6_5["Cortadoras de Piso"]
+    SUB6_6["Guinchos de Coluna"]
+    SUB6_7["Misturadores Argamassa"]
+    SUB6_8["Motores Elétricos"]
+    SUB6_9["Motores Gasolina"]
+    SUB6_10["Placas Vibratórias"]
+    SUB6_11["Réguas Vibratórias"]
+    SUB6_12["Serras Circulares Bancada"]
+    SUB6_13["Vibradores de Imersão"]
+    
+    CATALOGO --> CAT6
+    CAT6 --> SUB6_1
+    CAT6 --> SUB6_2
+    CAT6 --> SUB6_3
+    CAT6 --> SUB6_4
+    CAT6 --> SUB6_5
+    CAT6 --> SUB6_6
+    CAT6 --> SUB6_7
+    CAT6 --> SUB6_8
+    CAT6 --> SUB6_9
+    CAT6 --> SUB6_10
+    CAT6 --> SUB6_11
+    CAT6 --> SUB6_12
+    CAT6 --> SUB6_13
+    
+    %% ═══════════════════════════════════════════════════════════
+    %% CATEGORIA 7: EQUIPAMENTOS ESPECÍFICOS
+    %% ═══════════════════════════════════════════════════════════
+    
+    CAT7["🔩 EQUIPAMENTOS<br/>ESPECÍFICOS"]
+    
+    SUB7_1["Alicates Hidráulicos"]
+    SUB7_2["Alicates Rebitadores"]
+    SUB7_3["Aspiradores de Pó"]
+    SUB7_4["Carregadores Bateria"]
+    SUB7_5["Chaves de Corrente"]
+    SUB7_6["Chaves de Grifo"]
+    SUB7_7["Chaves de Impacto"]
+    SUB7_8["Cortadoras Piso Elétricas"]
+    SUB7_9["Enceradeiras de Piso"]
+    SUB7_10["Furadeiras Base Magnética"]
+    SUB7_11["Jogos de Soquete"]
+    SUB7_12["Lavadoras Alta Pressão"]
+    SUB7_13["Lixadeiras Teto/Parede"]
+    SUB7_14["Marretas"]
+    SUB7_15["Nebulizadores"]
+    SUB7_16["Perfuratrizes Diamantadas"]
+    SUB7_17["Policorte"]
+    SUB7_18["Politrizes de Piso"]
+    SUB7_19["Saca Polias Hidráulico"]
+    SUB7_20["Torquímetros"]
+    
+    CATALOGO --> CAT7
+    CAT7 --> SUB7_1
+    CAT7 --> SUB7_2
+    CAT7 --> SUB7_3
+    CAT7 --> SUB7_4
+    CAT7 --> SUB7_5
+    CAT7 --> SUB7_6
+    CAT7 --> SUB7_7
+    CAT7 --> SUB7_8
+    CAT7 --> SUB7_9
+    CAT7 --> SUB7_10
+    CAT7 --> SUB7_11
+    CAT7 --> SUB7_12
+    CAT7 --> SUB7_13
+    CAT7 --> SUB7_14
+    CAT7 --> SUB7_15
+    CAT7 --> SUB7_16
+    CAT7 --> SUB7_17
+    CAT7 --> SUB7_18
+    CAT7 --> SUB7_19
+    CAT7 --> SUB7_20
+    
+    %% ═══════════════════════════════════════════════════════════
+    %% CATEGORIA 8: FERRAMENTAS À BATERIA
+    %% ═══════════════════════════════════════════════════════════
+    
+    CAT8["🔋 FERRAMENTAS<br/>À BATERIA"]
+    
+    SUB8_1["Baterias Li-Ion"]
+    SUB8_2["Carregadores Li-Ion"]
+    SUB8_3["Chaves Impacto Bateria"]
+    SUB8_4["Níveis a Laser"]
+    SUB8_5["Parafusadeiras Bateria"]
+    
+    CATALOGO --> CAT8
+    CAT8 --> SUB8_1
+    CAT8 --> SUB8_2
+    CAT8 --> SUB8_3
+    CAT8 --> SUB8_4
+    CAT8 --> SUB8_5
+    
+    %% ═══════════════════════════════════════════════════════════
+    %% CATEGORIA 9: FERRAMENTAS ELÉTRICAS
+    %% ═══════════════════════════════════════════════════════════
+    
+    CAT9["⚡ FERRAMENTAS<br/>ELÉTRICAS"]
+    
+    SUB9_1["Esmeris Retos"]
+    SUB9_2["Esmerilhadeiras Angulares"]
+    SUB9_3["Furadeiras"]
+    SUB9_4["Lixadeiras"]
+    SUB9_5["Marteletes Perfuradores"]
+    SUB9_6["Martelos Demolidores"]
+    SUB9_7["Martelos Perfuradores"]
+    SUB9_8["Martelos Rompedores"]
+    SUB9_9["Multicortadoras"]
+    SUB9_10["Parafusadeiras"]
+    SUB9_11["Plainas Elétricas"]
+    SUB9_12["Politrizes"]
+    SUB9_13["Retificadeiras"]
+    SUB9_14["Serras Circulares"]
+    SUB9_15["Serras Mármores"]
+    SUB9_16["Serras Sabre"]
+    SUB9_17["Serras Tico Tico"]
+    SUB9_18["Sopradores Térmicos"]
+    
+    CATALOGO --> CAT9
+    CAT9 --> SUB9_1
+    CAT9 --> SUB9_2
+    CAT9 --> SUB9_3
+    CAT9 --> SUB9_4
+    CAT9 --> SUB9_5
+    CAT9 --> SUB9_6
+    CAT9 --> SUB9_7
+    CAT9 --> SUB9_8
+    CAT9 --> SUB9_9
+    CAT9 --> SUB9_10
+    CAT9 --> SUB9_11
+    CAT9 --> SUB9_12
+    CAT9 --> SUB9_13
+    CAT9 --> SUB9_14
+    CAT9 --> SUB9_15
+    CAT9 --> SUB9_16
+    CAT9 --> SUB9_17
+    CAT9 --> SUB9_18
+    
+    %% ═══════════════════════════════════════════════════════════
+    %% CATEGORIA 10: MÁQUINAS DE CORTE E SOLDA
+    %% ═══════════════════════════════════════════════════════════
+    
+    CAT10["🔥 MÁQUINAS DE<br/>CORTE E SOLDA"]
+    
+    SUB10_1["Conjuntos Oxi-Acetilênicos"]
+    SUB10_2["Inversores Solda TIG"]
+    SUB10_3["Máquinas Corte Plasma"]
+    SUB10_4["Máquinas Solda MIG/MAG"]
+    SUB10_5["Reguladores de Gás"]
+    SUB10_6["Retificadores de Solda"]
+    SUB10_7["Tochas Solda/Corte"]
+    SUB10_8["Transformadores Solda"]
+    
+    CATALOGO --> CAT10
+    CAT10 --> SUB10_1
+    CAT10 --> SUB10_2
+    CAT10 --> SUB10_3
+    CAT10 --> SUB10_4
+    CAT10 --> SUB10_5
+    CAT10 --> SUB10_6
+    CAT10 --> SUB10_7
+    CAT10 --> SUB10_8
+    
+    %% ═══════════════════════════════════════════════════════════
+    %% ESTILOS
+    %% ═══════════════════════════════════════════════════════════
+    
+    classDef root fill:#0d47a1,stroke:#1565c0,stroke-width:3px,color:#fff,font-weight:bold
+    classDef category fill:#1976d2,stroke:#1e88e5,stroke-width:2px,color:#fff,font-weight:bold
+    classDef subcategory fill:#e3f2fd,stroke:#64b5f6,stroke-width:1px,color:#1565c0
+    
+    class CATALOGO root
+    class CAT1,CAT2,CAT3,CAT4,CAT5,CAT6,CAT7,CAT8,CAT9,CAT10 category
+    class SUB1_1,SUB1_2,SUB1_3,SUB1_4,SUB1_5,SUB1_6,SUB1_7,SUB1_8 subcategory
+    class SUB2_1,SUB2_2,SUB2_3,SUB2_4,SUB2_5 subcategory
+    class SUB3_1,SUB3_2 subcategory
+    class SUB4_1,SUB4_2,SUB4_3,SUB4_4,SUB4_5,SUB4_6,SUB4_7,SUB4_8,SUB4_9,SUB4_10,SUB4_11,SUB4_12,SUB4_13,SUB4_14,SUB4_15,SUB4_16,SUB4_17 subcategory
+    class SUB5_1,SUB5_2,SUB5_3,SUB5_4,SUB5_5,SUB5_6,SUB5_7 subcategory
+    class SUB6_1,SUB6_2,SUB6_3,SUB6_4,SUB6_5,SUB6_6,SUB6_7,SUB6_8,SUB6_9,SUB6_10,SUB6_11,SUB6_12,SUB6_13 subcategory
+    class SUB7_1,SUB7_2,SUB7_3,SUB7_4,SUB7_5,SUB7_6,SUB7_7,SUB7_8,SUB7_9,SUB7_10,SUB7_11,SUB7_12,SUB7_13,SUB7_14,SUB7_15,SUB7_16,SUB7_17,SUB7_18,SUB7_19,SUB7_20 subcategory
+    class SUB8_1,SUB8_2,SUB8_3,SUB8_4,SUB8_5 subcategory
+    class SUB9_1,SUB9_2,SUB9_3,SUB9_4,SUB9_5,SUB9_6,SUB9_7,SUB9_8,SUB9_9,SUB9_10,SUB9_11,SUB9_12,SUB9_13,SUB9_14,SUB9_15,SUB9_16,SUB9_17,SUB9_18 subcategory
+    class SUB10_1,SUB10_2,SUB10_3,SUB10_4,SUB10_5,SUB10_6,SUB10_7,SUB10_8 subcategory
