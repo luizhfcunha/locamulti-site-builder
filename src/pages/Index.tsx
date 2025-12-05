@@ -9,7 +9,6 @@ import { SegmentCard } from "@/components/SegmentCard";
 import { BRANDS_CAROUSEL } from "@/config/brands";
 import { WHATSAPP } from "@/config/whatsapp";
 import { Hammer, Zap, Wrench, Package, PaintBucket, Cog, Trees, Shield, Headphones, Truck, CheckCircle2, MessageCircle, Building2, HardHat, Factory, TruckIcon, Users, Sparkles } from "lucide-react";
-
 const Index = () => {
   const categories = [{
     id: "construcao",
@@ -20,7 +19,7 @@ const Index = () => {
     id: "concretagem",
     title: "Concretagem e Vibração",
     icon: Cog,
-    imageUrl: "https://images.unsplash.com/photo-1518709268805-4e9042af9f23?q=80&w=800&auto=format&fit=crop"
+    imageUrl: "/images/concretagem-vibracao.jpg"
   }, {
     id: "energia",
     title: "Energia e Geração",
@@ -52,7 +51,6 @@ const Index = () => {
     icon: Trees,
     imageUrl: "https://images.unsplash.com/photo-1558904541-efa843a96f01?q=80&w=800&auto=format&fit=crop"
   }];
-
   const benefits = [{
     icon: CheckCircle2,
     title: "Equipamentos Revisados e Testados",
@@ -74,7 +72,6 @@ const Index = () => {
     title: "Agilidade no WhatsApp",
     description: "Atendimento rápido e orçamento ágil pelo WhatsApp, facilitando sua comunicação conosco."
   }];
-
   const segments = [{
     title: "Construtoras",
     icon: Building2
@@ -100,26 +97,23 @@ const Index = () => {
     title: "Órgãos Públicos",
     icon: Users
   }];
-
   const handleCategoryClick = (categoryId: string) => {
     window.location.href = `/catalogo?categoria=${categoryId}`;
   };
-
-  return (
-    <div className="min-h-screen flex flex-col">
+  return <div className="min-h-screen flex flex-col">
       <Header />
 
       <main className="flex-1">
         {/* Hero Section */}
-        <section className="relative bg-gradient-to-br from-lm-plum via-lm-plum/95 to-lm-ink min-h-[600px] flex items-center bg-primary">
-          <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1504917595217-d4dc5ebe6122?q=80&w=2070')] bg-cover bg-center opacity-15" />
+        <section className="relative min-h-[600px] flex items-center">
+          <div className="absolute inset-0 bg-[url('/images/hero-background.webp')] bg-cover bg-center" />
           <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10 py-20">
             <div className="max-w-3xl">
-              <h1 className="text-white mb-6 leading-tight">Locação de Equipamentos e Ferramentas Especiais</h1>
-              <p className="text-xl text-white/90 mb-8 leading-relaxed max-w-2xl">Locação profissional para obras, indústrias e manutenção</p>
+              <h1 className="mb-6 leading-tight text-primary">Locação de Equipamentos e Ferramentas Especiais</h1>
+              <p className="text-xl mb-8 leading-relaxed max-w-2xl text-neutral-950">Locação profissional para obras, indústrias e manutenção</p>
               <div className="flex flex-col sm:flex-row gap-4">
                 <WhatsappCTA text="Orçamento Rápido" href={WHATSAPP.homeHero} size="lg" className="text-lg font-semibold" />
-                <Button size="lg" variant="outline" className="text-lg font-semibold bg-white hover:bg-lm-muted text-lm-ink border-0" onClick={() => window.location.href = "/catalogo"}>
+                <Button size="lg" variant="outline" onClick={() => window.location.href = "/catalogo"} className="text-lg font-semibold border-0 bg-primary text-secondary">
                   Ver Catálogo Completo
                 </Button>
               </div>
@@ -155,7 +149,7 @@ const Index = () => {
         <section className="py-20 bg-secondary">
           <div className="container mx-auto px-4 sm:px-6 lg:px-8">
             <div className="text-center mb-12">
-              <h2 className="mb-4">Por Que Escolher a LocaMulti?</h2>
+              <h2 className="mb-4">Por Que Escolher a <span className="font-bold text-primary">LOCAMULTI</span>?</h2>
               <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
                 Confiança, qualidade e suporte técnico em cada locação
               </p>
@@ -196,9 +190,7 @@ const Index = () => {
         </section>
       </main>
 
-      <Footer className="text-primary-foreground bg-primary" />
-    </div>
-  );
+      <Footer />
+    </div>;
 };
-
 export default Index;
