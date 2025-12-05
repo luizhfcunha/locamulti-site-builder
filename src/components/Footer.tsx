@@ -2,11 +2,13 @@ import { Link } from "react-router-dom";
 import { Mail, MapPin, Phone, Clock, Facebook, Instagram } from "lucide-react";
 import { LOGO_FOOTER } from "@/lib/constants";
 export const Footer = () => {
+  const scrollToTop = () => window.scrollTo({ top: 0, behavior: 'smooth' });
+  
   return <footer className="bg-lm-orange text-white">
     <div className="container mx-auto px-4 py-12">
       {/* Logo Centralizada */}
       <div className="w-full mb-8 flex items-center justify-center">
-        <Link to="/" className="inline-block">
+        <Link to="/" onClick={scrollToTop} className="inline-block">
           <img src={LOGO_FOOTER.url} alt="Logo LocaMulti versão branca" className="h-auto w-[240px] object-contain" />
         </Link>
       </div>
@@ -17,22 +19,22 @@ export const Footer = () => {
           <h3 className="font-heading text-lg font-bold mb-4">Institucional</h3>
           <ul className="space-y-2">
             <li>
-              <Link to="/" className="hover:text-lm-plum transition-colors">
+              <Link to="/" onClick={scrollToTop} className="hover:text-lm-plum transition-colors">
                 Início
               </Link>
             </li>
             <li>
-              <Link to="/quem-somos" className="hover:text-lm-plum transition-colors">
+              <Link to="/quem-somos" onClick={scrollToTop} className="hover:text-lm-plum transition-colors">
                 Quem Somos
               </Link>
             </li>
             <li>
-              <Link to="/catalogo" className="hover:text-lm-plum transition-colors">
+              <Link to="/catalogo" onClick={scrollToTop} className="hover:text-lm-plum transition-colors">
                 Catálogo
               </Link>
             </li>
             <li>
-              <Link to="/contato" className="hover:text-lm-plum transition-colors">
+              <Link to="/contato" onClick={scrollToTop} className="hover:text-lm-plum transition-colors">
                 Contato
               </Link>
             </li>
@@ -44,22 +46,22 @@ export const Footer = () => {
           <h3 className="font-heading text-lg font-bold mb-4">Catálogo</h3>
           <ul className="space-y-2">
             <li>
-              <Link to="/catalogo?categoria=construcao" className="hover:text-lm-plum transition-colors">
+              <Link to="/catalogo?categoria=construcao" onClick={scrollToTop} className="hover:text-lm-plum transition-colors">
                 Construção e Demolição
               </Link>
             </li>
             <li>
-              <Link to="/catalogo?categoria=concretagem" className="hover:text-lm-plum transition-colors">
+              <Link to="/catalogo?categoria=concretagem" onClick={scrollToTop} className="hover:text-lm-plum transition-colors">
                 Concretagem e Vibração
               </Link>
             </li>
             <li>
-              <Link to="/catalogo?categoria=energia" className="hover:text-lm-plum transition-colors">
+              <Link to="/catalogo?categoria=energia" onClick={scrollToTop} className="hover:text-lm-plum transition-colors">
                 Energia e Geração
               </Link>
             </li>
             <li>
-              <Link to="/catalogo?categoria=soldagem" className="hover:text-lm-plum transition-colors">
+              <Link to="/catalogo?categoria=soldagem" onClick={scrollToTop} className="hover:text-lm-plum transition-colors">
                 Soldagem Profissional
               </Link>
             </li>
