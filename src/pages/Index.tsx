@@ -105,8 +105,8 @@ const Index = () => {
 
       <main className="flex-1">
         {/* Hero Section */}
-        <section className="relative bg-gradient-to-br from-lm-plum via-lm-plum/95 to-lm-ink min-h-[600px] flex items-center bg-primary">
-          <div className="absolute inset-0 bg-[url('/images/hero-background.webp')] bg-cover bg-center opacity-20" />
+        <section className="relative min-h-[600px] flex items-center">
+          <div className="absolute inset-0 bg-[url('/images/hero-background.webp')] bg-cover bg-center" />
           <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10 py-20">
             <div className="max-w-3xl">
               <h1 className="text-white mb-6 leading-tight">Locação de Equipamentos e Ferramentas Especiais</h1>
