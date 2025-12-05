@@ -84,14 +84,14 @@ const QuemSomos = () => {
         <section className="py-16 md:py-20 bg-primary">
           <div className="container mx-auto px-4">
             <div className="max-w-5xl mx-auto">
-              <div className="grid md:grid-cols-2 gap-12 items-center bg-neutral-950">
+              <div className="grid md:grid-cols-2 gap-12 items-center bg-primary">
                 <div>
                   <h2 className="font-heading text-3xl md:text-4xl font-bold text-white mb-6">
                     Nossa História
                   </h2>
                   <div className="space-y-4 text-white/90 leading-relaxed">
                     <p>
-                      Fundada em 2010, a <strong>LocaMulti</strong> nasceu da necessidade do mercado 
+                      Fundada em 2010, a <strong>Locamulti</strong> nasceu da necessidade do mercado 
                       por um fornecedor confiável de equipamentos industriais e para construção civil.
                     </p>
                     <p>
