@@ -84,7 +84,7 @@ const QuemSomos = () => {
         <section className="py-16 md:py-20 bg-primary">
           <div className="container mx-auto px-4">
             <div className="max-w-5xl mx-auto">
-              <div className="grid md:grid-cols-2 gap-12 items-center">
+              <div className="grid md:grid-cols-2 gap-12 items-center bg-neutral-950">
                 <div>
                   <h2 className="font-heading text-3xl md:text-4xl font-bold text-white mb-6">
                     Nossa História
@@ -256,7 +256,7 @@ const QuemSomos = () => {
         <section className="bg-primary py-16 md:py-20">
           <div className="container mx-auto px-4">
             <div className="max-w-4xl mx-auto text-center">
-              <h2 className="font-heading text-3xl md:text-4xl font-bold text-white mb-6">
+              <h2 className="font-heading text-3xl md:text-4xl font-bold text-white mb-6 bg-neutral-950">
                 Pronto para Trabalhar com a LocaMulti?
               </h2>
               <p className="text-lg text-white/90 mb-8 max-w-2xl mx-auto">
