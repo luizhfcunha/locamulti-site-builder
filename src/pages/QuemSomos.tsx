@@ -81,7 +81,7 @@ const QuemSomos = () => {
         </section>
 
         {/* História */}
-        <section className="py-16 md:py-20 bg-primary">
+        <section className="py-16 md:py-20 bg-primary rounded-none">
           <div className="container mx-auto px-4">
             <div className="max-w-5xl mx-auto">
               <div className="grid md:grid-cols-2 gap-12 items-center bg-primary">
@@ -107,7 +107,7 @@ const QuemSomos = () => {
                   </div>
                 </div>
                 <div className="relative h-80 rounded-card overflow-hidden bg-lm-ink/20">
-                  <img alt="LocaMulti - Equipamentos Industriais" className="w-full h-full object-cover opacity-80" src="/lovable-uploads/60169cc1-e31d-464b-9789-fb9ebd1f389b.webp" />
+                  <img alt="LocaMulti - Equipamentos Industriais" src="/lovable-uploads/60169cc1-e31d-464b-9789-fb9ebd1f389b.webp" className="w-full h-full object-cover opacity-80 border-primary-foreground" />
                 </div>
               </div>
             </div>
