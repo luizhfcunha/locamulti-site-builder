@@ -2,86 +2,66 @@ import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { WhatsappCTA } from "@/components/WhatsappCTA";
 import { WHATSAPP } from "@/config/whatsapp";
-import {
-  Shield, 
-  Zap, 
-  Wrench, 
-  Truck, 
-  CheckCircle2, 
-  Clock, 
-  Users, 
-  Award,
-  Factory,
-  Building2,
-  HardHat,
-  Package,
-  Quote
-} from "lucide-react";
-
+import { Shield, Zap, Wrench, Truck, CheckCircle2, Clock, Users, Award, Factory, Building2, HardHat, Package, Quote } from "lucide-react";
 const QuemSomos = () => {
-
-  const diferenciais = [
-    {
-      icon: CheckCircle2,
-      title: "Equipamentos Revisados",
-      description: "Toda nossa frota passa por manutenção preventiva e testes rigorosos antes de cada locação."
-    },
-    {
-      icon: Zap,
-      title: "Troca Imediata",
-      description: "Caso ocorra qualquer problema técnico, realizamos a substituição do equipamento em até 24 horas."
-    },
-    {
-      icon: Truck,
-      title: "Logística Integrada",
-      description: "Entrega e retirada programada conforme sua necessidade, com frota própria em toda região metropolitana."
-    },
-    {
-      icon: Wrench,
-      title: "Suporte Técnico",
-      description: "Equipe especializada disponível para orientação de uso e solução de dúvidas técnicas."
-    },
-    {
-      icon: Clock,
-      title: "Atendimento Ágil",
-      description: "Resposta rápida via WhatsApp e orçamentos elaborados em até 2 horas úteis."
-    },
-    {
-      icon: Shield,
-      title: "Segurança Garantida",
-      description: "Certificados de conformidade, EPIs inclusos e orientação sobre normas de segurança do trabalho."
-    }
-  ];
-
-  const segmentos = [
-    { icon: HardHat, name: "Construtoras e Engenharia" },
-    { icon: Factory, name: "Indústrias e Metalúrgicas" },
-    { icon: Building2, name: "Manutenção Predial" },
-    { icon: Package, name: "Logística e Armazenagem" },
-    { icon: Users, name: "Órgãos Públicos" },
-    { icon: Award, name: "Serralherias e Caldeirarias" }
-  ];
-
-  const depoimentos = [
-    {
-      name: "Carlos Alberto",
-      company: "Construtora Horizonte",
-      text: "A LocaMulti é nossa parceira há mais de 5 anos. Equipamentos sempre em perfeito estado e entrega pontual."
-    },
-    {
-      name: "Mariana Santos",
-      company: "Metalúrgica Industrial SP",
-      text: "Atendimento excelente e suporte técnico de qualidade. Recomendo para qualquer tipo de obra ou manutenção."
-    },
-    {
-      name: "Roberto Lima",
-      company: "Engenharia RJ",
-      text: "Profissionalismo e agilidade definem a LocaMulti. Quando precisamos, eles sempre entregam no prazo."
-    }
-  ];
-
-  return (
-    <div className="min-h-screen flex flex-col">
+  const diferenciais = [{
+    icon: CheckCircle2,
+    title: "Equipamentos Revisados",
+    description: "Toda nossa frota passa por manutenção preventiva e testes rigorosos antes de cada locação."
+  }, {
+    icon: Zap,
+    title: "Troca Imediata",
+    description: "Caso ocorra qualquer problema técnico, realizamos a substituição do equipamento em até 24 horas."
+  }, {
+    icon: Truck,
+    title: "Logística Integrada",
+    description: "Entrega e retirada programada conforme sua necessidade, com frota própria em toda região metropolitana."
+  }, {
+    icon: Wrench,
+    title: "Suporte Técnico",
+    description: "Equipe especializada disponível para orientação de uso e solução de dúvidas técnicas."
+  }, {
+    icon: Clock,
+    title: "Atendimento Ágil",
+    description: "Resposta rápida via WhatsApp e orçamentos elaborados em até 2 horas úteis."
+  }, {
+    icon: Shield,
+    title: "Segurança Garantida",
+    description: "Certificados de conformidade, EPIs inclusos e orientação sobre normas de segurança do trabalho."
+  }];
+  const segmentos = [{
+    icon: HardHat,
+    name: "Construtoras e Engenharia"
+  }, {
+    icon: Factory,
+    name: "Indústrias e Metalúrgicas"
+  }, {
+    icon: Building2,
+    name: "Manutenção Predial"
+  }, {
+    icon: Package,
+    name: "Logística e Armazenagem"
+  }, {
+    icon: Users,
+    name: "Órgãos Públicos"
+  }, {
+    icon: Award,
+    name: "Serralherias e Caldeirarias"
+  }];
+  const depoimentos = [{
+    name: "Carlos Alberto",
+    company: "Construtora Horizonte",
+    text: "A LocaMulti é nossa parceira há mais de 5 anos. Equipamentos sempre em perfeito estado e entrega pontual."
+  }, {
+    name: "Mariana Santos",
+    company: "Metalúrgica Industrial SP",
+    text: "Atendimento excelente e suporte técnico de qualidade. Recomendo para qualquer tipo de obra ou manutenção."
+  }, {
+    name: "Roberto Lima",
+    company: "Engenharia RJ",
+    text: "Profissionalismo e agilidade definem a LocaMulti. Quando precisamos, eles sempre entregam no prazo."
+  }];
+  return <div className="min-h-screen flex flex-col">
       <Header />
       
       <main className="flex-1">
@@ -101,7 +81,7 @@ const QuemSomos = () => {
         </section>
 
         {/* História */}
-        <section className="bg-lm-plum py-16 md:py-20">
+        <section className="py-16 md:py-20 bg-primary">
           <div className="container mx-auto px-4">
             <div className="max-w-5xl mx-auto">
               <div className="grid md:grid-cols-2 gap-12 items-center">
@@ -127,11 +107,7 @@ const QuemSomos = () => {
                   </div>
                 </div>
                 <div className="relative h-80 rounded-card overflow-hidden bg-lm-ink/20">
-                  <img 
-                    src="/placeholder.svg" 
-                    alt="LocaMulti - Equipamentos Industriais"
-                    className="w-full h-full object-cover opacity-80"
-                  />
+                  <img src="/placeholder.svg" alt="LocaMulti - Equipamentos Industriais" className="w-full h-full object-cover opacity-80" />
                 </div>
               </div>
             </div>
@@ -206,11 +182,7 @@ const QuemSomos = () => {
               </p>
               
               <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-                {diferenciais.map((diferencial, index) => (
-                  <div 
-                    key={index}
-                    className="bg-background p-6 rounded-card shadow-card hover:shadow-medium transition-all duration-base"
-                  >
+                {diferenciais.map((diferencial, index) => <div key={index} className="bg-background p-6 rounded-card shadow-card hover:shadow-medium transition-all duration-base">
                     <diferencial.icon className="h-10 w-10 text-primary mb-4" />
                     <h3 className="font-heading text-xl font-bold text-foreground mb-3">
                       {diferencial.title}
@@ -218,8 +190,7 @@ const QuemSomos = () => {
                     <p className="text-muted-foreground leading-relaxed">
                       {diferencial.description}
                     </p>
-                  </div>
-                ))}
+                  </div>)}
               </div>
             </div>
           </div>
@@ -237,19 +208,14 @@ const QuemSomos = () => {
               </p>
               
               <div className="grid grid-cols-2 md:grid-cols-3 gap-6">
-                {segmentos.map((segmento, index) => (
-                  <div 
-                    key={index}
-                    className="flex flex-col items-center text-center p-6 bg-lm-muted rounded-card hover:shadow-card transition-all duration-base group"
-                  >
+                {segmentos.map((segmento, index) => <div key={index} className="flex flex-col items-center text-center p-6 bg-lm-muted rounded-card hover:shadow-card transition-all duration-base group">
                     <div className="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mb-4 group-hover:bg-primary/20 transition-colors">
                       <segmento.icon className="h-8 w-8 text-primary" />
                     </div>
                     <h3 className="font-heading font-bold text-foreground">
                       {segmento.name}
                     </h3>
-                  </div>
-                ))}
+                  </div>)}
               </div>
             </div>
           </div>
@@ -267,11 +233,7 @@ const QuemSomos = () => {
               </p>
               
               <div className="grid md:grid-cols-3 gap-8">
-                {depoimentos.map((depoimento, index) => (
-                  <div 
-                    key={index}
-                    className="bg-white/10 backdrop-blur-sm p-6 rounded-card border border-white/20"
-                  >
+                {depoimentos.map((depoimento, index) => <div key={index} className="bg-white/10 backdrop-blur-sm p-6 rounded-card border border-white/20">
                     <Quote className="h-8 w-8 text-primary mb-4" />
                     <p className="text-white/90 italic mb-6 leading-relaxed">
                       "{depoimento.text}"
@@ -284,8 +246,7 @@ const QuemSomos = () => {
                         {depoimento.company}
                       </p>
                     </div>
-                  </div>
-                ))}
+                  </div>)}
               </div>
             </div>
           </div>
@@ -302,21 +263,13 @@ const QuemSomos = () => {
                 Entre em contato agora e descubra como podemos ajudar seu projeto 
                 com equipamentos de qualidade e atendimento profissional.
               </p>
-              <WhatsappCTA 
-                text="Falar com a Equipe"
-                href={WHATSAPP.quemSomos}
-                variant="outline"
-                size="lg"
-                className="bg-white text-lm-ink hover:bg-white/90 border-0 text-lg px-8"
-              />
+              <WhatsappCTA text="Falar com a Equipe" href={WHATSAPP.quemSomos} variant="outline" size="lg" className="bg-white text-lm-ink hover:bg-white/90 border-0 text-lg px-8" />
             </div>
           </div>
         </section>
       </main>
 
       <Footer />
-    </div>
-  );
+    </div>;
 };
-
 export default QuemSomos;
