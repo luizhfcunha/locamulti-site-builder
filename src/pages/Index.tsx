@@ -109,11 +109,11 @@ const Index = () => {
           <div className="absolute inset-0 bg-[url('/images/hero-background.webp')] bg-cover bg-center" />
           <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10 py-20">
             <div className="max-w-3xl">
-              <h1 className="text-white mb-6 leading-tight">Locação de Equipamentos e Ferramentas Especiais</h1>
-              <p className="text-xl text-white/90 mb-8 leading-relaxed max-w-2xl">Locação profissional para obras, indústrias e manutenção</p>
+              <h1 className="mb-6 leading-tight text-primary">Locação de Equipamentos e Ferramentas Especiais</h1>
+              <p className="text-xl mb-8 leading-relaxed max-w-2xl text-neutral-950">Locação profissional para obras, indústrias e manutenção</p>
               <div className="flex flex-col sm:flex-row gap-4">
                 <WhatsappCTA text="Orçamento Rápido" href={WHATSAPP.homeHero} size="lg" className="text-lg font-semibold" />
-                <Button size="lg" variant="outline" className="text-lg font-semibold bg-white hover:bg-lm-muted text-lm-ink border-0" onClick={() => window.location.href = "/catalogo"}>
+                <Button size="lg" variant="outline" onClick={() => window.location.href = "/catalogo"} className="text-lg font-semibold border-0 bg-primary text-secondary">
                   Ver Catálogo Completo
                 </Button>
               </div>
