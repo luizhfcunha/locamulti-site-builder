@@ -263,7 +263,6 @@ const QuemSomos = () => {
                     <p className="text-white/90 italic mb-6 leading-relaxed">"{depoimento.text}"</p>
                     <div className="border-t border-white/20 pt-4">
                       <p className="font-heading font-bold text-white">{depoimento.name}</p>
-                      <p className="text-sm text-white/70">{depoimento.company}</p>
                     </div>
                   </div>
                 ))}
