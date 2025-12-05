@@ -51,7 +51,7 @@ const QuemSomos = () => {
   const depoimentos = [{
     name: "Carlos Alberto",
     company: "Construtora Horizonte",
-    text: "A LocaMulti é nossa parceira há mais de 5 anos. Equipamentos sempre em perfeito estado e entrega pontual."
+    text: "Sou cliente há 8 anos. Todas as vezes tive ótimas soluções da parte da empresa. Todos os tipos de equipamentos p obra. Pronta reposição de equipamentos (o q é raro), muito flexíveis e excelente atendimento. Sem dúvidas a melhor q conheci. Parabéns aos envolvidos!"
   }, {
     name: "Mariana Santos",
     company: "Metalúrgica Industrial SP",
