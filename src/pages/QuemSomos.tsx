@@ -64,7 +64,7 @@ const QuemSomos = () => {
   return <div className="min-h-screen flex flex-col">
       <Header />
       
-      <main className="flex-1">
+      <main className="flex-1 bg-primary">
         {/* Hero Section */}
         <section className="bg-background py-16 md:py-24">
           <div className="container mx-auto px-4">
@@ -222,7 +222,7 @@ const QuemSomos = () => {
         </section>
 
         {/* Depoimentos */}
-        <section className="bg-lm-plum py-16 md:py-20">
+        <section className="py-16 md:py-20 bg-primary">
           <div className="container mx-auto px-4">
             <div className="max-w-6xl mx-auto">
               <h2 className="font-heading text-3xl md:text-4xl font-bold text-white mb-4 text-center">
@@ -253,10 +253,10 @@ const QuemSomos = () => {
         </section>
 
         {/* CTA Final */}
-        <section className="bg-primary py-16 md:py-20">
+        <section className="py-16 md:py-20 bg-stone-950">
           <div className="container mx-auto px-4">
             <div className="max-w-4xl mx-auto text-center">
-              <h2 className="font-heading text-3xl md:text-4xl font-bold text-white mb-6 bg-primary">Pronto para Trabalhar com a LOCAMULTI?</h2>
+              <h2 className="font-heading text-3xl md:text-4xl font-bold text-white mb-6 bg-neutral-950">Pronto para Trabalhar com a LOCAMULTI?</h2>
               <p className="text-lg text-white/90 mb-8 max-w-2xl mx-auto">
                 Entre em contato agora e descubra como podemos ajudar seu projeto 
                 com equipamentos de qualidade e atendimento profissional.
