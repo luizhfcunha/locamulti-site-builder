@@ -16,8 +16,8 @@ const Contato = () => {
     {
       icon: Phone,
       title: "Telefone",
-      content: "(62) 98419-4024",
-      link: "tel:+5562984194024",
+      content: "(62) 3324-4024 ",
+      link: "tel:+556233244024 ",
     },
     {
       icon: Mail,
@@ -28,7 +28,7 @@ const Contato = () => {
     {
       icon: Clock,
       title: "Horário de Atendimento",
-      content: "Segunda a Sexta: 7h às 18h\nSábado: 7h às 11:30h",
+      content: "Segunda a Sexta: 7h às 17h\nSábado: 8h às 11:30h",
     },
   ];
 
