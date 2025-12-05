@@ -3,7 +3,6 @@ import { Mail, MapPin, Phone, Clock, Facebook, Instagram } from "lucide-react";
 import { WhatsappCTA } from "@/components/WhatsappCTA";
 import { LOGO_FOOTER } from "@/lib/constants";
 import { WHATSAPP } from "@/config/whatsapp";
-
 export const Footer = () => {
   return <footer className="bg-lm-orange text-white">
     <div className="container mx-auto px-4 py-12">
@@ -76,7 +75,7 @@ export const Footer = () => {
             <li className="flex items-start gap-2">
               <MapPin className="h-5 w-5 flex-shrink-0 mt-0.5" />
               <span className="text-sm">
-                JK Parque Industrial - Av. Juscelino Kubitscheck, 2058 - JK Nova Capital, Anápolis - GO, 75114-225
+                 Av. Juscelino Kubitscheck, 2058 - JK Nova Capital, Anápolis - GO, 75114-225
               </span>
             </li>
             <li className="flex items-center gap-2">
@@ -93,7 +92,7 @@ export const Footer = () => {
             </li>
             <li className="flex items-start gap-2">
               <Clock className="h-5 w-5 flex-shrink-0 mt-0.5" />
-              <span className="text-sm">Seg-Sex: 7:30h às 17h Sáb: 8h às 11:30h</span>
+              <span className="text-sm">Seg-Sex: 7:00h às 17h Sáb: 8h às 11:30h</span>
             </li>
           </ul>
         </div>
