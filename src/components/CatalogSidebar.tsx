@@ -4,29 +4,40 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { Separator } from "@/components/ui/separator";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 
-interface CategoryWithSubcategories {
+interface FamilyWithSubfamilies {
+  name: string;
+  subfamilies: string[];
+}
+
+interface CategoryWithHierarchy {
   category: string;
-  subcategories: string[];
+  families: FamilyWithSubfamilies[];
 }
 
 interface CatalogSidebarProps {
-  categories: CategoryWithSubcategories[];
+  categories: CategoryWithHierarchy[];
   onSearch?: (query: string) => void;
-  onSubcategoryClick?: (category: string, subcategory: string) => void;
+  onSubfamilyClick?: (category: string, family: string, subfamily: string) => void;
   selectedCategory?: string | null;
-  selectedSubcategory?: string | null;
+  selectedFamily?: string | null;
+  selectedSubfamily?: string | null;
   expandedCategory?: string | null;
-  onExpandedChange?: (category: string | null) => void;
+  expandedFamily?: string | null;
+  onExpandedCategoryChange?: (category: string | null) => void;
+  onExpandedFamilyChange?: (family: string | null) => void;
 }
 
 export const CatalogSidebar = ({
   categories,
   onSearch,
-  onSubcategoryClick,
+  onSubfamilyClick,
   selectedCategory,
-  selectedSubcategory,
+  selectedFamily,
+  selectedSubfamily,
   expandedCategory,
-  onExpandedChange,
+  expandedFamily,
+  onExpandedCategoryChange,
+  onExpandedFamilyChange,
 }: CatalogSidebarProps) => {
   return (
     <aside className="w-full lg:w-80 bg-background border-r border-border">
@@ -53,7 +64,7 @@ export const CatalogSidebar = ({
                 type="single"
                 collapsible
                 value={expandedCategory || undefined}
-                onValueChange={(value) => onExpandedChange?.(value || null)}
+                onValueChange={(value) => onExpandedCategoryChange?.(value || null)}
               >
                 {categories.map((item) => (
                   <AccordionItem key={item.category} value={item.category} className="border-b border-border">
@@ -61,24 +72,46 @@ export const CatalogSidebar = ({
                       {item.category}
                     </AccordionTrigger>
                     <AccordionContent>
-                      <div className="space-y-1 pl-4">
-                        {item.subcategories.map((subcategory) => {
-                          const isActive = selectedCategory === item.category && selectedSubcategory === subcategory;
-                          return (
-                            <Button
-                              key={subcategory}
-                              variant="ghost"
-                              className={`w-full justify-start text-sm h-auto py-2 ${
-                                isActive
-                                  ? "bg-primary/10 text-primary font-medium"
-                                  : "text-muted-foreground hover:text-foreground hover:bg-muted"
-                              }`}
-                              onClick={() => onSubcategoryClick?.(item.category, subcategory)}
-                            >
-                              {subcategory}
-                            </Button>
-                          );
-                        })}
+                      <div className="pl-2">
+                        {/* Families nested accordion */}
+                        <Accordion
+                          type="single"
+                          collapsible
+                          value={expandedFamily || undefined}
+                          onValueChange={(value) => onExpandedFamilyChange?.(value || null)}
+                        >
+                          {item.families.map((family) => (
+                            <AccordionItem key={family.name} value={family.name} className="border-b-0">
+                              <AccordionTrigger className="text-sm text-muted-foreground hover:text-foreground hover:no-underline py-2">
+                                {family.name}
+                              </AccordionTrigger>
+                              <AccordionContent>
+                                <div className="space-y-1 pl-4">
+                                  {family.subfamilies.map((subfamily) => {
+                                    const isActive = 
+                                      selectedCategory === item.category && 
+                                      selectedFamily === family.name && 
+                                      selectedSubfamily === subfamily;
+                                    return (
+                                      <Button
+                                        key={subfamily}
+                                        variant="ghost"
+                                        className={`w-full justify-start text-sm h-auto py-2 ${
+                                          isActive
+                                            ? "bg-primary/10 text-primary font-medium"
+                                            : "text-muted-foreground hover:text-foreground hover:bg-muted"
+                                        }`}
+                                        onClick={() => onSubfamilyClick?.(item.category, family.name, subfamily)}
+                                      >
+                                        {subfamily}
+                                      </Button>
+                                    );
+                                  })}
+                                </div>
+                              </AccordionContent>
+                            </AccordionItem>
+                          ))}
+                        </Accordion>
                       </div>
                     </AccordionContent>
                   </AccordionItem>

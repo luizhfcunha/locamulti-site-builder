@@ -2,7 +2,8 @@ import { supabase } from "@/integrations/supabase/client";
 
 export interface CatalogFilters {
   category?: string;
-  subcategory?: string;
+  family?: string;
+  subfamily?: string;
   brand?: string;
   search?: string;
   page?: number;
@@ -15,16 +16,20 @@ export async function getCatalog(filters?: CatalogFilters) {
   const from = (page - 1) * pageSize;
   const to = from + pageSize - 1;
 
-  // Construct select string based on filters to ensure correct joins
-  let selectString = '*, categories(name), subcategories(name)';
+  // Build select string with proper joins
+  let selectString = '*, categories(name), families(name), subfamilies(name)';
 
-  // If filtering by category/subcategory name, we need !inner join to filter on the joined table
-  if (filters?.category && filters?.subcategory) {
-    selectString = '*, categories!inner(name), subcategories!inner(name)';
+  // If filtering by name, we need !inner join to filter on the joined table
+  if (filters?.category && filters?.family && filters?.subfamily) {
+    selectString = '*, categories!inner(name), families!inner(name), subfamilies!inner(name)';
+  } else if (filters?.category && filters?.family) {
+    selectString = '*, categories!inner(name), families!inner(name), subfamilies(name)';
   } else if (filters?.category) {
-    selectString = '*, categories!inner(name), subcategories(name)';
-  } else if (filters?.subcategory) {
-    selectString = '*, categories(name), subcategories!inner(name)';
+    selectString = '*, categories!inner(name), families(name), subfamilies(name)';
+  } else if (filters?.family) {
+    selectString = '*, categories(name), families!inner(name), subfamilies(name)';
+  } else if (filters?.subfamily) {
+    selectString = '*, categories(name), families(name), subfamilies!inner(name)';
   }
 
   let query = supabase
@@ -38,8 +43,12 @@ export async function getCatalog(filters?: CatalogFilters) {
     query = query.eq('categories.name', filters.category);
   }
 
-  if (filters?.subcategory) {
-    query = query.eq('subcategories.name', filters.subcategory);
+  if (filters?.family) {
+    query = query.eq('families.name', filters.family);
+  }
+
+  if (filters?.subfamily) {
+    query = query.eq('subfamilies.name', filters.subfamily);
   }
 
   if (filters?.brand) {
@@ -61,11 +70,12 @@ export async function getCatalog(filters?: CatalogFilters) {
     throw error;
   }
 
-  // Map the result to flatten category and subcategory names
+  // Map the result to flatten names
   const mappedData = data.map((item: any) => ({
     ...item,
     category: item.categories?.name || null,
-    subcategory: item.subcategories?.name || null,
+    family: item.families?.name || null,
+    subfamily: item.subfamilies?.name || null,
   }));
 
   return { data: mappedData, count };
@@ -85,9 +95,9 @@ export async function getCatalogCategories() {
   return data.map(cat => ({ id: cat.name, label: cat.name }));
 }
 
-export async function getCatalogSubcategories(categoryName?: string) {
+export async function getCatalogFamilies(categoryName?: string) {
   let query = supabase
-    .from('subcategories')
+    .from('families')
     .select('name, categories!inner(name)')
     .order('display_order');
 
@@ -98,7 +108,27 @@ export async function getCatalogSubcategories(categoryName?: string) {
   const { data, error } = await query;
 
   if (error) {
-    console.error('Error fetching subcategories:', error);
+    console.error('Error fetching families:', error);
+    return [];
+  }
+
+  return data.map((fam: any) => ({ id: fam.name, label: fam.name }));
+}
+
+export async function getCatalogSubfamilies(familyName?: string) {
+  let query = supabase
+    .from('subfamilies')
+    .select('name, families!inner(name)')
+    .order('display_order');
+
+  if (familyName) {
+    query = query.eq('families.name', familyName);
+  }
+
+  const { data, error } = await query;
+
+  if (error) {
+    console.error('Error fetching subfamilies:', error);
     return [];
   }
 
@@ -122,20 +152,23 @@ export async function getCatalogBrands() {
   return uniqueBrands.map(brand => ({ id: brand, label: brand }));
 }
 
-export async function getCategoriesWithSubcategories() {
-  // Fetch categories and their subcategories directly from the source tables
+export async function getCategoriesWithFamiliesAndSubfamilies() {
+  // Fetch complete hierarchy: categories -> families -> subfamilies
   const { data, error } = await supabase
     .from('categories')
-    .select('name, subcategories(name)')
+    .select('name, families(name, subfamilies(name))')
     .order('display_order');
 
   if (error) {
-    console.error('Error fetching categories with subcategories:', error);
+    console.error('Error fetching categories with hierarchy:', error);
     return [];
   }
 
   return data.map((cat: any) => ({
     category: cat.name,
-    subcategories: cat.subcategories?.map((sub: any) => sub.name).sort() || [],
+    families: cat.families?.map((fam: any) => ({
+      name: fam.name,
+      subfamilies: fam.subfamilies?.map((sub: any) => sub.name).sort() || [],
+    })).sort((a: any, b: any) => a.name.localeCompare(b.name)) || [],
   }));
 }

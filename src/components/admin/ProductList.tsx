@@ -47,7 +47,8 @@ const ProductList = ({ onEdit, refreshTrigger }: ProductListProps) => {
   const [searchTerm, setSearchTerm] = useState("");
   const [debouncedSearchTerm, setDebouncedSearchTerm] = useState("");
   const [selectedCategory, setSelectedCategory] = useState<string>("_all");
-  const [selectedSubcategory, setSelectedSubcategory] = useState<string>("_all");
+  const [selectedFamily, setSelectedFamily] = useState<string>("_all");
+  const [selectedSubfamily, setSelectedSubfamily] = useState<string>("_all");
   const [selectedBrand, setSelectedBrand] = useState<string>("_all");
   const [selectedStatus, setSelectedStatus] = useState<string>("all");
   const [sortOrder, setSortOrder] = useState<string>("name_asc");
@@ -59,7 +60,8 @@ const ProductList = ({ onEdit, refreshTrigger }: ProductListProps) => {
 
   // Data for filters
   const [categories, setCategories] = useState<any[]>([]);
-  const [subcategories, setSubcategories] = useState<any[]>([]);
+  const [families, setFamilies] = useState<any[]>([]);
+  const [subfamilies, setSubfamilies] = useState<any[]>([]);
   const [brands, setBrands] = useState<string[]>([]);
 
   // Debounce search term
@@ -78,21 +80,32 @@ const ProductList = ({ onEdit, refreshTrigger }: ProductListProps) => {
 
   useEffect(() => {
     if (selectedCategory && selectedCategory !== "_all") {
-      fetchSubcategories(selectedCategory);
+      fetchFamilies(selectedCategory);
     } else {
-      setSubcategories([]);
-      setSelectedSubcategory("_all");
+      setFamilies([]);
+      setSelectedFamily("_all");
     }
   }, [selectedCategory]);
+
+  useEffect(() => {
+    if (selectedFamily && selectedFamily !== "_all") {
+      fetchSubfamilies(selectedFamily);
+    } else {
+      setSubfamilies([]);
+      setSelectedSubfamily("_all");
+    }
+  }, [selectedFamily]);
 
   // Reset to page 1 when filters change
   useEffect(() => {
     setCurrentPage(1);
-  }, [debouncedSearchTerm, selectedCategory, selectedSubcategory, selectedBrand, selectedStatus, sortOrder]);
+  }, [debouncedSearchTerm, selectedCategory, selectedFamily, selectedSubfamily, selectedBrand, selectedStatus, sortOrder]);
 
   useEffect(() => {
     fetchProducts();
-  }, [debouncedSearchTerm, selectedCategory, selectedSubcategory, selectedBrand, selectedStatus, sortOrder, currentPage, itemsPerPage]);
+  }, [debouncedSearchTerm, selectedCategory, selectedFamily, selectedSubfamily, selectedBrand, selectedStatus, sortOrder, currentPage, itemsPerPage]);
+
+  // (handled above)
 
   // Refresh when refreshTrigger changes (after edits/bulk uploads)
   useEffect(() => {
@@ -110,14 +123,24 @@ const ProductList = ({ onEdit, refreshTrigger }: ProductListProps) => {
     if (data) setCategories(data);
   };
 
-  const fetchSubcategories = async (categoryId: string) => {
+  const fetchFamilies = async (categoryId: string) => {
     const { data } = await supabase
-      .from("subcategories")
+      .from("families")
       .select("*")
       .eq("category_id", categoryId)
       .order("display_order");
 
-    if (data) setSubcategories(data);
+    if (data) setFamilies(data);
+  };
+
+  const fetchSubfamilies = async (familyId: string) => {
+    const { data } = await supabase
+      .from("subfamilies")
+      .select("*")
+      .eq("family_id", familyId)
+      .order("display_order");
+
+    if (data) setSubfamilies(data);
   };
 
   const fetchProducts = async () => {
@@ -134,7 +157,8 @@ const ProductList = ({ onEdit, refreshTrigger }: ProductListProps) => {
         .select(`
           *,
           categories(name),
-          subcategories(name)
+          families(name),
+          subfamilies(name)
         `);
 
       // Apply filters to both queries
@@ -149,9 +173,14 @@ const ProductList = ({ onEdit, refreshTrigger }: ProductListProps) => {
         countQuery = countQuery.eq("category_id", selectedCategory);
       }
 
-      if (selectedSubcategory && selectedSubcategory !== "_all") {
-        query = query.eq("subcategory_id", selectedSubcategory);
-        countQuery = countQuery.eq("subcategory_id", selectedSubcategory);
+      if (selectedFamily && selectedFamily !== "_all") {
+        query = query.eq("family_id", selectedFamily);
+        countQuery = countQuery.eq("family_id", selectedFamily);
+      }
+
+      if (selectedSubfamily && selectedSubfamily !== "_all") {
+        query = query.eq("subcategory_id", selectedSubfamily);
+        countQuery = countQuery.eq("subcategory_id", selectedSubfamily);
       }
 
       if (selectedBrand && selectedBrand !== "_all") {
@@ -258,14 +287,15 @@ const ProductList = ({ onEdit, refreshTrigger }: ProductListProps) => {
     setSearchTerm("");
     setDebouncedSearchTerm("");
     setSelectedCategory("_all");
-    setSelectedSubcategory("_all");
+    setSelectedFamily("_all");
+    setSelectedSubfamily("_all");
     setSelectedBrand("_all");
     setSelectedStatus("all");
     setSortOrder("name_asc");
     setCurrentPage(1);
   };
 
-  const hasActiveFilters = searchTerm || selectedCategory !== "_all" || selectedSubcategory !== "_all" || selectedBrand !== "_all" || selectedStatus !== "all" || sortOrder !== "name_asc";
+  const hasActiveFilters = searchTerm || selectedCategory !== "_all" || selectedFamily !== "_all" || selectedSubfamily !== "_all" || selectedBrand !== "_all" || selectedStatus !== "all" || sortOrder !== "name_asc";
 
   const totalPages = Math.ceil(totalCount / itemsPerPage);
   const startItem = totalCount === 0 ? 0 : (currentPage - 1) * itemsPerPage + 1;
@@ -383,20 +413,42 @@ const ProductList = ({ onEdit, refreshTrigger }: ProductListProps) => {
               </Select>
             </div>
 
-            {/* Subcategory */}
+            {/* Family */}
             <div className="space-y-2">
-              <Label htmlFor="subcategory">Subcategoria</Label>
+              <Label htmlFor="family">Família</Label>
               <Select
-                value={selectedSubcategory}
-                onValueChange={setSelectedSubcategory}
+                value={selectedFamily}
+                onValueChange={setSelectedFamily}
                 disabled={selectedCategory === "_all"}
               >
-                <SelectTrigger id="subcategory">
+                <SelectTrigger id="family">
                   <SelectValue placeholder="Todas" />
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="_all">Todas</SelectItem>
-                  {subcategories.map((sub) => (
+                  {families.map((fam) => (
+                    <SelectItem key={fam.id} value={fam.id}>
+                      {fam.name}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+
+            {/* Subfamily */}
+            <div className="space-y-2">
+              <Label htmlFor="subfamily">Subfamília</Label>
+              <Select
+                value={selectedSubfamily}
+                onValueChange={setSelectedSubfamily}
+                disabled={selectedFamily === "_all"}
+              >
+                <SelectTrigger id="subfamily">
+                  <SelectValue placeholder="Todas" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="_all">Todas</SelectItem>
+                  {subfamilies.map((sub) => (
                     <SelectItem key={sub.id} value={sub.id}>
                       {sub.name}
                     </SelectItem>

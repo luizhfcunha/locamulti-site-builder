@@ -19,7 +19,7 @@ import {
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
 import { WHATSAPP } from "@/config/whatsapp";
-import { getCatalog, getCategoriesWithSubcategories } from "@/lib/catalog";
+import { getCatalog, getCategoriesWithFamiliesAndSubfamilies } from "@/lib/catalog";
 import { useToast } from "@/hooks/use-toast";
 import { trackWhatsAppClick } from "@/lib/analytics";
 
@@ -27,7 +27,8 @@ interface Equipment {
   id: string;
   name: string | null;
   category: string | null;
-  subcategory: string | null;
+  family: string | null;
+  subfamily: string | null;
   brand: string | null;
   image_url: string | null;
   description: string | null;
@@ -44,23 +45,25 @@ const Catalogo = () => {
   const [searchQuery, setSearchQuery] = useState("");
 
   const [equipments, setEquipments] = useState<Equipment[]>([]);
-  const [categories, setCategories] = useState<{ category: string; subcategories: string[] }[]>([]);
+  const [categories, setCategories] = useState<{ category: string; families: { name: string; subfamilies: string[] }[] }[]>([]);
   const [loading, setLoading] = useState(true);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalCount, setTotalCount] = useState(0);
   const pageSize = 24;
 
-  // Estados para filtros com accordion
+  // Estados para filtros com accordion de 3 níveis
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
-  const [selectedSubcategory, setSelectedSubcategory] = useState<string | null>(null);
+  const [selectedFamily, setSelectedFamily] = useState<string | null>(null);
+  const [selectedSubfamily, setSelectedSubfamily] = useState<string | null>(null);
   const [expandedCategory, setExpandedCategory] = useState<string | null>(null);
+  const [expandedFamily, setExpandedFamily] = useState<string | null>(null);
   const [isFilterOpen, setIsFilterOpen] = useState(false);
 
-  // Carregar categorias e subcategorias agrupadas
+  // Carregar categorias com hierarquia completa
   useEffect(() => {
     const loadCategories = async () => {
       try {
-        const categoriesData = await getCategoriesWithSubcategories();
+        const categoriesData = await getCategoriesWithFamiliesAndSubfamilies();
         setCategories(categoriesData);
       } catch (error) {
         console.error("Erro ao carregar categorias:", error);
@@ -70,10 +73,11 @@ const Catalogo = () => {
     loadCategories();
   }, []);
 
-  // Handler para selecionar subcategoria
-  const handleSubcategoryClick = (category: string, subcategory: string) => {
+  // Handler para selecionar subfamília
+  const handleSubfamilyClick = (category: string, family: string, subfamily: string) => {
     setSelectedCategory(category);
-    setSelectedSubcategory(subcategory);
+    setSelectedFamily(family);
+    setSelectedSubfamily(subfamily);
     setCurrentPage(1);
     setIsFilterOpen(false); // Fechar drawer no mobile
   };
@@ -81,8 +85,10 @@ const Catalogo = () => {
   // Limpar filtros
   const handleClearFilters = () => {
     setSelectedCategory(null);
-    setSelectedSubcategory(null);
+    setSelectedFamily(null);
+    setSelectedSubfamily(null);
     setExpandedCategory(null);
+    setExpandedFamily(null);
     setCurrentPage(1);
   };
 
@@ -100,8 +106,12 @@ const Catalogo = () => {
           catalogFilters.category = selectedCategory;
         }
 
-        if (selectedSubcategory) {
-          catalogFilters.subcategory = selectedSubcategory;
+        if (selectedFamily) {
+          catalogFilters.family = selectedFamily;
+        }
+
+        if (selectedSubfamily) {
+          catalogFilters.subfamily = selectedSubfamily;
         }
 
         if (searchQuery) {
@@ -124,7 +134,7 @@ const Catalogo = () => {
     };
 
     applyFilters();
-  }, [selectedCategory, selectedSubcategory, searchQuery, currentPage, toast]);
+  }, [selectedCategory, selectedFamily, selectedSubfamily, searchQuery, currentPage, toast]);
 
   // Reset para página 1 quando busca mudar
   useEffect(() => {
@@ -162,11 +172,14 @@ const Catalogo = () => {
             <CatalogSidebar
               categories={categories}
               onSearch={setSearchQuery}
-              onSubcategoryClick={handleSubcategoryClick}
+              onSubfamilyClick={handleSubfamilyClick}
               selectedCategory={selectedCategory}
-              selectedSubcategory={selectedSubcategory}
+              selectedFamily={selectedFamily}
+              selectedSubfamily={selectedSubfamily}
               expandedCategory={expandedCategory}
-              onExpandedChange={setExpandedCategory}
+              expandedFamily={expandedFamily}
+              onExpandedCategoryChange={setExpandedCategory}
+              onExpandedFamilyChange={setExpandedFamily}
             />
           </div>
 
@@ -232,14 +245,12 @@ const Catalogo = () => {
                 </div>
 
                 {/* Badge de filtros ativos */}
-                {(selectedCategory || selectedSubcategory) && (
+                {(selectedCategory || selectedFamily || selectedSubfamily) && (
                   <div className="mt-4 flex items-center gap-2 flex-wrap">
                     <span className="text-sm text-muted-foreground">Filtros ativos:</span>
-                    {selectedCategory && selectedSubcategory && (
-                      <div className="inline-flex items-center gap-2 px-3 py-1 bg-primary/10 text-primary rounded-full text-sm">
-                        {selectedCategory} → {selectedSubcategory}
-                      </div>
-                    )}
+                    <div className="inline-flex items-center gap-2 px-3 py-1 bg-primary/10 text-primary rounded-full text-sm">
+                      {[selectedCategory, selectedFamily, selectedSubfamily].filter(Boolean).join(" → ")}
+                    </div>
                     <Button
                       variant="ghost"
                       size="sm"
@@ -260,7 +271,7 @@ const Catalogo = () => {
               <div className="mb-6 flex items-center justify-between">
                 <Breadcrumb>
                   <BreadcrumbList>
-                    {!selectedCategory && !selectedSubcategory ? (
+                    {!selectedCategory && !selectedFamily && !selectedSubfamily ? (
                       <BreadcrumbItem>
                         <BreadcrumbPage className="text-sm text-muted-foreground">
                           Todos os equipamentos
@@ -269,12 +280,12 @@ const Catalogo = () => {
                     ) : (
                       <>
                         <BreadcrumbItem>
-                          {selectedSubcategory ? (
+                          {selectedFamily || selectedSubfamily ? (
                             <BreadcrumbLink
                               asChild
                               className="text-sm cursor-pointer"
                             >
-                              <button onClick={() => setSelectedSubcategory(null)}>
+                              <button onClick={() => { setSelectedFamily(null); setSelectedSubfamily(null); }}>
                                 {selectedCategory}
                               </button>
                             </BreadcrumbLink>
@@ -284,12 +295,33 @@ const Catalogo = () => {
                             </BreadcrumbPage>
                           )}
                         </BreadcrumbItem>
-                        {selectedSubcategory && (
+                        {selectedFamily && (
+                          <>
+                            <BreadcrumbSeparator />
+                            <BreadcrumbItem>
+                              {selectedSubfamily ? (
+                                <BreadcrumbLink
+                                  asChild
+                                  className="text-sm cursor-pointer"
+                                >
+                                  <button onClick={() => setSelectedSubfamily(null)}>
+                                    {selectedFamily}
+                                  </button>
+                                </BreadcrumbLink>
+                              ) : (
+                                <BreadcrumbPage className="text-sm">
+                                  {selectedFamily}
+                                </BreadcrumbPage>
+                              )}
+                            </BreadcrumbItem>
+                          </>
+                        )}
+                        {selectedSubfamily && (
                           <>
                             <BreadcrumbSeparator />
                             <BreadcrumbItem>
                               <BreadcrumbPage className="text-sm">
-                                {selectedSubcategory}
+                                {selectedSubfamily}
                               </BreadcrumbPage>
                             </BreadcrumbItem>
                           </>
@@ -298,7 +330,7 @@ const Catalogo = () => {
                     )}
                   </BreadcrumbList>
                 </Breadcrumb>
-                {(selectedCategory || selectedSubcategory) && (
+                {(selectedCategory || selectedFamily || selectedSubfamily) && (
                   <Button
                     variant="link"
                     size="sm"
@@ -336,7 +368,7 @@ const Catalogo = () => {
                           id={equipment.id}
                           name={equipment.name || "Equipamento"}
                           category={equipment.category || ""}
-                          subcategory={equipment.subcategory}
+                          subcategory={equipment.subfamily}
                           brand={equipment.brand || ""}
                           imageUrl={equipment.image_url || "/placeholder.svg"}
                           specifications={equipment.description ? [equipment.description] : []}
@@ -377,9 +409,9 @@ const Catalogo = () => {
                                   {equipment.description}
                                 </p>
                               )}
-                              {equipment.subcategory && (
+                              {equipment.subfamily && (
                                 <p className="text-xs text-muted-foreground">
-                                  <span className="font-medium">Subcategoria:</span> {equipment.subcategory}
+                                  <span className="font-medium">Subfamília:</span> {equipment.subfamily}
                                 </p>
                               )}
                             </div>
@@ -484,11 +516,14 @@ const Catalogo = () => {
             <CatalogSidebar
               categories={categories}
               onSearch={setSearchQuery}
-              onSubcategoryClick={handleSubcategoryClick}
+              onSubfamilyClick={handleSubfamilyClick}
               selectedCategory={selectedCategory}
-              selectedSubcategory={selectedSubcategory}
+              selectedFamily={selectedFamily}
+              selectedSubfamily={selectedSubfamily}
               expandedCategory={expandedCategory}
-              onExpandedChange={setExpandedCategory}
+              expandedFamily={expandedFamily}
+              onExpandedCategoryChange={setExpandedCategory}
+              onExpandedFamilyChange={setExpandedFamily}
             />
           </div>
         </DrawerContent>
