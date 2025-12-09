@@ -3,6 +3,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Checkbox } from "@/components/ui/checkbox";
 import {
   Select,
   SelectContent,
@@ -29,7 +30,7 @@ import {
   PaginationPrevious,
   PaginationEllipsis,
 } from "@/components/ui/pagination";
-import { Pencil, Trash2, X } from "lucide-react";
+import { Pencil, Trash2, X, CheckSquare, Square } from "lucide-react";
 import { toast } from "@/hooks/use-toast";
 import { Skeleton } from "@/components/ui/skeleton";
 
@@ -42,6 +43,11 @@ const ProductList = ({ onEdit, refreshTrigger }: ProductListProps) => {
   const [products, setProducts] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [deleteId, setDeleteId] = useState<string | null>(null);
+
+  // Bulk actions state
+  const [selectedIds, setSelectedIds] = useState<string[]>([]);
+  const [bulkDeleteOpen, setBulkDeleteOpen] = useState(false);
+  const [isBulkDeleting, setIsBulkDeleting] = useState(false);
 
   // Filter states
   const [searchTerm, setSearchTerm] = useState("");
@@ -99,18 +105,18 @@ const ProductList = ({ onEdit, refreshTrigger }: ProductListProps) => {
   // Reset to page 1 when filters change
   useEffect(() => {
     setCurrentPage(1);
+    setSelectedIds([]); // Clear selection on filter change
   }, [debouncedSearchTerm, selectedCategory, selectedFamily, selectedSubfamily, selectedBrand, selectedStatus, sortOrder]);
 
   useEffect(() => {
     fetchProducts();
   }, [debouncedSearchTerm, selectedCategory, selectedFamily, selectedSubfamily, selectedBrand, selectedStatus, sortOrder, currentPage, itemsPerPage]);
 
-  // (handled above)
-
   // Refresh when refreshTrigger changes (after edits/bulk uploads)
   useEffect(() => {
     if (refreshTrigger !== undefined && refreshTrigger > 0) {
       fetchProducts();
+      setSelectedIds([]);
     }
   }, [refreshTrigger]);
 
@@ -280,6 +286,59 @@ const ProductList = ({ onEdit, refreshTrigger }: ProductListProps) => {
       });
     } finally {
       setDeleteId(null);
+    }
+  };
+
+  const handleBulkDelete = async () => {
+    if (selectedIds.length === 0) return;
+
+    setIsBulkDeleting(true);
+    try {
+      const { error } = await supabase
+        .from("products")
+        .delete()
+        .in("id", selectedIds);
+
+      if (error) throw error;
+
+      toast({
+        title: "Produtos excluídos",
+        description: `${selectedIds.length} produtos foram excluídos com sucesso.`,
+      });
+
+      setSelectedIds([]);
+      setBulkDeleteOpen(false);
+      fetchProducts();
+    } catch (error: any) {
+      toast({
+        title: "Erro ao excluir produtos",
+        description: error.message,
+        variant: "destructive",
+      });
+    } finally {
+      setIsBulkDeleting(false);
+    }
+  };
+
+  const toggleSelection = (id: string) => {
+    setSelectedIds(prev =>
+      prev.includes(id) ? prev.filter(item => item !== id) : [...prev, id]
+    );
+  };
+
+  const toggleSelectAll = () => {
+    if (products.length === 0) return;
+
+    const allSelectedInPage = products.every(p => selectedIds.includes(p.id));
+
+    if (allSelectedInPage) {
+      // Unselect all in this page
+      const newSelected = selectedIds.filter(id => !products.find(p => p.id === id));
+      setSelectedIds(newSelected);
+    } else {
+      // Select all in this page
+      const idsToAdd = products.map(p => p.id).filter(id => !selectedIds.includes(id));
+      setSelectedIds([...selectedIds, ...idsToAdd]);
     }
   };
 
@@ -510,11 +569,36 @@ const ProductList = ({ onEdit, refreshTrigger }: ProductListProps) => {
           </div>
         </div>
 
-        {/* Results count and items per page */}
-        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-          <p className="text-sm text-muted-foreground">
-            Mostrando {startItem}-{endItem} de {totalCount} {totalCount === 1 ? "produto" : "produtos"}
-          </p>
+        {/* Results count, Select All and Bulk Actions */}
+        <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
+          <div className="flex items-center gap-4">
+            <div className="flex items-center gap-2">
+              <Checkbox
+                id="select-all"
+                checked={products.length > 0 && products.every(p => selectedIds.includes(p.id))}
+                onCheckedChange={toggleSelectAll}
+              />
+              <Label htmlFor="select-all" className="cursor-pointer">
+                Selecionar todos ({products.length > 0 && products.every(p => selectedIds.includes(p.id)) ? "na página" : ""})
+              </Label>
+            </div>
+
+            <p className="text-sm text-muted-foreground hidden sm:block">
+              | {totalCount} produtos totais
+            </p>
+
+            {selectedIds.length > 0 && (
+              <Button
+                variant="destructive"
+                size="sm"
+                onClick={() => setBulkDeleteOpen(true)}
+                className="gap-2 animate-in fade-in"
+              >
+                <Trash2 className="w-4 h-4" />
+                Excluir Selecionados ({selectedIds.length})
+              </Button>
+            )}
+          </div>
 
           <div className="flex items-center gap-2">
             <Label htmlFor="items-per-page" className="text-sm whitespace-nowrap">
@@ -553,10 +637,19 @@ const ProductList = ({ onEdit, refreshTrigger }: ProductListProps) => {
               {products.map((product) => (
                 <div
                   key={product.id}
-                  className="border rounded-card overflow-hidden hover:shadow-card transition-shadow"
+                  className={`border rounded-card overflow-hidden hover:shadow-card transition-shadow relative group ${selectedIds.includes(product.id) ? 'ring-2 ring-primary border-primary' : ''}`}
                 >
+                  {/* Checkbox Overlay */}
+                  <div className="absolute top-2 left-2 z-10">
+                    <Checkbox
+                      checked={selectedIds.includes(product.id)}
+                      onCheckedChange={() => toggleSelection(product.id)}
+                      className="bg-white/80 data-[state=checked]:bg-primary data-[state=checked]:text-primary-foreground"
+                    />
+                  </div>
+
                   {/* Image */}
-                  <div className="aspect-video bg-lm-muted relative">
+                  <div className="aspect-video bg-lm-muted relative cursor-pointer" onClick={() => toggleSelection(product.id)}>
                     {product.image_url ? (
                       <img
                         src={product.image_url}
@@ -654,6 +747,7 @@ const ProductList = ({ onEdit, refreshTrigger }: ProductListProps) => {
         )}
       </div>
 
+      {/* Single Delete Alert */}
       <AlertDialog open={!!deleteId} onOpenChange={() => setDeleteId(null)}>
         <AlertDialogContent>
           <AlertDialogHeader>
@@ -670,8 +764,27 @@ const ProductList = ({ onEdit, refreshTrigger }: ProductListProps) => {
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
+
+      {/* Bulk Delete Alert */}
+      <AlertDialog open={bulkDeleteOpen} onOpenChange={setBulkDeleteOpen}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Confirmar exclusão em massa</AlertDialogTitle>
+            <AlertDialogDescription>
+              Tem certeza que deseja excluir os <strong>{selectedIds.length}</strong> produtos selecionados? Esta ação não pode ser desfeita.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancelar</AlertDialogCancel>
+            <AlertDialogAction onClick={handleBulkDelete} className="bg-destructive hover:bg-destructive/90">
+              {isBulkDeleting ? "Excluindo..." : "Excluir Selecionados"}
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </>
   );
 };
 
 export default ProductList;
+
