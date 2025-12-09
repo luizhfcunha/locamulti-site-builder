@@ -1,9 +1,4 @@
-import {
-  Carousel,
-  CarouselContent,
-  CarouselItem,
-} from "@/components/ui/carousel";
-import Autoplay from "embla-carousel-autoplay";
+import { InfiniteSlider } from "@/components/ui/infinite-slider";
 
 interface Brand {
   id: string;
@@ -17,37 +12,30 @@ interface BrandCarouselProps {
 
 export const BrandCarousel = ({ brands }: BrandCarouselProps) => {
   return (
-    <Carousel
-      opts={{
-        align: "start",
-        loop: true,
-      }}
-      plugins={[
-        Autoplay({
-          delay: 3000,
-        }),
-      ]}
-      className="w-full"
+    <InfiniteSlider 
+      gap={48} 
+      duration={30}
+      durationOnHover={60}
+      className="py-4"
     >
-      <CarouselContent className="-ml-8">
-        {brands.map((brand) => (
-          <CarouselItem key={brand.id} className="pl-8 basis-1/3 sm:basis-1/4 md:basis-1/5 lg:basis-1/6">
-            <div className="flex items-center justify-center h-20 p-4 grayscale hover:grayscale-0 opacity-60 hover:opacity-100 transition-all duration-base">
-              {brand.logoUrl ? (
-                <img
-                  src={brand.logoUrl}
-                  alt={brand.name}
-                  className="max-w-full max-h-full object-contain"
-                />
-              ) : (
-                <span className="font-heading font-bold text-lm-ink text-lg">
-                  {brand.name}
-                </span>
-              )}
-            </div>
-          </CarouselItem>
-        ))}
-      </CarouselContent>
-    </Carousel>
+      {brands.map((brand) => (
+        <div
+          key={brand.id}
+          className="flex items-center justify-center h-16 w-32 px-4"
+        >
+          {brand.logoUrl ? (
+            <img
+              src={brand.logoUrl}
+              alt={brand.name}
+              className="max-w-full max-h-full object-contain"
+            />
+          ) : (
+            <span className="font-heading font-bold text-foreground text-lg">
+              {brand.name}
+            </span>
+          )}
+        </div>
+      ))}
+    </InfiniteSlider>
   );
 };
