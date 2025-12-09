@@ -13,6 +13,7 @@ import Login from "./pages/Login";
 import AdminProdutos from "./pages/AdminProdutos";
 import AdminDashboard from "./pages/AdminDashboard";
 import Categories from "./pages/admin/Categories";
+import ImportCatalog from "./pages/admin/ImportCatalog";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -58,6 +59,14 @@ const App = () => {
                   element={
                     <AdminRoute>
                       <Categories />
+                    </AdminRoute>
+                  }
+                />
+                <Route
+                  path="/admin/import-catalog"
+                  element={
+                    <AdminRoute>
+                      <ImportCatalog />
                     </AdminRoute>
                   }
                 />
