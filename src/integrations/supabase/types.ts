@@ -83,10 +83,10 @@ export type Database = {
             referencedColumns: ["id"]
           },
           {
-            foreignKeyName: "analytics_events_subcategory_id_fkey"
+            foreignKeyName: "analytics_events_subfamily_id_fkey"
             columns: ["subcategory_id"]
             isOneToOne: false
-            referencedRelation: "subcategories"
+            referencedRelation: "subfamilies"
             referencedColumns: ["id"]
           },
         ]
@@ -129,30 +129,77 @@ export type Database = {
       }
       categories: {
         Row: {
+          catalog_id: string | null
           created_at: string | null
           description: string | null
           display_order: number | null
           id: string
           name: string
+          slug: string | null
           updated_at: string | null
         }
         Insert: {
+          catalog_id?: string | null
           created_at?: string | null
           description?: string | null
           display_order?: number | null
           id?: string
           name: string
+          slug?: string | null
           updated_at?: string | null
         }
         Update: {
+          catalog_id?: string | null
           created_at?: string | null
           description?: string | null
           display_order?: number | null
           id?: string
           name?: string
+          slug?: string | null
           updated_at?: string | null
         }
         Relationships: []
+      }
+      families: {
+        Row: {
+          catalog_id: string | null
+          category_id: string
+          created_at: string | null
+          display_order: number
+          id: string
+          name: string
+          slug: string | null
+          updated_at: string | null
+        }
+        Insert: {
+          catalog_id?: string | null
+          category_id: string
+          created_at?: string | null
+          display_order?: number
+          id?: string
+          name: string
+          slug?: string | null
+          updated_at?: string | null
+        }
+        Update: {
+          catalog_id?: string | null
+          category_id?: string
+          created_at?: string | null
+          display_order?: number
+          id?: string
+          name?: string
+          slug?: string | null
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "families_category_id_fkey"
+            columns: ["category_id"]
+            isOneToOne: false
+            referencedRelation: "categories"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       products: {
         Row: {
@@ -161,6 +208,7 @@ export type Database = {
           category_id: string | null
           created_at: string | null
           description: string | null
+          family_id: string | null
           id: string
           image_url: string | null
           name: string
@@ -175,6 +223,7 @@ export type Database = {
           category_id?: string | null
           created_at?: string | null
           description?: string | null
+          family_id?: string | null
           id?: string
           image_url?: string | null
           name: string
@@ -189,6 +238,7 @@ export type Database = {
           category_id?: string | null
           created_at?: string | null
           description?: string | null
+          family_id?: string | null
           id?: string
           image_url?: string | null
           name?: string
@@ -206,48 +256,64 @@ export type Database = {
             referencedColumns: ["id"]
           },
           {
-            foreignKeyName: "products_subcategory_id_fkey"
+            foreignKeyName: "products_family_id_fkey"
+            columns: ["family_id"]
+            isOneToOne: false
+            referencedRelation: "families"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "products_subfamily_id_fkey"
             columns: ["subcategory_id"]
             isOneToOne: false
-            referencedRelation: "subcategories"
+            referencedRelation: "subfamilies"
             referencedColumns: ["id"]
           },
         ]
       }
-      subcategories: {
+      subfamilies: {
         Row: {
-          category_id: string
+          catalog_id: string | null
           created_at: string | null
           description: string | null
-          display_order: number | null
+          display_order: number
+          family_id: string
           id: string
+          is_consumable: boolean | null
           name: string
+          slug: string | null
           updated_at: string | null
         }
         Insert: {
-          category_id: string
+          catalog_id?: string | null
           created_at?: string | null
           description?: string | null
-          display_order?: number | null
+          display_order?: number
+          family_id: string
           id?: string
+          is_consumable?: boolean | null
           name: string
+          slug?: string | null
           updated_at?: string | null
         }
         Update: {
-          category_id?: string
+          catalog_id?: string | null
           created_at?: string | null
           description?: string | null
-          display_order?: number | null
+          display_order?: number
+          family_id?: string
           id?: string
+          is_consumable?: boolean | null
           name?: string
+          slug?: string | null
           updated_at?: string | null
         }
         Relationships: [
           {
-            foreignKeyName: "subcategories_category_id_fkey"
-            columns: ["category_id"]
+            foreignKeyName: "subfamilies_family_id_fkey"
+            columns: ["family_id"]
             isOneToOne: false
-            referencedRelation: "categories"
+            referencedRelation: "families"
             referencedColumns: ["id"]
           },
         ]

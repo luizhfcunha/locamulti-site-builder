@@ -18,7 +18,8 @@ const productSchema = z.object({
   brand: z.string().optional(),
   supplier_code: z.string().optional(),
   category_id: z.string().min(1, "Categoria é obrigatória"),
-  subcategory_id: z.string().optional(),
+  family_id: z.string().optional(),
+  subfamily_id: z.string().optional(),
   price: z.string().optional(),
   active: z.boolean().default(true),
 });
@@ -32,7 +33,8 @@ interface ProductFormProps {
 
 const ProductForm = ({ product, onClose }: ProductFormProps) => {
   const [categories, setCategories] = useState<any[]>([]);
-  const [subcategories, setSubcategories] = useState<any[]>([]);
+  const [families, setFamilies] = useState<any[]>([]);
+  const [subfamilies, setSubfamilies] = useState<any[]>([]);
   const [imageFile, setImageFile] = useState<File | null>(null);
   const [imagePreview, setImagePreview] = useState<string | null>(product?.image_url || null);
   const [uploading, setUploading] = useState(false);
@@ -45,13 +47,16 @@ const ProductForm = ({ product, onClose }: ProductFormProps) => {
       brand: product.brand || "",
       supplier_code: product.supplier_code || "",
       category_id: product.category_id || "",
-      subcategory_id: product.subcategory_id || "",
+      family_id: product.family_id || "",
+      subfamily_id: product.subcategory_id || "",
       price: product.price?.toString() || "",
       active: product.active ?? true,
     } : {
       active: true,
     },
   });
+
+  const selectedFamilyId = watch("family_id");
 
   const selectedCategoryId = watch("category_id");
 
@@ -61,9 +66,19 @@ const ProductForm = ({ product, onClose }: ProductFormProps) => {
 
   useEffect(() => {
     if (selectedCategoryId) {
-      fetchSubcategories(selectedCategoryId);
+      fetchFamilies(selectedCategoryId);
+    } else {
+      setFamilies([]);
     }
   }, [selectedCategoryId]);
+
+  useEffect(() => {
+    if (selectedFamilyId) {
+      fetchSubfamilies(selectedFamilyId);
+    } else {
+      setSubfamilies([]);
+    }
+  }, [selectedFamilyId]);
 
   const fetchCategories = async () => {
     const { data } = await supabase
@@ -74,14 +89,24 @@ const ProductForm = ({ product, onClose }: ProductFormProps) => {
     if (data) setCategories(data);
   };
 
-  const fetchSubcategories = async (categoryId: string) => {
+  const fetchFamilies = async (categoryId: string) => {
     const { data } = await supabase
-      .from("subcategories")
+      .from("families")
       .select("*")
       .eq("category_id", categoryId)
       .order("display_order");
     
-    if (data) setSubcategories(data);
+    if (data) setFamilies(data);
+  };
+
+  const fetchSubfamilies = async (familyId: string) => {
+    const { data } = await supabase
+      .from("subfamilies")
+      .select("*")
+      .eq("family_id", familyId)
+      .order("display_order");
+    
+    if (data) setSubfamilies(data);
   };
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -139,7 +164,8 @@ const ProductForm = ({ product, onClose }: ProductFormProps) => {
         brand: data.brand || null,
         supplier_code: data.supplier_code || null,
         category_id: data.category_id,
-        subcategory_id: data.subcategory_id || null,
+        family_id: data.family_id || null,
+        subcategory_id: data.subfamily_id || null,
         price: data.price ? parseFloat(data.price) : null,
         image_url: imageUrl,
         active: data.active,
@@ -259,17 +285,37 @@ const ProductForm = ({ product, onClose }: ProductFormProps) => {
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="subcategory_id">Subcategoria</Label>
+              <Label htmlFor="family_id">Família</Label>
               <Select
-                value={watch("subcategory_id") || ""}
-                onValueChange={(value) => setValue("subcategory_id", value)}
+                value={watch("family_id") || ""}
+                onValueChange={(value) => setValue("family_id", value)}
                 disabled={!selectedCategoryId}
               >
                 <SelectTrigger>
-                  <SelectValue placeholder="Selecione uma subcategoria" />
+                  <SelectValue placeholder="Selecione uma família" />
                 </SelectTrigger>
                 <SelectContent>
-                  {subcategories.map((sub) => (
+                  {families.map((fam) => (
+                    <SelectItem key={fam.id} value={fam.id}>
+                      {fam.name}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="subfamily_id">Subfamília</Label>
+              <Select
+                value={watch("subfamily_id") || ""}
+                onValueChange={(value) => setValue("subfamily_id", value)}
+                disabled={!selectedFamilyId}
+              >
+                <SelectTrigger>
+                  <SelectValue placeholder="Selecione uma subfamília" />
+                </SelectTrigger>
+                <SelectContent>
+                  {subfamilies.map((sub) => (
                     <SelectItem key={sub.id} value={sub.id}>
                       {sub.name}
                     </SelectItem>
