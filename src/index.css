@@ -2,6 +2,26 @@
 @tailwind components;
 @tailwind utilities;
 
+/* ============================================
+   CUSTOM FONTS - Microgramma (LocaMulti Brand)
+   ============================================ */
+@font-face {
+  font-family: 'Microgramma';
+  src: url('/fonts/microgbe.ttf') format('truetype');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Microgramma';
+  src: url('/fonts/microgme.ttf') format('truetype');
+  font-weight: 400;
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+
 /* Definition of the design system. All colors, gradients, fonts, etc should be defined here. 
 All colors MUST be HSL.
 */
@@ -11,93 +31,143 @@ All colors MUST be HSL.
     /* ============================================
        LOCAMULTI BRAND COLORS (HSL)
        ============================================ */
-    --lm-orange: 12 67% 53%;      /* #DB5A34 - Primary CTA, destaques, botões principais */
-    --lm-terracota: 11 57% 47%;   /* #B94935 - Hover states, estados ativos */
-    --lm-plum: 347 28% 20%;       /* #3E2229 - Títulos, seções premium, footer */
-    --lm-ink: 0 3% 21%;           /* #373435 - Textos, ícones, linhas */
-    --lm-white: 0 0% 100%;        /* #FFFFFF - Fundo geral, textos em fundos escuros */
-    --lm-muted: 20 22% 96%;       /* #F6F3F2 - Seções alternadas, cards, fundos suaves */
+    --lm-orange: 12 67% 53%;
+    /* #DB5A34 - Primary CTA, destaques, botões principais */
+    --lm-terracota: 11 57% 47%;
+    /* #B94935 - Hover states, estados ativos */
+    --lm-plum: 347 28% 20%;
+    /* #3E2229 - Títulos, seções premium, footer */
+    --lm-ink: 0 3% 21%;
+    /* #373435 - Textos, ícones, linhas */
+    --lm-white: 0 0% 100%;
+    /* #FFFFFF - Fundo geral, textos em fundos escuros */
+    --lm-muted: 20 22% 96%;
+    /* #F6F3F2 - Seções alternadas, cards, fundos suaves */
 
     /* ============================================
        SEMANTIC TOKENS (Mapped to Brand Colors)
        ============================================ */
-    --background: 0 0% 100%;           /* Fundo principal */
-    --foreground: 0 3% 21%;            /* Texto principal */
+    --background: 0 0% 100%;
+    /* Fundo principal */
+    --foreground: 0 3% 21%;
+    /* Texto principal */
 
-    --card: 0 0% 100%;                 /* Fundo de cards */
-    --card-foreground: 0 3% 21%;       /* Texto em cards */
+    --card: 0 0% 100%;
+    /* Fundo de cards */
+    --card-foreground: 0 3% 21%;
+    /* Texto em cards */
 
-    --popover: 0 0% 100%;              /* Fundo de popovers */
-    --popover-foreground: 0 3% 21%;    /* Texto em popovers */
+    --popover: 0 0% 100%;
+    /* Fundo de popovers */
+    --popover-foreground: 0 3% 21%;
+    /* Texto em popovers */
 
-    --primary: 12 67% 53%;             /* Cor primária (Laranja LocaMulti) */
-    --primary-foreground: 0 0% 100%;   /* Texto em elementos primários */
+    --primary: 12 67% 53%;
+    /* Cor primária (Laranja LocaMulti) */
+    --primary-foreground: 0 0% 100%;
+    /* Texto em elementos primários */
 
-    --secondary: 20 22% 96%;           /* Cor secundária (Neutro Claro) */
-    --secondary-foreground: 0 3% 21%;  /* Texto em elementos secundários */
+    --secondary: 20 22% 96%;
+    /* Cor secundária (Neutro Claro) */
+    --secondary-foreground: 0 3% 21%;
+    /* Texto em elementos secundários */
 
-    --muted: 20 22% 96%;               /* Fundo suave/muted */
-    --muted-foreground: 0 3% 45%;      /* Texto suave/muted */
+    --muted: 20 22% 96%;
+    /* Fundo suave/muted */
+    --muted-foreground: 0 3% 45%;
+    /* Texto suave/muted */
 
-    --accent: 12 67% 53%;              /* Cor de acento (Laranja) */
-    --accent-foreground: 0 0% 100%;    /* Texto em elementos de acento */
+    --accent: 12 67% 53%;
+    /* Cor de acento (Laranja) */
+    --accent-foreground: 0 0% 100%;
+    /* Texto em elementos de acento */
 
-    --destructive: 0 84.2% 60.2%;      /* Cor para ações destrutivas */
+    --destructive: 0 84.2% 60.2%;
+    /* Cor para ações destrutivas */
     --destructive-foreground: 0 0% 100%;
 
-    --border: 0 0% 90%;                /* Bordas */
-    --input: 0 0% 90%;                 /* Bordas de inputs */
-    --ring: 12 67% 53%;                /* Focus ring (Laranja) */
+    --border: 0 0% 90%;
+    /* Bordas */
+    --input: 0 0% 90%;
+    /* Bordas de inputs */
+    --ring: 12 67% 53%;
+    /* Focus ring (Laranja) */
 
     /* ============================================
        BORDER RADIUS (Raio de Borda)
        ============================================ */
-    --radius: 1rem;                    /* 16px - Padrão geral */
-    --radius-card: 0.875rem;           /* 14px - Cards */
-    --radius-button: 1rem;             /* 16px - Botões */
-    --radius-input: 0.75rem;           /* 12px - Inputs */
+    --radius: 1rem;
+    /* 16px - Padrão geral */
+    --radius-card: 0.875rem;
+    /* 14px - Cards */
+    --radius-button: 1rem;
+    /* 16px - Botões */
+    --radius-input: 0.75rem;
+    /* 12px - Inputs */
 
     /* ============================================
        SHADOWS (Sombras Leves)
        ============================================ */
-    --shadow-soft: 0 2px 8px rgba(0, 0, 0, 0.08);      /* Sombra suave padrão */
-    --shadow-medium: 0 4px 16px rgba(0, 0, 0, 0.12);   /* Sombra média para cards elevados */
-    --shadow-card: 0 2px 8px rgba(0, 0, 0, 0.06);      /* Sombra específica de cards */
-    --shadow-button: 0 2px 6px rgba(219, 90, 52, 0.15); /* Sombra para botões primários */
+    --shadow-soft: 0 2px 8px rgba(0, 0, 0, 0.08);
+    /* Sombra suave padrão */
+    --shadow-medium: 0 4px 16px rgba(0, 0, 0, 0.12);
+    /* Sombra média para cards elevados */
+    --shadow-card: 0 2px 8px rgba(0, 0, 0, 0.06);
+    /* Sombra específica de cards */
+    --shadow-button: 0 2px 6px rgba(219, 90, 52, 0.15);
+    /* Sombra para botões primários */
 
     /* ============================================
        SPACING (Espaçamentos Padrão)
        ============================================ */
-    --spacing-xs: 0.5rem;    /* 8px */
-    --spacing-sm: 1rem;      /* 16px */
-    --spacing-md: 1.5rem;    /* 24px */
-    --spacing-lg: 2rem;      /* 32px */
-    --spacing-xl: 3rem;      /* 48px */
-    --spacing-2xl: 4rem;     /* 64px */
-    --spacing-3xl: 6rem;     /* 96px */
+    --spacing-xs: 0.5rem;
+    /* 8px */
+    --spacing-sm: 1rem;
+    /* 16px */
+    --spacing-md: 1.5rem;
+    /* 24px */
+    --spacing-lg: 2rem;
+    /* 32px */
+    --spacing-xl: 3rem;
+    /* 48px */
+    --spacing-2xl: 4rem;
+    /* 64px */
+    --spacing-3xl: 6rem;
+    /* 96px */
 
     /* Container max-width */
     --container-max: 1280px;
-    
+
     /* Grid gaps */
-    --grid-gap: 1.5rem;      /* 24px - Gap padrão para grids */
-    --grid-gap-sm: 1rem;     /* 16px - Gap menor */
+    --grid-gap: 1.5rem;
+    /* 24px - Gap padrão para grids */
+    --grid-gap-sm: 1rem;
+    /* 16px - Gap menor */
 
     /* ============================================
        TYPOGRAPHY
        ============================================ */
-    font-family: 'Inter', system-ui, -apple-system, sans-serif;
-    
+    font-family: 'Montserrat', system-ui, -apple-system, sans-serif;
+
     /* Font sizes */
-    --text-xs: 0.75rem;      /* 12px */
-    --text-sm: 0.875rem;     /* 14px */
-    --text-base: 1rem;       /* 16px */
-    --text-lg: 1.125rem;     /* 18px */
-    --text-xl: 1.25rem;      /* 20px */
-    --text-2xl: 1.5rem;      /* 24px */
-    --text-3xl: 1.875rem;    /* 30px */
-    --text-4xl: 2.25rem;     /* 36px */
-    --text-5xl: 3rem;        /* 48px */
+    --text-xs: 0.75rem;
+    /* 12px */
+    --text-sm: 0.875rem;
+    /* 14px */
+    --text-base: 1rem;
+    /* 16px */
+    --text-lg: 1.125rem;
+    /* 18px */
+    --text-xl: 1.25rem;
+    /* 20px */
+    --text-2xl: 1.5rem;
+    /* 24px */
+    --text-3xl: 1.875rem;
+    /* 30px */
+    --text-4xl: 2.25rem;
+    /* 36px */
+    --text-5xl: 3rem;
+    /* 48px */
 
     /* Line heights */
     --leading-tight: 1.25;
@@ -116,8 +186,10 @@ All colors MUST be HSL.
      DARK MODE (Tema Escuro Industrial)
      ============================================ */
   .dark {
-    --background: 347 28% 20%;           /* Vinho Industrial */
-    --foreground: 0 0% 100%;             /* Branco */
+    --background: 347 28% 20%;
+    /* Vinho Industrial */
+    --foreground: 0 0% 100%;
+    /* Branco */
 
     --card: 347 28% 20%;
     --card-foreground: 0 0% 100%;
@@ -125,7 +197,8 @@ All colors MUST be HSL.
     --popover: 347 28% 20%;
     --popover-foreground: 0 0% 100%;
 
-    --primary: 12 67% 53%;               /* Laranja mantido */
+    --primary: 12 67% 53%;
+    /* Laranja mantido */
     --primary-foreground: 0 0% 100%;
 
     --secondary: 0 3% 25%;
@@ -155,8 +228,13 @@ All colors MUST be HSL.
     @apply bg-background text-foreground antialiased;
   }
 
-  h1, h2, h3, h4, h5, h6 {
-    font-family: 'Montserrat', system-ui, -apple-system, sans-serif;
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    font-family: 'Microgramma', system-ui, -apple-system, sans-serif;
     font-weight: 700;
   }
 
@@ -174,10 +252,13 @@ All colors MUST be HSL.
 
   /* WhatsApp Button Pulse Animation */
   @keyframes pulse-subtle {
-    0%, 100% {
+
+    0%,
+    100% {
       transform: scale(1);
       box-shadow: 0 4px 16px rgba(37, 211, 102, 0.4);
     }
+
     50% {
       transform: scale(1.05);
       box-shadow: 0 6px 24px rgba(37, 211, 102, 0.6);

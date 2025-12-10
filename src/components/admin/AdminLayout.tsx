@@ -50,7 +50,7 @@ export function AdminLayout({ children }: AdminLayoutProps) {
             <div className="p-6 border-b border-border">
               <img
                 src={logoHeader}
-                alt="LocaMulti"
+                alt="LOCAMULTI"
                 className="w-full h-auto"
               />
             </div>

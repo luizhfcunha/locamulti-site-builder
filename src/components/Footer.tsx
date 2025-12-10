@@ -10,7 +10,7 @@ export const Footer = () => {
         {/* Logo Centralizada */}
         <div className="w-full mb-8 flex items-center justify-center">
           <Link to="/" onClick={scrollToTop} className="inline-block">
-            <img src={LOGO_FOOTER.url} alt="Logo LocaMulti versão branca" className="h-auto w-[240px] object-contain" />
+            <img src={LOGO_FOOTER.url} alt="Logo LOCAMULTI versão branca" className="h-auto w-[240px] object-contain" />
           </Link>
         </div>
 
@@ -139,7 +139,8 @@ export const Footer = () => {
         </div>
 
         <div className="border-t border-white/20 pt-6 text-center text-sm">
-          <p>&copy; {new Date().getFullYear()} LocaMulti. Todos os direitos reservados.</p>
+          <p>&copy; {new Date().getFullYear()} <span className="font-bold">LOCAMULTI</span>. Todos os direitos reservados.</p>
+
         </div>
       </div>
     </footer>

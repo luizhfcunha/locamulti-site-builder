@@ -101,96 +101,96 @@ const Index = () => {
     window.location.href = `/catalogo?categoria=${categoryId}`;
   };
   return <div className="min-h-screen flex flex-col">
-      <Header />
+    <Header />
 
-      <main className="flex-1">
-        {/* Hero Section */}
-        <section className="relative min-h-[600px] flex items-center">
-          <div className="absolute inset-0 bg-cover bg-center bg-[url('/lovable-uploads/354cf962-9168-44e0-8c93-0a695e288f8d.webp')] opacity-40" />
-          <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10 py-20">
-            <div className="max-w-3xl">
-              <h1 className="mb-6 leading-tight text-primary">Locação de Equipamentos e Ferramentas Especiais</h1>
-              <p className="text-xl mb-8 leading-relaxed max-w-2xl text-neutral-950">Locação profissional para obras, indústrias e manutenção</p>
-              <div className="flex flex-col sm:flex-row gap-4">
-                <WhatsappCTA text="Orçamento Rápido" href={WHATSAPP.homeHero} size="lg" className="text-lg font-semibold" />
-                <Button size="lg" variant="outline" onClick={() => window.location.href = "/catalogo"} className="text-lg font-semibold border-0 bg-primary text-secondary">
-                  Ver Catálogo Completo
-                </Button>
-              </div>
+    <main className="flex-1">
+      {/* Hero Section */}
+      <section className="relative min-h-[600px] flex items-center">
+        <div className="absolute inset-0 bg-cover bg-center bg-[url('/lovable-uploads/354cf962-9168-44e0-8c93-0a695e288f8d.webp')] opacity-40" />
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10 py-20">
+          <div className="max-w-3xl">
+            <h1 className="mb-6 leading-tight text-primary">Locação de Equipamentos e Ferramentas Especiais</h1>
+            <p className="text-xl mb-8 leading-relaxed max-w-2xl text-neutral-950">Locação profissional para obras, indústrias e manutenção</p>
+            <div className="flex flex-col sm:flex-row gap-4">
+              <WhatsappCTA text="Orçamento Rápido" href={WHATSAPP.homeHero} size="lg" className="text-lg font-semibold" />
+              <Button size="lg" variant="outline" onClick={() => window.location.href = "/catalogo"} className="text-lg font-semibold border-0 bg-primary text-secondary">
+                Ver Catálogo Completo
+              </Button>
             </div>
           </div>
-        </section>
+        </div>
+      </section>
 
-        {/* Categories Section - Carrossel */}
-        <section id="categorias" className="py-20 bg-secondary">
-          <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="text-center mb-12">
-              <h2 className="mb-4">Principais Categorias</h2>
-              <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-                Equipamentos profissionais para todas as necessidades técnicas e industriais
-              </p>
-            </div>
-            <CategoryCarousel categories={categories} onCategoryClick={handleCategoryClick} />
+      {/* Categories Section - Carrossel */}
+      <section id="categorias" className="py-20 bg-secondary">
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-12">
+            <h2 className="mb-4">Principais Categorias</h2>
+            <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
+              Equipamentos profissionais para todas as necessidades técnicas e industriais
+            </p>
           </div>
-        </section>
+          <CategoryCarousel categories={categories} onCategoryClick={handleCategoryClick} />
+        </div>
+      </section>
 
-        {/* Brand Carousel Section */}
-        <section className="py-16 bg-background border-y border-border">
-          <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="text-center mb-10">
-              <h2 className="text-2xl font-heading font-bold text-foreground mb-2">Marcas de Confiança</h2>
-              <p className="text-muted-foreground">Trabalhamos com as melhores marcas do mercado</p>
-            </div>
-            <BrandCarousel brands={BRANDS_CAROUSEL} />
+      {/* Brand Carousel Section */}
+      <section className="py-16 bg-background border-y border-border">
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-10">
+            <h2 className="text-2xl font-heading font-bold text-foreground mb-2">Marcas de Confiança</h2>
+            <p className="text-muted-foreground">Trabalhamos com as melhores marcas do mercado</p>
           </div>
-        </section>
+          <BrandCarousel brands={BRANDS_CAROUSEL} />
+        </div>
+      </section>
 
-        {/* Benefits Section - Por que escolher a LocaMulti? */}
-        <section className="py-20 bg-secondary">
-          <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="text-center mb-12">
-              <h2 className="mb-4">Por Que Escolher a <span className="font-bold text-primary">LOCAMULTI</span>?</h2>
-              <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-                Confiança, qualidade e suporte técnico em cada locação
-              </p>
-            </div>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6">
-              {benefits.map(benefit => <BenefitCard key={benefit.title} title={benefit.title} description={benefit.description} icon={benefit.icon} />)}
-            </div>
+      {/* Benefits Section - Por que escolher a LocaMulti? */}
+      <section className="py-20 bg-secondary">
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-12">
+            <h2 className="mb-4">Por Que Escolher a <span className="font-bold text-primary">LOCAMULTI</span>?</h2>
+            <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
+              Confiança, qualidade e suporte técnico em cada locação
+            </p>
           </div>
-        </section>
-
-        {/* Segments Section - Segmentos Atendidos */}
-        <section className="py-20 bg-background">
-          <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="text-center mb-12">
-              <h2 className="mb-4">Segmentos que Atendemos</h2>
-              <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-                Soluções profissionais para diversos setores da indústria e construção
-              </p>
-            </div>
-            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-4 gap-6 max-w-5xl mx-auto">
-              {segments.map(segment => <SegmentCard key={segment.title} title={segment.title} icon={segment.icon} />)}
-            </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6">
+            {benefits.map(benefit => <BenefitCard key={benefit.title} title={benefit.title} description={benefit.description} icon={benefit.icon} />)}
           </div>
-        </section>
+        </div>
+      </section>
 
-        {/* CTA Section - Orçamento Rápido */}
-        <section className="py-20 bg-gradient-to-br from-lm-plum to-lm-plum/90 relative overflow-hidden bg-primary-foreground">
-          <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1581094271901-8022df4466f9?q=80')] bg-cover bg-center opacity-10" />
-          <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-            <div className="max-w-3xl mx-auto text-center">
-              <h2 className="text-white mb-6">Precisa de um Orçamento Imediato?</h2>
-              <p className="text-xl text-white/90 mb-8 leading-relaxed">
-                Fale agora com a equipe da LocaMulti pelo WhatsApp e receba seu orçamento em minutos.
-              </p>
-              <WhatsappCTA text="Falar pelo WhatsApp Agora" href={WHATSAPP.homeOrcamento} size="lg" variant="outline" className="text-lg font-semibold bg-white hover:bg-lm-muted text-lm-ink border-0 shadow-button" />
-            </div>
+      {/* Segments Section - Segmentos Atendidos */}
+      <section className="py-20 bg-background">
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-12">
+            <h2 className="mb-4">Segmentos que Atendemos</h2>
+            <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
+              Soluções profissionais para diversos setores da indústria e construção
+            </p>
           </div>
-        </section>
-      </main>
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-4 gap-6 max-w-5xl mx-auto">
+            {segments.map(segment => <SegmentCard key={segment.title} title={segment.title} icon={segment.icon} />)}
+          </div>
+        </div>
+      </section>
 
-      <Footer />
-    </div>;
+      {/* CTA Section - Orçamento Rápido */}
+      <section className="py-20 bg-gradient-to-br from-lm-plum to-lm-plum/90 relative overflow-hidden bg-primary-foreground">
+        <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1581094271901-8022df4466f9?q=80')] bg-cover bg-center opacity-10" />
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+          <div className="max-w-3xl mx-auto text-center">
+            <h2 className="text-white mb-6">Precisa de um Orçamento Imediato?</h2>
+            <p className="text-xl text-white/90 mb-8 leading-relaxed">
+              Fale agora com a equipe da <span className="font-bold">LOCAMULTI</span> pelo WhatsApp e receba seu orçamento em minutos.
+            </p>
+            <WhatsappCTA text="Falar pelo WhatsApp Agora" href={WHATSAPP.homeOrcamento} size="lg" variant="outline" className="text-lg font-semibold bg-white hover:bg-lm-muted text-lm-ink border-0 shadow-button" />
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <Footer />
+  </div>;
 };
 export default Index;

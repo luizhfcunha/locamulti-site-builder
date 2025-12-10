@@ -60,9 +60,9 @@ export default {
       },
       /* Typography */
       fontFamily: {
-        sans: ['Inter', 'system-ui', '-apple-system', 'sans-serif'],
-        heading: ['Montserrat', 'system-ui', '-apple-system', 'sans-serif'],
-        display: ['Montserrat', 'system-ui', '-apple-system', 'sans-serif'], // Alias para consistência
+        sans: ['Montserrat', 'system-ui', '-apple-system', 'sans-serif'],
+        heading: ['Microgramma', 'system-ui', '-apple-system', 'sans-serif'],
+        display: ['Microgramma', 'system-ui', '-apple-system', 'sans-serif'],
       },
       fontSize: {
         xs: 'var(--text-xs)',
