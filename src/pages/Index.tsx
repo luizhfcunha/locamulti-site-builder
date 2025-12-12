@@ -106,7 +106,7 @@ const Index = () => {
     <main className="flex-1">
       {/* Hero Section */}
       <section className="relative min-h-[600px] flex items-center">
-        <div className="absolute inset-0 bg-cover bg-center bg-[url('/lovable-uploads/354cf962-9168-44e0-8c93-0a695e288f8d.webp')] opacity-40" />
+        <div className="absolute inset-0 bg-cover bg-center opacity-40 bg-[url('/lovable-uploads/05999dca-cf7c-4355-b1e7-491d92ab70d9.png')]" />
         <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10 py-20">
           <div className="max-w-3xl">
             <h1 className="mb-6 leading-tight text-primary">Locação de Equipamentos e Ferramentas Especiais</h1>
