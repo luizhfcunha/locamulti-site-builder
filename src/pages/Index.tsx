@@ -117,12 +117,9 @@ const Index = () => {
     <main className="flex-1">
       {/* Hero Section */}
       <section className="relative min-h-[500px] md:min-h-[600px] lg:min-h-[700px] flex items-center">
-        <div 
-          className="absolute inset-0 bg-cover bg-[position:70%_center] md:bg-center"
-          style={{
-            backgroundImage: "url('/images/hero-banner-locamulti.jpg')"
-          }}
-        />
+        <div className="absolute inset-0 bg-cover bg-[position:70%_center] md:bg-center" style={{
+          backgroundImage: "url('/images/hero-banner-locamulti.jpg')"
+        }} />
         <div className="absolute inset-0 bg-gradient-to-r from-white/30 via-white/10 to-transparent" />
         <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10 py-12 md:py-16 lg:py-20">
           <div className="max-w-2xl lg:max-w-3xl">
@@ -177,7 +174,7 @@ const Index = () => {
       </section>
 
       {/* Featured Equipment Section */}
-      <FeaturedEquipmentCarousel />
+      <FeaturedEquipmentCarousel className="bg-primary" />
 
       {/* Benefits Section - Por que escolher a LocaMulti? */}
       <section className="py-20 bg-secondary">
