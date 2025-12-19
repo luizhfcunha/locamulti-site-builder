@@ -207,7 +207,7 @@ const Index = () => {
 
       {/* CTA Section - Orçamento Rápido */}
       <section className="py-20 bg-gradient-to-br from-lm-plum to-lm-plum/90 relative overflow-hidden bg-primary-foreground">
-        <div className="absolute inset-0 bg-[url('/images/cta-background.jpg')] bg-cover bg-center opacity-20" />
+        <div className="absolute inset-0 bg-[url('/images/cta-background.jpg')] bg-cover bg-center bg-fixed opacity-20" />
         <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
           <div className="max-w-3xl mx-auto text-center">
             <h2 className="text-white mb-6">Precisa de um Orçamento Imediato?</h2>
