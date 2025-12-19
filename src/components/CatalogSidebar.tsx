@@ -40,7 +40,7 @@ export const CatalogSidebar = ({
   onExpandedFamilyChange,
 }: CatalogSidebarProps) => {
   return (
-    <aside className="w-full lg:w-96 bg-background border-r border-border">
+    <aside className="w-full lg:w-72 flex-shrink-0 bg-background border-r border-border">
       <div className="sticky top-24 p-6">
         <ScrollArea className="h-[calc(100vh-8rem)]">
           <div className="space-y-6 pr-4">
