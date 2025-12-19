@@ -7,8 +7,7 @@ import { Input } from "@/components/ui/input";
 
 const mobileNavItems = [
   { path: "/catalogo", label: "Equipamentos" },
-  { path: "/quem-somos", label: "Como alugar" },
-  { path: "/contato", label: "Área de atendimento" },
+  { path: "/quem-somos", label: "Por que alugar conosco" },
   { path: "/contato", label: "Contato" },
 ];
 
