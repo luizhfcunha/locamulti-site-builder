@@ -119,8 +119,8 @@ const Index = () => {
         <div 
           className="absolute inset-0 bg-cover bg-[position:70%_center] md:bg-center"
           style={{
-            backgroundImage: "url('/images/hero-fundo-locamulti.jpg')"
-          }} 
+            backgroundImage: "url('/images/hero-banner-locamulti.jpg')"
+          }}
         />
         <div className="absolute inset-0 bg-gradient-to-r from-white/30 via-white/10 to-transparent" />
         <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10 py-12 md:py-16 lg:py-20">
