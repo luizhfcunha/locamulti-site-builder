@@ -14,52 +14,52 @@ const Index = () => {
     id: "DEMOLIÇÃO E PERFURAÇÃO",
     title: "Demolição e Perfuração",
     icon: Hammer,
-    imageUrl: "https://hdrqdfjxwohrnarbghed.supabase.co/storage/v1/object/public/product-images/martelo-demolidor.jpg"
+    imageUrl: "/images/categories/martelo-demolidor.jpg"
   }, {
     id: "CONCRETAGEM E ACABAMENTO",
     title: "Concretagem e Acabamento",
     icon: Cog,
-    imageUrl: "https://hdrqdfjxwohrnarbghed.supabase.co/storage/v1/object/public/product-images/betoneira.jpg"
+    imageUrl: "/images/categories/betoneira.jpg"
   }, {
     id: "FERRAMENTAS DE CORTAR, LIXAR E PARAFUSAR",
     title: "Ferramentas de Cortar, Lixar e Parafusar",
     icon: Wrench,
-    imageUrl: "https://hdrqdfjxwohrnarbghed.supabase.co/storage/v1/object/public/product-images/esmerilhadeira.jpg"
+    imageUrl: "/images/categories/esmerilhadeira.jpg"
   }, {
     id: "BOMBAS, GERADORES E COMPRESSORES",
     title: "Bombas, Geradores e Compressores",
     icon: Zap,
-    imageUrl: "https://hdrqdfjxwohrnarbghed.supabase.co/storage/v1/object/public/product-images/gerador.jpg"
+    imageUrl: "/images/categories/gerador.jpg"
   }, {
     id: "ELEVAÇÃO, MOVIMENTAÇÃO E REMOÇÃO",
     title: "Elevação, Movimentação e Remoção",
     icon: Package,
-    imageUrl: "https://hdrqdfjxwohrnarbghed.supabase.co/storage/v1/object/public/product-images/empilhadeira.jpg"
+    imageUrl: "/images/categories/empilhadeira.jpg"
   }, {
     id: "MÁQUINAS DE SOLDA E MONTAGEM",
     title: "Máquinas de Solda e Montagem",
     icon: Shield,
-    imageUrl: "https://hdrqdfjxwohrnarbghed.supabase.co/storage/v1/object/public/product-images/maquina-solda.jpg"
+    imageUrl: "/images/categories/maquina-solda.jpg"
   }, {
     id: "CONSERVAÇÃO E LIMPEZA",
     title: "Conservação e Limpeza",
     icon: PaintBucket,
-    imageUrl: "https://hdrqdfjxwohrnarbghed.supabase.co/storage/v1/object/public/product-images/aspirador.jpg"
+    imageUrl: "/images/categories/aspirador.jpg"
   }, {
     id: "EQUIPAMENTOS DE ACESSO A ALTURA",
     title: "Equipamentos de Acesso à Altura",
     icon: Package,
-    imageUrl: "https://hdrqdfjxwohrnarbghed.supabase.co/storage/v1/object/public/product-images/escada.jpg"
+    imageUrl: "/images/categories/escada.jpg"
   }, {
     id: "EQUIPAMENTOS AGRÍCOLAS",
     title: "Equipamentos Agrícolas",
     icon: Trees,
-    imageUrl: "https://hdrqdfjxwohrnarbghed.supabase.co/storage/v1/object/public/product-images/cortador-grama.jpg"
+    imageUrl: "/images/categories/cortador-grama.jpg"
   }, {
     id: "FERRAMENTAS À BATERIA",
     title: "Ferramentas à Bateria",
     icon: Zap,
-    imageUrl: "https://hdrqdfjxwohrnarbghed.supabase.co/storage/v1/object/public/product-images/parafusadeira.jpg"
+    imageUrl: "/images/categories/parafusadeira.jpg"
   }];
   const benefits = [{
     icon: CheckCircle2,
