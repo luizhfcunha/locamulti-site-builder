@@ -31,7 +31,11 @@ export const CategoryCard = ({ title, icon: Icon, imageUrl, onClick }: CategoryC
             <img
               src={imageUrl}
               alt={title}
+              width={800}
+              height={600}
               loading="lazy"
+              decoding="async"
+              fetchPriority="low"
               onLoad={() => setIsLoaded(true)}
               onError={() => setHasError(true)}
               className={`w-full h-full object-cover group-hover:scale-105 transition-all duration-slow ${isLoaded ? 'opacity-100 blur-0' : 'opacity-0 blur-sm'}`}
