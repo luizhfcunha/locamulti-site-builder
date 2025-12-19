@@ -11,7 +11,7 @@ export const TopBar = () => {
             href={CONTACT.googleMapsUrl}
             target="_blank"
             rel="noopener noreferrer"
-            className="flex items-center gap-1.5 hover:text-primary transition-colors"
+            className="flex items-center gap-1.5 hover:text-lm-ink transition-colors"
           >
             <MapPin className="h-4 w-4" />
             <span className="hidden sm:inline">{CONTACT.location}</span>
@@ -34,7 +34,7 @@ export const TopBar = () => {
           {/* Mobile Phone */}
           <a
             href={`tel:${CONTACT.phoneMobileClean}`}
-            className="flex items-center gap-1.5 hover:text-primary transition-colors"
+            className="flex items-center gap-1.5 hover:text-lm-ink transition-colors"
           >
             <Smartphone className="h-4 w-4" />
             <span>{CONTACT.phoneMobile}</span>
