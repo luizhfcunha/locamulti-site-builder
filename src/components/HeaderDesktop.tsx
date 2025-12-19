@@ -8,7 +8,6 @@ import { Input } from "@/components/ui/input";
 const navItems = [
   { path: "/catalogo", label: "Equipamentos" },
   { path: "/quem-somos", label: "Por que alugar conosco" },
-  { path: "/contato", label: "Atendimento em Anápolis" },
   { path: "/contato", label: "Contato" },
 ];
 
