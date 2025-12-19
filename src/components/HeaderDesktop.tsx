@@ -1,6 +1,6 @@
 import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
-import { Search, MessageCircle } from "lucide-react";
+import { Search } from "lucide-react";
 import { logoHeaderUrl } from "@/lib/constants";
 import { WHATSAPP } from "@/config/whatsapp";
 import { Input } from "@/components/ui/input";
@@ -92,7 +92,7 @@ export const HeaderDesktop = () => {
             rel="noopener noreferrer"
             className="flex-shrink-0 flex items-center gap-2 px-6 py-3 bg-[#25D366] hover:bg-[#128C7E] text-white font-semibold rounded-xl transition-all duration-200 hover:scale-[1.02] shadow-md"
           >
-            <MessageCircle className="h-5 w-5" />
+            <img src="/lovable-uploads/c5861fea-0072-4651-9ee0-c32e148f0e85.png" alt="WhatsApp" className="w-5 h-5" />
             <span>Orçamento imediato</span>
           </a>
         </div>

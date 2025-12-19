@@ -1,4 +1,4 @@
-import { MapPin, Phone, MessageCircle, Zap } from "lucide-react";
+import { MapPin, Phone, Zap } from "lucide-react";
 import { CONTACT } from "@/config/contact";
 import { WHATSAPP } from "@/config/whatsapp";
 
@@ -38,7 +38,7 @@ export const TopBar = () => {
             rel="noopener noreferrer"
             className="flex items-center gap-1.5 px-3 py-1.5 bg-white/10 rounded-md transition-all duration-200 hover:bg-white/90 hover:text-primary hover:scale-105 font-medium"
           >
-            <MessageCircle className="h-4 w-4" />
+            <img src="/lovable-uploads/c5861fea-0072-4651-9ee0-c32e148f0e85.png" alt="WhatsApp" className="w-4 h-4" />
             <span>{CONTACT.whatsappFormatted}</span>
           </a>
 
