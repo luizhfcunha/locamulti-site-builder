@@ -1,6 +1,6 @@
 import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
-import { Search, Menu, X, MapPin, MessageCircle } from "lucide-react";
+import { Search, Menu, X, MapPin } from "lucide-react";
 import { CONTACT } from "@/config/contact";
 import { WHATSAPP } from "@/config/whatsapp";
 import { Input } from "@/components/ui/input";
@@ -119,7 +119,7 @@ export const HeaderMobile = () => {
             rel="noopener noreferrer"
             className="flex items-center justify-center gap-2 w-full py-3.5 bg-[#25D366] hover:bg-[#128C7E] text-white font-semibold rounded-xl transition-all duration-200 shadow-md"
           >
-            <MessageCircle className="h-5 w-5" />
+            <img src="/lovable-uploads/c5861fea-0072-4651-9ee0-c32e148f0e85.png" alt="WhatsApp" className="w-5 h-5" />
             <span>Orçamento grátis no WhatsApp</span>
           </a>
           <p className="text-xs text-center text-muted-foreground">

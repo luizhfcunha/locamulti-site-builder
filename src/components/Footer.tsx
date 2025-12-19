@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { Mail, MapPin, Phone, Clock, Facebook, Instagram, MessageCircle, Smartphone } from "lucide-react";
+import { Mail, MapPin, Phone, Clock, Facebook, Instagram, Smartphone } from "lucide-react";
 import { LOGO_FOOTER } from "@/lib/constants";
 import { WHATSAPP } from "@/config/whatsapp";
 
@@ -49,7 +49,7 @@ export const Footer = () => {
               className="bg-white/10 p-2.5 rounded-full hover:bg-white/20 active:scale-95 transition-all duration-300"
               aria-label="WhatsApp"
             >
-              <MessageCircle className="h-6 w-6" />
+              <img src="/lovable-uploads/c5861fea-0072-4651-9ee0-c32e148f0e85.png" alt="WhatsApp" className="w-6 h-6" />
             </a>
           </div>
         </div>
@@ -148,7 +148,7 @@ export const Footer = () => {
                 className="bg-white/10 p-3 rounded-full hover:bg-white/20 hover:scale-110 transition-all duration-300"
                 aria-label="WhatsApp"
               >
-                <MessageCircle className="h-8 w-8" />
+                <img src="/lovable-uploads/c5861fea-0072-4651-9ee0-c32e148f0e85.png" alt="WhatsApp" className="w-8 h-8" />
               </a>
             </div>
             <p className="text-sm mt-4 opacity-80">
