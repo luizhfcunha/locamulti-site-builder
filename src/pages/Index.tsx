@@ -158,8 +158,18 @@ const Index = () => {
       <section className="py-16 bg-background border-y border-border">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-10">
-            <h2 className="text-2xl font-heading font-bold text-foreground mb-2">Marcas de Confiança</h2>
-            <p className="text-muted-foreground">Trabalhamos com as melhores marcas do mercado</p>
+            <h2 className="text-2xl font-heading font-bold text-foreground mb-4">Marcas de Confiança</h2>
+            <div className="max-w-3xl mx-auto space-y-3">
+              <p className="text-muted-foreground">
+                Trabalhamos com marcas líderes e reconhecidas no mercado, garantindo equipamentos confiáveis, seguros e de alto desempenho.
+              </p>
+              <p className="text-muted-foreground">
+                A escolha dos nossos parceiros reflete nosso compromisso com qualidade, eficiência e melhores resultados para cada cliente.
+              </p>
+              <p className="text-muted-foreground font-medium">
+                Conheça os parceiros que acreditam em nosso trabalho e nos apoiam em nossa jornada:
+              </p>
+            </div>
           </div>
           <BrandCarousel brands={BRANDS_CAROUSEL} />
         </div>
