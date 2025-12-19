@@ -11,45 +11,55 @@ import { WHATSAPP } from "@/config/whatsapp";
 import { Hammer, Zap, Wrench, Package, PaintBucket, Cog, Trees, Shield, Headphones, Truck, CheckCircle2, MessageCircle, Building2, HardHat, Factory, TruckIcon, Users, Sparkles } from "lucide-react";
 const Index = () => {
   const categories = [{
-    id: "construcao",
-    title: "Construção e Demolição",
+    id: "DEMOLIÇÃO E PERFURAÇÃO",
+    title: "Demolição e Perfuração",
     icon: Hammer,
     imageUrl: "https://images.unsplash.com/photo-1541888946425-d81bb19240f5?q=80&w=800&auto=format&fit=crop"
   }, {
-    id: "concretagem",
-    title: "Concretagem e Vibração",
+    id: "CONCRETAGEM E ACABAMENTO",
+    title: "Concretagem e Acabamento",
     icon: Cog,
     imageUrl: "/images/concretagem-vibracao.jpg"
   }, {
-    id: "energia",
-    title: "Energia e Geração",
-    icon: Zap,
-    imageUrl: "https://images.unsplash.com/photo-1473341304170-971dccb5ac1e?q=80&w=800&auto=format&fit=crop"
-  }, {
-    id: "soldagem",
-    title: "Soldagem Profissional",
-    icon: Shield,
-    imageUrl: "https://images.unsplash.com/photo-1504328345606-18bbc8c9d7d1?q=80&w=800&auto=format&fit=crop"
-  }, {
-    id: "movimentacao",
-    title: "Movimentação de Cargas",
-    icon: Package,
-    imageUrl: "https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?q=80&w=800&auto=format&fit=crop"
-  }, {
-    id: "pintura",
-    title: "Pintura e Acabamento",
-    icon: PaintBucket,
-    imageUrl: "https://images.unsplash.com/photo-1589939705384-5185137a7f0f?q=80&w=800&auto=format&fit=crop"
-  }, {
-    id: "hidraulicas",
-    title: "Ferramentas Hidráulicas",
+    id: "FERRAMENTAS DE CORTAR, LIXAR E PARAFUSAR",
+    title: "Ferramentas de Cortar, Lixar e Parafusar",
     icon: Wrench,
     imageUrl: "https://images.unsplash.com/photo-1581092160562-40aa08e78837?q=80&w=800&auto=format&fit=crop"
   }, {
-    id: "jardinagem",
-    title: "Jardinagem e Limpeza Técnica",
-    icon: Trees,
+    id: "BOMBAS, GERADORES E COMPRESSORES",
+    title: "Bombas, Geradores e Compressores",
+    icon: Zap,
+    imageUrl: "https://images.unsplash.com/photo-1473341304170-971dccb5ac1e?q=80&w=800&auto=format&fit=crop"
+  }, {
+    id: "ELEVAÇÃO, MOVIMENTAÇÃO E REMOÇÃO",
+    title: "Elevação, Movimentação e Remoção",
+    icon: Package,
+    imageUrl: "https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?q=80&w=800&auto=format&fit=crop"
+  }, {
+    id: "MÁQUINAS DE SOLDA E MONTAGEM",
+    title: "Máquinas de Solda e Montagem",
+    icon: Shield,
+    imageUrl: "https://images.unsplash.com/photo-1504328345606-18bbc8c9d7d1?q=80&w=800&auto=format&fit=crop"
+  }, {
+    id: "CONSERVAÇÃO E LIMPEZA",
+    title: "Conservação e Limpeza",
+    icon: PaintBucket,
     imageUrl: "https://images.unsplash.com/photo-1558904541-efa843a96f01?q=80&w=800&auto=format&fit=crop"
+  }, {
+    id: "EQUIPAMENTOS DE ACESSO A ALTURA",
+    title: "Equipamentos de Acesso à Altura",
+    icon: Package,
+    imageUrl: "https://images.unsplash.com/photo-1504307651254-35680f356dfd?q=80&w=800&auto=format&fit=crop"
+  }, {
+    id: "EQUIPAMENTOS AGRÍCOLAS",
+    title: "Equipamentos Agrícolas",
+    icon: Trees,
+    imageUrl: "https://images.unsplash.com/photo-1625246333195-78d9c38ad449?q=80&w=800&auto=format&fit=crop"
+  }, {
+    id: "FERRAMENTAS À BATERIA",
+    title: "Ferramentas à Bateria",
+    icon: Zap,
+    imageUrl: "https://images.unsplash.com/photo-1572981779307-38b8cabb2407?q=80&w=800&auto=format&fit=crop"
   }];
   const benefits = [{
     icon: CheckCircle2,
@@ -98,7 +108,7 @@ const Index = () => {
     icon: Users
   }];
   const handleCategoryClick = (categoryId: string) => {
-    window.location.href = `/catalogo?categoria=${categoryId}`;
+    window.location.href = `/catalogo?categoria=${encodeURIComponent(categoryId)}`;
   };
   return <div className="min-h-screen flex flex-col">
     <Header />
