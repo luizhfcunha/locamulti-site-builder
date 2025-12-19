@@ -144,8 +144,8 @@ export const FeaturedEquipmentCarousel = () => {
 
         {/* Ver Todos Button */}
         <div className="text-center mt-10 md:mt-12">
-          <Button asChild size="lg" variant="outline" className="border-2 border-white text-white hover:bg-white hover:text-lm-orange font-semibold text-base px-8">
-            <Link to="/catalogo" className="text-white">
+          <Button asChild size="lg" className="bg-white text-lm-ink hover:bg-lm-orange hover:text-white font-semibold text-base px-8 transition-colors">
+            <Link to="/catalogo">
               Ver Todos os Equipamentos
               <ArrowRight className="ml-2 h-5 w-5" />
             </Link>
