@@ -1,4 +1,5 @@
 import { useState, useMemo, useEffect } from "react";
+import { useSearchParams } from "react-router-dom";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { CatalogSidebar } from "@/components/CatalogSidebar";
@@ -40,9 +41,10 @@ type SortOption = "relevance" | "name" | "name_desc" | "popular";
 
 const Catalogo = () => {
   const { toast } = useToast();
+  const [searchParams, setSearchParams] = useSearchParams();
   const [viewMode, setViewMode] = useState<ViewMode>("grid");
   const [sortBy, setSortBy] = useState<SortOption>("relevance");
-  const [searchQuery, setSearchQuery] = useState("");
+  const [searchQuery, setSearchQuery] = useState(() => searchParams.get("q") || "");
 
   const [equipments, setEquipments] = useState<Equipment[]>([]);
   const [categories, setCategories] = useState<{ category: string; families: { name: string; subfamilies: string[] }[] }[]>([]);
@@ -135,6 +137,14 @@ const Catalogo = () => {
 
     applyFilters();
   }, [selectedCategory, selectedFamily, selectedSubfamily, searchQuery, currentPage, toast]);
+
+  // Sincronizar busca da URL quando parâmetro mudar
+  useEffect(() => {
+    const urlQuery = searchParams.get("q") || "";
+    if (urlQuery !== searchQuery) {
+      setSearchQuery(urlQuery);
+    }
+  }, [searchParams]);
 
   // Reset para página 1 quando busca mudar
   useEffect(() => {
