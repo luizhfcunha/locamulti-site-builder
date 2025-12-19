@@ -212,7 +212,7 @@ const Index = () => {
           <div className="max-w-3xl mx-auto text-center">
             <h2 className="text-white mb-6">Precisa de um Orçamento Imediato?</h2>
             <p className="text-xl text-white/90 mb-8 leading-relaxed">
-              Fale agora com a equipe da <span className="font-bold">LOCAMULTI</span> pelo WhatsApp e receba seu orçamento em minutos.
+              Fale agora com nossa equipe de atendentes técnicos, que eles te auxiliarão a definir a melhor solução para sua necessidade!
             </p>
             <WhatsappCTA text="Falar pelo WhatsApp Agora" href={WHATSAPP.homeOrcamento} size="lg" variant="outline" className="text-lg font-semibold bg-white hover:bg-lm-muted text-lm-ink border-0 shadow-button" />
           </div>
