@@ -17,7 +17,46 @@
   font-family: 'Microgramma';
   src: url('/fonts/microgme.ttf') format('truetype');
   font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Microgramma';
+  src: url('/fonts/microgme.ttf') format('truetype');
   font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'feedservice';
+  src: url('/fonts/fedservice.ttf') format('truetype');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'feedservice';
+  src: url('/fonts/fedservice.ttf') format('truetype');
+  font-weight: 600; /* Assuming same file or map if multiple weights exist, but for now map to same */
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'strikelord';
+  src: url('/fonts/strikelord.ttf') format('truetype');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'microgbe';
+  src: url('/fonts/microgbe.ttf') format('truetype');
+  font-weight: 700;
   font-style: normal;
   font-display: swap;
 }

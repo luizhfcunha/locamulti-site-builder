@@ -60,9 +60,11 @@ export default {
       },
       /* Typography */
       fontFamily: {
-        sans: ['Montserrat', 'system-ui', '-apple-system', 'sans-serif'],
+        sans: ['feedservice', 'system-ui', '-apple-system', 'sans-serif'],
         heading: ['Microgramma', 'system-ui', '-apple-system', 'sans-serif'],
         display: ['Microgramma', 'system-ui', '-apple-system', 'sans-serif'],
+        num: ['microgbe', 'monospace'],
+        accent: ['strikelord', 'sans-serif'],
       },
       fontSize: {
         xs: 'var(--text-xs)',

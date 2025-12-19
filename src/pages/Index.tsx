@@ -105,15 +105,25 @@ const Index = () => {
 
     <main className="flex-1">
       {/* Hero Section */}
-      <section className="relative min-h-[600px] flex items-center">
-        <div className="absolute inset-0 bg-cover bg-center bg-[url('/lovable-uploads/354cf962-9168-44e0-8c93-0a695e288f8d.webp')] opacity-40" />
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10 py-20">
-          <div className="max-w-3xl">
-            <h1 className="mb-6 leading-tight text-primary">Locação de Equipamentos e Ferramentas Especiais</h1>
-            <p className="text-xl mb-8 leading-relaxed max-w-2xl text-neutral-950">Locação profissional para obras, indústrias e manutenção</p>
-            <div className="flex flex-col sm:flex-row gap-4">
-              <WhatsappCTA text="Orçamento Rápido" href={WHATSAPP.homeHero} size="lg" className="text-lg font-semibold" />
-              <Button size="lg" variant="outline" onClick={() => window.location.href = "/catalogo"} className="text-lg font-semibold border-0 bg-primary text-secondary">
+      <section className="relative min-h-[500px] md:min-h-[600px] lg:min-h-[700px] flex items-center">
+        <div 
+          className="absolute inset-0 bg-cover bg-[position:70%_center] md:bg-center"
+          style={{
+            backgroundImage: "url('/images/hero-fundo-locamulti.jpg')"
+          }} 
+        />
+        <div className="absolute inset-0 bg-gradient-to-r from-white/30 via-white/10 to-transparent" />
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10 py-12 md:py-16 lg:py-20">
+          <div className="max-w-2xl lg:max-w-3xl">
+            <h1 className="mb-4 md:mb-6 leading-tight text-lm-plum drop-shadow-sm text-3xl md:text-4xl lg:text-5xl font-heading font-bold">
+              Locação de Equipamentos e Ferramentas Especiais
+            </h1>
+            <p className="text-base md:text-lg lg:text-xl mb-6 md:mb-8 leading-relaxed max-w-xl lg:max-w-2xl text-lm-ink/90">
+              Locação profissional para obras, indústrias e manutenção
+            </p>
+            <div className="flex flex-col sm:flex-row gap-3 md:gap-4">
+              <WhatsappCTA text="Orçamento Rápido" href={WHATSAPP.homeHero} size="lg" className="text-base md:text-lg font-semibold" />
+              <Button size="lg" variant="outline" onClick={() => window.location.href = "/catalogo"} className="text-base md:text-lg font-semibold border-0 bg-primary text-secondary">
                 Ver Catálogo Completo
               </Button>
             </div>
