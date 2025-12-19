@@ -23,6 +23,7 @@ export interface Brand {
   name: string;
   slug: string;
   logoUrl: string;
+  websiteUrl?: string;
 }
 
 export const BRANDS_CAROUSEL: Brand[] = [
@@ -31,48 +32,56 @@ export const BRANDS_CAROUSEL: Brand[] = [
     name: "DeWalt",
     slug: "dewalt",
     logoUrl: logoDewalt,
+    websiteUrl: "https://www.dewalt.com.br",
   },
   {
     id: "bosch",
     name: "Bosch",
     slug: "bosch",
     logoUrl: logoBosch,
+    websiteUrl: "https://www.bosch.com.br",
   },
   {
     id: "makita",
     name: "Makita",
     slug: "makita",
     logoUrl: logoMakita,
+    websiteUrl: "https://www.makita.com.br",
   },
   {
     id: "esab",
     name: "Esab",
     slug: "esab",
     logoUrl: logoEsab,
+    websiteUrl: "https://www.esab.com.br",
   },
   {
     id: "sumig",
     name: "Sumig",
     slug: "sumig",
     logoUrl: logoSumig,
+    websiteUrl: "https://www.sumig.com",
   },
   {
     id: "toyama",
     name: "Toyama",
     slug: "toyama",
     logoUrl: logoToyama,
+    websiteUrl: "https://www.toyama.com.br",
   },
   {
     id: "karcher",
     name: "Kärcher",
     slug: "karcher",
     logoUrl: logoKarcher,
+    websiteUrl: "https://www.karcher.com.br",
   },
   {
     id: "bovenau",
     name: "Bovenau",
     slug: "bovenau",
     logoUrl: logoBovenau,
+    websiteUrl: "https://www.bovenau.com.br",
   },
   {
     id: "merax",
