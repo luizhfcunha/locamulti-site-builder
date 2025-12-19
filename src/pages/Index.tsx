@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { WhatsappCTA } from "@/components/WhatsappCTA";
 import { CategoryCarousel } from "@/components/CategoryCarousel";
 import { BrandCarousel } from "@/components/BrandCarousel";
+import { FeaturedEquipmentCarousel } from "@/components/FeaturedEquipmentCarousel";
 import { BenefitCard } from "@/components/BenefitCard";
 import { SegmentCard } from "@/components/SegmentCard";
 import { BRANDS_CAROUSEL } from "@/config/brands";
@@ -174,6 +175,9 @@ const Index = () => {
           <BrandCarousel brands={BRANDS_CAROUSEL} />
         </div>
       </section>
+
+      {/* Featured Equipment Section */}
+      <FeaturedEquipmentCarousel />
 
       {/* Benefits Section - Por que escolher a LocaMulti? */}
       <section className="py-20 bg-secondary">

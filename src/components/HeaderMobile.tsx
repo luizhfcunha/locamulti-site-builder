@@ -6,6 +6,7 @@ import { WHATSAPP } from "@/config/whatsapp";
 import { Input } from "@/components/ui/input";
 
 const mobileNavItems = [
+  { path: "/", label: "Início" },
   { path: "/catalogo", label: "Equipamentos" },
   { path: "/quem-somos", label: "Por que alugar conosco" },
   { path: "/contato", label: "Contato" },
@@ -32,7 +33,7 @@ export const HeaderMobile = () => {
       return (
         <a
           href={`${mainDomain}${path}`}
-          className="block py-3 text-foreground hover:text-primary transition-colors font-medium border-b border-border/30"
+          className="block py-3 text-foreground hover:text-primary transition-colors font-semibold text-base border-b border-border/30"
           onClick={() => setMenuOpen(false)}
         >
           {label}
@@ -42,7 +43,7 @@ export const HeaderMobile = () => {
     return (
       <Link
         to={path}
-        className="block py-3 text-foreground hover:text-primary transition-colors font-medium border-b border-border/30"
+        className="block py-3 text-foreground hover:text-primary transition-colors font-semibold text-base border-b border-border/30"
         onClick={() => setMenuOpen(false)}
       >
         {label}

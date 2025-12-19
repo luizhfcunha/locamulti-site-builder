@@ -6,6 +6,7 @@ import { WHATSAPP } from "@/config/whatsapp";
 import { Input } from "@/components/ui/input";
 
 const navItems = [
+  { path: "/", label: "Início" },
   { path: "/catalogo", label: "Equipamentos" },
   { path: "/quem-somos", label: "Por que alugar conosco" },
   { path: "/contato", label: "Contato" },
@@ -31,7 +32,7 @@ export const HeaderDesktop = () => {
       return (
         <a
           href={`${mainDomain}${path}`}
-          className="text-foreground hover:text-primary transition-colors font-medium text-sm"
+          className="text-foreground hover:text-primary transition-colors font-semibold text-base"
         >
           {label}
         </a>
@@ -40,7 +41,7 @@ export const HeaderDesktop = () => {
     return (
       <Link
         to={path}
-        className="text-foreground hover:text-primary transition-colors font-medium text-sm"
+        className="text-foreground hover:text-primary transition-colors font-semibold text-base"
       >
         {label}
       </Link>
