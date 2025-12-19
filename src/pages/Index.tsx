@@ -174,7 +174,7 @@ const Index = () => {
       </section>
 
       {/* Featured Equipment Section */}
-      <FeaturedEquipmentCarousel className="bg-primary" />
+      <FeaturedEquipmentCarousel />
 
       {/* Benefits Section - Por que escolher a LocaMulti? */}
       <section className="py-20 bg-secondary">
