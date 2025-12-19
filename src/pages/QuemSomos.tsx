@@ -2,6 +2,7 @@ import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { WhatsappCTA } from "@/components/WhatsappCTA";
 import { WHATSAPP } from "@/config/whatsapp";
+import { motion } from "framer-motion";
 import { 
   MapPin, 
   Users, 
@@ -27,6 +28,51 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
+
+// Animation variants
+const fadeInUp = {
+  initial: { opacity: 0, y: 30 },
+  whileInView: { opacity: 1, y: 0 },
+  viewport: { once: true, margin: "-50px" },
+  transition: { duration: 0.6, ease: [0.4, 0, 0.2, 1] as const }
+};
+
+const fadeInLeft = {
+  initial: { opacity: 0, x: -50 },
+  whileInView: { opacity: 1, x: 0 },
+  viewport: { once: true, margin: "-50px" },
+  transition: { duration: 0.6, ease: [0.4, 0, 0.2, 1] as const }
+};
+
+const fadeInRight = {
+  initial: { opacity: 0, x: 50 },
+  whileInView: { opacity: 1, x: 0 },
+  viewport: { once: true, margin: "-50px" },
+  transition: { duration: 0.6, ease: [0.4, 0, 0.2, 1] as const }
+};
+
+const scaleIn = {
+  initial: { opacity: 0, scale: 0.9 },
+  whileInView: { opacity: 1, scale: 1 },
+  viewport: { once: true, margin: "-50px" },
+  transition: { duration: 0.5, ease: [0.4, 0, 0.2, 1] as const }
+};
+
+const staggerContainer = {
+  initial: {},
+  whileInView: {
+    transition: {
+      staggerChildren: 0.1
+    }
+  },
+  viewport: { once: true, margin: "-50px" }
+};
+
+const staggerItem = {
+  initial: { opacity: 0, y: 20 },
+  whileInView: { opacity: 1, y: 0 },
+  transition: { duration: 0.5, ease: [0.4, 0, 0.2, 1] as const }
+};
 
 const QuemSomos = () => {
   const vantagensLocacao = [
@@ -243,7 +289,7 @@ const QuemSomos = () => {
           <div className="container mx-auto px-4">
             <div className="max-w-5xl mx-auto">
               <div className="grid md:grid-cols-2 gap-12 items-center bg-primary">
-                <div>
+                <motion.div {...fadeInLeft}>
                   <h2 className="font-heading text-3xl md:text-4xl font-bold text-white mb-6">Nossa História</h2>
                   <div className="space-y-4 text-white/90 leading-relaxed">
                     <p>
@@ -259,14 +305,17 @@ const QuemSomos = () => {
                       Pretendendo alcançar o reconhecimento e a confiança de nossos clientes, trabalhamos com honestidade e objetividade, com uma equipe técnica preparada e treinada para atender com excelência e competência quaisquer necessidades e dúvidas de nossos parceiros.
                     </p>
                   </div>
-                </div>
-                <div className="relative h-80 rounded-card overflow-hidden bg-lm-ink/20">
+                </motion.div>
+                <motion.div 
+                  className="relative h-80 rounded-card overflow-hidden bg-lm-ink/20"
+                  {...fadeInRight}
+                >
                   <img 
                     alt="LOCAMULTI - Fachada da Loja em Anápolis" 
                     src="/images/loja-locamulti.jpg" 
                     className="w-full h-full object-cover opacity-90" 
                   />
-                </div>
+                </motion.div>
               </div>
             </div>
           </div>
@@ -276,35 +325,47 @@ const QuemSomos = () => {
         <section className="bg-lm-plum py-16 md:py-20">
           <div className="container mx-auto px-4">
             <div className="max-w-5xl mx-auto">
-              <h2 className="font-heading text-3xl md:text-4xl font-bold text-white mb-6 text-center">
-                Vantagens da Locação
-              </h2>
-              <p className="text-lg text-white/80 text-center mb-12 max-w-3xl mx-auto">
-                O aluguel de equipamentos é a melhor opção para o empreendedor que deseja diminuir custos operacionais usufruindo dos benefícios e segurança da locação.
-              </p>
+              <motion.div {...fadeInUp}>
+                <h2 className="font-heading text-3xl md:text-4xl font-bold text-white mb-6 text-center">
+                  Vantagens da Locação
+                </h2>
+                <p className="text-lg text-white/80 text-center mb-12 max-w-3xl mx-auto">
+                  O aluguel de equipamentos é a melhor opção para o empreendedor que deseja diminuir custos operacionais usufruindo dos benefícios e segurança da locação.
+                </p>
+              </motion.div>
 
-              <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+              <motion.div 
+                className="grid md:grid-cols-2 lg:grid-cols-3 gap-6"
+                {...staggerContainer}
+              >
                 {vantagensLocacao.map((vantagem, index) => (
-                  <div 
+                  <motion.div 
                     key={index} 
                     className="bg-white/10 backdrop-blur-sm p-6 rounded-card border border-white/20 hover:bg-white/15 transition-all duration-base"
+                    variants={staggerItem}
+                    initial="initial"
+                    whileInView="whileInView"
+                    viewport={{ once: true }}
                   >
                     <vantagem.icon className="h-10 w-10 text-primary mb-4" />
                     <h3 className="font-heading text-lg font-bold text-white mb-2">{vantagem.title}</h3>
                     <p className="text-white/80 text-sm leading-relaxed">{vantagem.description}</p>
-                  </div>
+                  </motion.div>
                 ))}
-              </div>
+              </motion.div>
 
               {/* Nunca loquei um equipamento */}
-              <div className="mt-12 bg-white/5 border border-white/20 rounded-card p-8">
+              <motion.div 
+                className="mt-12 bg-white/5 border border-white/20 rounded-card p-8"
+                {...fadeInUp}
+              >
                 <h3 className="font-heading text-xl font-bold text-white mb-4">
                   Nunca Loquei um Equipamento, Qual o Procedimento?
                 </h3>
                 <p className="text-white/80 leading-relaxed">
                   Confirmar se o equipamento está disponível no momento. Caso não esteja, poderá ser solicitada reserva do mesmo. Assim que estiver disponível, entramos em contato e confirmaremos se ainda há interesse na locação do equipamento.
                 </p>
-              </div>
+              </motion.div>
             </div>
           </div>
         </section>
@@ -313,25 +374,34 @@ const QuemSomos = () => {
         <section className="bg-lm-muted py-16 md:py-20">
           <div className="container mx-auto px-4">
             <div className="max-w-6xl mx-auto">
-              <h2 className="font-heading text-3xl md:text-4xl font-bold text-foreground mb-4 text-center">
-                Nossos Diferenciais
-              </h2>
-              <p className="text-lg text-muted-foreground text-center mb-12 max-w-3xl mx-auto">
-                O que nos torna referência no mercado de locação de equipamentos profissionais.
-              </p>
+              <motion.div {...fadeInUp}>
+                <h2 className="font-heading text-3xl md:text-4xl font-bold text-foreground mb-4 text-center">
+                  Nossos Diferenciais
+                </h2>
+                <p className="text-lg text-muted-foreground text-center mb-12 max-w-3xl mx-auto">
+                  O que nos torna referência no mercado de locação de equipamentos profissionais.
+                </p>
+              </motion.div>
 
-              <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+              <motion.div 
+                className="grid md:grid-cols-2 lg:grid-cols-3 gap-8"
+                {...staggerContainer}
+              >
                 {diferenciais.map((diferencial, index) => (
-                  <div 
+                  <motion.div 
                     key={index} 
                     className="bg-background p-6 rounded-card shadow-card hover:shadow-medium transition-all duration-base"
+                    variants={staggerItem}
+                    initial="initial"
+                    whileInView="whileInView"
+                    viewport={{ once: true }}
                   >
                     <diferencial.icon className="h-10 w-10 text-primary mb-4" />
                     <h3 className="font-heading text-xl font-bold text-foreground mb-3">{diferencial.title}</h3>
                     <p className="text-muted-foreground leading-relaxed">{diferencial.description}</p>
-                  </div>
+                  </motion.div>
                 ))}
-              </div>
+              </motion.div>
             </div>
           </div>
         </section>
@@ -340,26 +410,35 @@ const QuemSomos = () => {
         <section className="bg-background py-16 md:py-20">
           <div className="container mx-auto px-4">
             <div className="max-w-5xl mx-auto">
-              <h2 className="font-heading text-3xl md:text-4xl font-bold text-foreground mb-4 text-center">
-                Segmentos que Atendemos
-              </h2>
-              <p className="text-lg text-muted-foreground text-center mb-12 max-w-3xl mx-auto">
-                Soluções especializadas para diferentes setores da indústria e construção.
-              </p>
+              <motion.div {...fadeInUp}>
+                <h2 className="font-heading text-3xl md:text-4xl font-bold text-foreground mb-4 text-center">
+                  Segmentos que Atendemos
+                </h2>
+                <p className="text-lg text-muted-foreground text-center mb-12 max-w-3xl mx-auto">
+                  Soluções especializadas para diferentes setores da indústria e construção.
+                </p>
+              </motion.div>
 
-              <div className="grid grid-cols-2 md:grid-cols-3 gap-6">
+              <motion.div 
+                className="grid grid-cols-2 md:grid-cols-3 gap-6"
+                {...staggerContainer}
+              >
                 {segmentos.map((segmento, index) => (
-                  <div 
+                  <motion.div 
                     key={index} 
                     className="flex flex-col items-center text-center p-6 bg-lm-muted rounded-card hover:shadow-card transition-all duration-base group"
+                    variants={staggerItem}
+                    initial="initial"
+                    whileInView="whileInView"
+                    viewport={{ once: true }}
                   >
                     <div className="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mb-4 group-hover:bg-primary/20 transition-colors">
                       <segmento.icon className="h-8 w-8 text-primary" />
                     </div>
                     <h3 className="font-heading font-bold text-foreground">{segmento.name}</h3>
-                  </div>
+                  </motion.div>
                 ))}
-              </div>
+              </motion.div>
             </div>
           </div>
         </section>
@@ -368,38 +447,47 @@ const QuemSomos = () => {
         <section className="py-16 md:py-20 bg-primary">
           <div className="container mx-auto px-4">
             <div className="max-w-6xl mx-auto">
-              <h2 className="font-heading text-3xl md:text-4xl font-bold text-white mb-4 text-center">
-                O Que Dizem Nossos Clientes
-              </h2>
-              <p className="text-lg text-white/80 text-center mb-12 max-w-3xl mx-auto">
-                Depoimentos de quem confia na <span className="font-bold">LOCAMULTI</span> para suas operações.
-              </p>
+              <motion.div {...fadeInUp}>
+                <h2 className="font-heading text-3xl md:text-4xl font-bold text-white mb-4 text-center">
+                  O Que Dizem Nossos Clientes
+                </h2>
+                <p className="text-lg text-white/80 text-center mb-12 max-w-3xl mx-auto">
+                  Depoimentos de quem confia na <span className="font-bold">LOCAMULTI</span> para suas operações.
+                </p>
+              </motion.div>
 
-              <div className="grid md:grid-cols-3 gap-8">
+              <motion.div 
+                className="grid md:grid-cols-3 gap-8"
+                {...staggerContainer}
+              >
                 {depoimentos.map((depoimento, index) => (
-                  <div 
+                  <motion.div 
                     key={index} 
                     className="bg-white/10 backdrop-blur-sm p-6 rounded-card border border-white/20"
+                    variants={staggerItem}
+                    initial="initial"
+                    whileInView="whileInView"
+                    viewport={{ once: true }}
                   >
                     <Quote className="h-8 w-8 text-primary mb-4" />
                     <p className="text-white/90 italic mb-6 leading-relaxed">"{depoimento.text}"</p>
                     <div className="border-t border-white/20 pt-4">
                       <p className="font-heading font-bold text-white">{depoimento.name}</p>
                     </div>
-                  </div>
+                  </motion.div>
                 ))}
-              </div>
+              </motion.div>
             </div>
           </div>
         </section>
 
         {/* CTA Final */}
-        <section className="py-16 md:py-20 bg-stone-950">
+        <motion.section 
+          className="py-16 md:py-20 bg-stone-950"
+          {...scaleIn}
+        >
           <div className="container mx-auto px-4">
             <div className="max-w-4xl mx-auto text-center">
-              <h2 className="font-heading text-3xl md:text-4xl font-bold text-white mb-6">
-                Pronto para Trabalhar com a LOCAMULTI?
-              </h2>
               <p className="text-lg text-white/90 mb-8 max-w-2xl mx-auto">
                 Agora que você conhece um pouco sobre a LOCAMULTI, fique à vontade para entrar em contato quando precisar, que um de nossos técnicos poderá atendê-lo!
               </p>
@@ -412,35 +500,39 @@ const QuemSomos = () => {
               />
             </div>
           </div>
-        </section>
+        </motion.section>
 
         {/* FAQ - Dúvidas Sobre Locação */}
         <section className="py-16 md:py-20 bg-lm-muted">
           <div className="container mx-auto px-4">
             <div className="max-w-4xl mx-auto">
-              <h2 className="font-heading text-3xl md:text-4xl font-bold text-foreground mb-4 text-center">
-                Dúvidas Sobre Locação
-              </h2>
-              <p className="text-lg text-muted-foreground text-center mb-12 max-w-3xl mx-auto">
-                Encontre respostas para as perguntas mais frequentes sobre nossos serviços de locação.
-              </p>
+              <motion.div {...fadeInUp}>
+                <h2 className="font-heading text-3xl md:text-4xl font-bold text-foreground mb-4 text-center">
+                  Dúvidas Sobre Locação
+                </h2>
+                <p className="text-lg text-muted-foreground text-center mb-12 max-w-3xl mx-auto">
+                  Encontre respostas para as perguntas mais frequentes sobre nossos serviços de locação.
+                </p>
+              </motion.div>
 
-              <Accordion type="single" collapsible className="space-y-4">
-                {faqItems.map((item, index) => (
-                  <AccordionItem 
-                    key={index} 
-                    value={`item-${index}`}
-                    className="bg-background rounded-card border border-border/50 px-6 shadow-card"
-                  >
-                    <AccordionTrigger className="text-left font-heading font-semibold text-foreground hover:text-primary py-5">
-                      {item.question}
-                    </AccordionTrigger>
-                    <AccordionContent className="text-muted-foreground pb-5 whitespace-pre-line leading-relaxed">
-                      {item.answer}
-                    </AccordionContent>
-                  </AccordionItem>
-                ))}
-              </Accordion>
+              <motion.div {...fadeInUp}>
+                <Accordion type="single" collapsible className="space-y-4">
+                  {faqItems.map((item, index) => (
+                    <AccordionItem 
+                      key={index} 
+                      value={`item-${index}`}
+                      className="bg-background rounded-card border border-border/50 px-6 shadow-card"
+                    >
+                      <AccordionTrigger className="text-left font-heading font-semibold text-foreground hover:text-primary py-5">
+                        {item.question}
+                      </AccordionTrigger>
+                      <AccordionContent className="text-muted-foreground pb-5 whitespace-pre-line leading-relaxed">
+                        {item.answer}
+                      </AccordionContent>
+                    </AccordionItem>
+                  ))}
+                </Accordion>
+              </motion.div>
             </div>
           </div>
         </section>
