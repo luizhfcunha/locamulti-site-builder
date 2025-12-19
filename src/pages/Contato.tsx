@@ -12,14 +12,19 @@ const Contato = () => {
     content: "Av. Juscelino Kubitscheck, 2058 - JK Nova Capital, Anápolis - GO, 75114-225"
   }, {
     icon: Phone,
-    title: "Telefone",
-    content: "(62) 3324-4024 ",
-    link: "tel:+556233244024 "
+    title: "Telefone Fixo",
+    content: "(62) 3324-4024",
+    link: "tel:+556233244024"
+  }, {
+    icon: Phone,
+    title: "Celular / WhatsApp",
+    content: "(62) 9 8419-4024",
+    link: "tel:+5562984194024"
   }, {
     icon: Mail,
     title: "E-mail",
-    content: "contato@locamulti.com.br",
-    link: "mailto:contato@locamulti.com.br"
+    content: "atendimento@locamulti.com.br",
+    link: "mailto:atendimento@locamulti.com.br"
   }, {
     icon: Clock,
     title: "Horário de Atendimento",
@@ -34,8 +39,7 @@ const Contato = () => {
           <div className="max-w-3xl">
             <h1 className="text-4xl md:text-5xl font-display font-bold mb-4">Entre em Contato</h1>
             <p className="text-lg md:text-xl text-white/90">
-              Estamos prontos para atender sua necessidade de equipamentos profissionais. Fale com nossa equipe
-              técnica especializada.
+              Nossa Equipe Técnica está pronta para atender sua necessidade, e te auxiliar a definir a solução com melhor custo benefício para sua obra.
             </p>
           </div>
         </div>
@@ -80,7 +84,7 @@ const Contato = () => {
               <div className="mb-8">
                 <h2 className="text-3xl font-display font-bold text-lm-plum mb-4">Envie sua Mensagem</h2>
                 <p className="text-lm-ink/70">
-                  Preencha o formulário abaixo e nossa equipe entrará em contato em breve.
+                  Preencha o formulário abaixo, que nossa equipe retornará em breve com as informações técnicas e comerciais solicitadas.
                 </p>
               </div>
               <ContactForm />
@@ -90,7 +94,9 @@ const Contato = () => {
             <div>
               <div className="mb-8">
                 <h2 className="text-3xl font-display font-bold text-lm-plum mb-4">Nossa Localização</h2>
-                <p className="text-lm-ink/70">Visite nossa loja física e conheça nossos equipamentos pessoalmente.</p>
+                <p className="text-lm-ink/70">
+                  A LOCAMULTI está localizada em uma das principais avenidas comerciais de Anápolis, de fácil acesso, próximo ao trevo da BR 060 com BR 153, com estacionamento próprio e facilidade para carregamento e descarregamento de equipamentos.
+                </p>
               </div>
               <Card className="overflow-hidden border-none shadow-button h-[400px] lg:h-[500px]">
                 <iframe src="https://www.google.com/maps?q=Av.+Juscelino+Kubitscheck,+2058,+Anápolis+GO+75114-225&output=embed" width="100%" height="100%" style={{

@@ -2,3 +2,6 @@ project_id = "hdrqdfjxwohrnarbghed"
 
 [functions.upload-images]
 verify_jwt = true
+
+[functions.send-contact-email]
+verify_jwt = false

@@ -12,6 +12,21 @@ import {
 } from "@/components/ui/select";
 import { useToast } from "@/hooks/use-toast";
 import { Send } from "lucide-react";
+import { supabase } from "@/integrations/supabase/client";
+
+const CATEGORIES = [
+  { value: "demolicao-perfuracao", label: "Demolição e Perfuração" },
+  { value: "concretagem-acabamento", label: "Concretagem e Acabamento" },
+  { value: "cortar-lixar-parafusar", label: "Ferramentas de Cortar, Lixar e Parafusar" },
+  { value: "bombas-geradores-compressores", label: "Bombas, Geradores e Compressores" },
+  { value: "elevacao-movimentacao", label: "Elevação, Movimentação e Remoção" },
+  { value: "solda-montagem", label: "Máquinas de Solda e Montagem" },
+  { value: "conservacao-limpeza", label: "Conservação e Limpeza" },
+  { value: "acesso-altura", label: "Equipamentos de Acesso a Altura" },
+  { value: "equipamentos-agricolas", label: "Equipamentos Agrícolas" },
+  { value: "ferramentas-bateria", label: "Ferramentas à Bateria" },
+  { value: "outro", label: "Outro Assunto..." },
+];
 
 interface ContactFormData {
   name: string;
@@ -60,8 +75,22 @@ export const ContactForm = () => {
       return;
     }
 
-    // Simulação de envio (aqui você integraria com backend)
-    setTimeout(() => {
+    try {
+      const categoryLabel = CATEGORIES.find(c => c.value === formData.category)?.label || formData.category;
+      
+      const { data, error } = await supabase.functions.invoke('send-contact-email', {
+        body: {
+          name: formData.name,
+          company: formData.company,
+          phone: formData.phone,
+          email: formData.email,
+          category: categoryLabel,
+          message: formData.message,
+        },
+      });
+
+      if (error) throw error;
+
       toast({
         title: "Mensagem enviada!",
         description: "Entraremos em contato em breve.",
@@ -76,8 +105,16 @@ export const ContactForm = () => {
         category: "",
         message: "",
       });
+    } catch (error) {
+      console.error('Error sending email:', error);
+      toast({
+        title: "Erro ao enviar",
+        description: "Ocorreu um erro ao enviar sua mensagem. Tente novamente ou entre em contato pelo WhatsApp.",
+        variant: "destructive",
+      });
+    } finally {
       setIsSubmitting(false);
-    }, 1500);
+    }
   };
 
   return (
@@ -151,15 +188,11 @@ export const ContactForm = () => {
             <SelectValue placeholder="Selecione uma categoria" />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="construcao">Construção e Demolição</SelectItem>
-            <SelectItem value="concretagem">Concretagem e Vibração</SelectItem>
-            <SelectItem value="energia">Energia e Geração</SelectItem>
-            <SelectItem value="soldagem">Soldagem Profissional</SelectItem>
-            <SelectItem value="movimentacao">Movimentação de Cargas</SelectItem>
-            <SelectItem value="pintura">Pintura e Acabamento</SelectItem>
-            <SelectItem value="hidraulica">Ferramentas Hidráulicas</SelectItem>
-            <SelectItem value="jardinagem">Jardinagem e Limpeza Técnica</SelectItem>
-            <SelectItem value="outro">Outro</SelectItem>
+            {CATEGORIES.map((category) => (
+              <SelectItem key={category.value} value={category.value}>
+                {category.label}
+              </SelectItem>
+            ))}
           </SelectContent>
         </Select>
       </div>
