@@ -40,7 +40,7 @@ export const CatalogSidebar = ({
   onExpandedFamilyChange,
 }: CatalogSidebarProps) => {
   return (
-    <aside className="w-full lg:w-80 bg-background border-r border-border">
+    <aside className="w-full lg:w-96 bg-background border-r border-border">
       <div className="sticky top-24 p-6">
         <ScrollArea className="h-[calc(100vh-8rem)]">
           <div className="space-y-6 pr-4">
@@ -58,8 +58,8 @@ export const CatalogSidebar = ({
             )}
 
             {/* Categories Accordion */}
-            <div className="space-y-3">
-              <h3 className="font-heading font-semibold text-foreground">Categorias</h3>
+            <div className="space-y-1">
+              <h3 className="font-heading font-semibold text-foreground px-2 mb-3">Categorias</h3>
               <Accordion
                 type="single"
                 collapsible
@@ -67,12 +67,14 @@ export const CatalogSidebar = ({
                 onValueChange={(value) => onExpandedCategoryChange?.(value || null)}
               >
                 {categories.map((item) => (
-                  <AccordionItem key={item.category} value={item.category} className="border-b border-border">
-                    <AccordionTrigger className="text-sm font-medium text-foreground hover:text-primary hover:no-underline py-3">
+                  <AccordionItem key={item.category} value={item.category} className="border-b-0 mb-1">
+                    <AccordionTrigger
+                      className="px-3 py-0 h-12 text-base font-heading font-semibold text-foreground hover:text-primary hover:bg-muted/50 rounded-md transition-colors data-[state=open]:bg-muted/50 data-[state=open]:text-primary hover:no-underline"
+                    >
                       {item.category}
                     </AccordionTrigger>
-                    <AccordionContent>
-                      <div className="pl-2">
+                    <AccordionContent className="pb-0 pt-1">
+                      <div className="pl-4 border-l-2 border-border/50 ml-3 my-1">
                         {/* Families nested accordion */}
                         <Accordion
                           type="single"
@@ -82,28 +84,29 @@ export const CatalogSidebar = ({
                         >
                           {item.families.map((family) => (
                             <AccordionItem key={family.name} value={family.name} className="border-b-0">
-                              <AccordionTrigger className="text-sm text-muted-foreground hover:text-foreground hover:no-underline py-2">
+                              <AccordionTrigger
+                                className="px-3 py-0 h-10 text-sm font-medium text-muted-foreground hover:text-foreground hover:bg-muted/30 rounded-md transition-colors data-[state=open]:text-foreground data-[state=open]:bg-muted/30 hover:no-underline"
+                              >
                                 {family.name}
                               </AccordionTrigger>
-                              <AccordionContent>
-                                <div className="space-y-1 pl-4">
+                              <AccordionContent className="pb-1 pt-0">
+                                <div className="space-y-0.5 pl-3 pt-1">
                                   {family.subfamilies.map((subfamily) => {
-                                    const isActive = 
-                                      selectedCategory === item.category && 
-                                      selectedFamily === family.name && 
+                                    const isActive =
+                                      selectedCategory === item.category &&
+                                      selectedFamily === family.name &&
                                       selectedSubfamily === subfamily;
                                     return (
                                       <Button
                                         key={subfamily}
                                         variant="ghost"
-                                        className={`w-full justify-start text-sm h-auto py-2 ${
-                                          isActive
-                                            ? "bg-primary/10 text-primary font-medium"
-                                            : "text-muted-foreground hover:text-foreground hover:bg-muted"
-                                        }`}
+                                        className={`w-full justify-start text-sm h-9 px-3 rounded-md font-normal transition-all duration-200 ${isActive
+                                          ? "bg-primary/10 text-primary font-medium hover:bg-primary/15 hover:text-primary"
+                                          : "text-muted-foreground hover:text-foreground hover:bg-muted/50 hover:pl-4"
+                                          }`}
                                         onClick={() => onSubfamilyClick?.(item.category, family.name, subfamily)}
                                       >
-                                        {subfamily}
+                                        <span className="truncate">{subfamily}</span>
                                       </Button>
                                     );
                                   })}
