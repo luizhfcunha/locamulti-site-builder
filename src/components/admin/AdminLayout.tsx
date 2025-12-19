@@ -11,13 +11,14 @@ import {
   SidebarMenuButton,
   SidebarProvider,
 } from "@/components/ui/sidebar";
-import { BarChart3, Package, LogOut, FolderTree, Upload } from "lucide-react";
+import { BarChart3, Package, LogOut, FolderTree, Upload, ImageOff } from "lucide-react";
 import logoHeader from "@/assets/logo-locamulti-header-horizontal.png";
 import { toast } from "@/hooks/use-toast";
 
 const menuItems = [
   { title: "Dashboard", url: "/admin/dashboard", icon: BarChart3 },
   { title: "Produtos", url: "/admin/produtos", icon: Package },
+  { title: "Sem Imagem", url: "/admin/missing-images", icon: ImageOff },
   { title: "Categorias", url: "/admin/categories", icon: FolderTree },
   { title: "Importar Catálogo", url: "/admin/import-catalog", icon: Upload },
 ];

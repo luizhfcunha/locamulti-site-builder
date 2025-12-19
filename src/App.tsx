@@ -15,6 +15,7 @@ import AdminProdutos from "./pages/AdminProdutos";
 import AdminDashboard from "./pages/AdminDashboard";
 import Categories from "./pages/admin/Categories";
 import ImportCatalog from "./pages/admin/ImportCatalog";
+import MissingImages from "./pages/admin/MissingImages";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -69,6 +70,14 @@ const App = () => {
                   element={
                     <AdminRoute>
                       <ImportCatalog />
+                    </AdminRoute>
+                  }
+                />
+                <Route
+                  path="/admin/missing-images"
+                  element={
+                    <AdminRoute>
+                      <MissingImages />
                     </AdminRoute>
                   }
                 />
