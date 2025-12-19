@@ -1,5 +1,4 @@
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import { LucideIcon } from "lucide-react";
 import { useState } from "react";
 
@@ -15,11 +14,12 @@ export const CategoryCard = ({ title, icon: Icon, imageUrl, onClick }: CategoryC
   const [hasError, setHasError] = useState(false);
 
   return (
-    <Card className="group overflow-hidden border-border hover:shadow-medium transition-all duration-base cursor-pointer rounded-card">
-      <div 
-        className="relative h-48 bg-muted overflow-hidden"
-        onClick={onClick}
-      >
+    <div 
+      className="group bg-card rounded-2xl overflow-hidden border border-border shadow-sm hover:shadow-lg transition-all duration-300 cursor-pointer h-full flex flex-col"
+      onClick={onClick}
+    >
+      {/* Image Container - Aspect 4:3 */}
+      <div className="relative aspect-[4/3] bg-muted overflow-hidden">
         {imageUrl && !hasError ? (
           <>
             {/* Placeholder blur skeleton */}
@@ -38,33 +38,38 @@ export const CategoryCard = ({ title, icon: Icon, imageUrl, onClick }: CategoryC
               fetchPriority="low"
               onLoad={() => setIsLoaded(true)}
               onError={() => setHasError(true)}
-              className={`w-full h-full object-cover group-hover:scale-105 transition-all duration-slow ${isLoaded ? 'opacity-100 blur-0' : 'opacity-0 blur-sm'}`}
+              className={`w-full h-full object-cover group-hover:scale-105 transition-all duration-500 ${isLoaded ? 'opacity-100 blur-0' : 'opacity-0 blur-sm'}`}
             />
           </>
         ) : (
-          <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-lm-muted to-secondary">
-            <Icon className="h-16 w-16 text-lm-ink/30" />
+          <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-muted to-secondary">
+            <Icon className="h-16 w-16 text-muted-foreground/40" />
           </div>
         )}
-        <div className="absolute inset-0 bg-gradient-to-t from-lm-ink/60 to-transparent" />
+        {/* Overlay gradient */}
+        <div className="absolute inset-0 bg-gradient-to-t from-foreground/50 via-transparent to-transparent opacity-60" />
       </div>
       
-      <CardContent className="p-4">
-        <h3 className="font-heading text-lg font-bold text-foreground line-clamp-2">
+      {/* Content */}
+      <div className="p-4 md:p-5 flex flex-col gap-3 flex-grow">
+        <h3 className="font-heading text-lg md:text-xl font-bold text-foreground line-clamp-2 text-center">
           {title}
         </h3>
-      </CardContent>
-      
-      <CardFooter className="p-4 pt-0">
-        <Button 
-          variant="outline" 
-          size="sm" 
-          className="w-full"
-          onClick={onClick}
-        >
-          Ver Equipamentos
-        </Button>
-      </CardFooter>
-    </Card>
+        
+        <div className="mt-auto">
+          <Button 
+            variant="default" 
+            size="sm" 
+            className="w-full font-semibold"
+            onClick={(e) => {
+              e.stopPropagation();
+              onClick?.();
+            }}
+          >
+            Ver Categoria
+          </Button>
+        </div>
+      </div>
+    </div>
   );
 };
