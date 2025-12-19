@@ -279,8 +279,8 @@ export const BulkImageUpload = ({ onClose, onSuccess }: BulkImageUploadProps) =>
   };
 
   return (
-    <Card className="w-full h-full flex flex-col">
-      <CardHeader className="flex flex-row items-center justify-between border-b">
+    <Card className="w-full h-full flex flex-col overflow-hidden">
+      <CardHeader className="flex flex-row items-center justify-between border-b flex-shrink-0">
         <div>
           <CardTitle>Importação em Massa de Imagens</CardTitle>
           <p className="text-sm text-muted-foreground mt-1">
@@ -291,7 +291,7 @@ export const BulkImageUpload = ({ onClose, onSuccess }: BulkImageUploadProps) =>
           <X className="w-4 h-4" />
         </Button>
       </CardHeader>
-      <CardContent className="flex-1 flex flex-col gap-4 overflow-hidden p-6">
+      <CardContent className="flex-1 flex flex-col gap-4 p-6 min-h-0 overflow-auto">
         {/* Drag and Drop Area */}
         <div
           onDrop={handleDrop}
@@ -401,7 +401,7 @@ export const BulkImageUpload = ({ onClose, onSuccess }: BulkImageUploadProps) =>
           )}
         </div>
 
-        <ScrollArea className="flex-1 border rounded-md">
+        <ScrollArea className="flex-1 border rounded-md min-h-0 max-h-[calc(80vh-350px)]">
           {matches.length === 0 ? (
             <div className="p-8 text-center text-muted-foreground">
               <ImageIcon className="w-12 h-12 mx-auto mb-3 opacity-50" />
