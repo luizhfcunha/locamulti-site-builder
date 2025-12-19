@@ -14,52 +14,52 @@ const Index = () => {
     id: "DEMOLIÇÃO E PERFURAÇÃO",
     title: "Demolição e Perfuração",
     icon: Hammer,
-    imageUrl: "https://images.unsplash.com/photo-1541888946425-d81bb19240f5?q=80&w=800&auto=format&fit=crop"
+    imageUrl: "/Fotos Produtos 45 (800 x 600 px)/MARTELO DEMOLIDOR 16KG D25960K - DEWALT.jpg"
   }, {
     id: "CONCRETAGEM E ACABAMENTO",
     title: "Concretagem e Acabamento",
     icon: Cog,
-    imageUrl: "/images/concretagem-vibracao.jpg"
+    imageUrl: "/Fotos Produtos 45 (800 x 600 px)/BETONEIRA 400 LITROS RENTAL NR12 - CSM.jpg"
   }, {
     id: "FERRAMENTAS DE CORTAR, LIXAR E PARAFUSAR",
     title: "Ferramentas de Cortar, Lixar e Parafusar",
     icon: Wrench,
-    imageUrl: "https://images.unsplash.com/photo-1581092160562-40aa08e78837?q=80&w=800&auto=format&fit=crop"
+    imageUrl: "/Fotos Produtos 45 (800 x 600 px)/ESMERILHADEIRA ANGULAR 9 DWE 490.jpg"
   }, {
     id: "BOMBAS, GERADORES E COMPRESSORES",
     title: "Bombas, Geradores e Compressores",
     icon: Zap,
-    imageUrl: "https://images.unsplash.com/photo-1473341304170-971dccb5ac1e?q=80&w=800&auto=format&fit=crop"
+    imageUrl: "/Fotos Produtos 45 (800 x 600 px)/GERADOR GASOLINA TG8000 CXEV - TOYAMA.jpg"
   }, {
     id: "ELEVAÇÃO, MOVIMENTAÇÃO E REMOÇÃO",
     title: "Elevação, Movimentação e Remoção",
     icon: Package,
-    imageUrl: "https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?q=80&w=800&auto=format&fit=crop"
+    imageUrl: "/Fotos Produtos 45 (800 x 600 px)/EMPILHADEIRA 1,5T - BOVENAU.jpg"
   }, {
     id: "MÁQUINAS DE SOLDA E MONTAGEM",
     title: "Máquinas de Solda e Montagem",
     icon: Shield,
-    imageUrl: "https://images.unsplash.com/photo-1504328345606-18bbc8c9d7d1?q=80&w=800&auto=format&fit=crop"
+    imageUrl: "/Fotos Produtos 45 (800 x 600 px)/MÁQUINA DE SOLDA MIGMAG SMASHWELD 408 TOPFLEX - ESAB.jpg"
   }, {
     id: "CONSERVAÇÃO E LIMPEZA",
     title: "Conservação e Limpeza",
     icon: PaintBucket,
-    imageUrl: "https://images.unsplash.com/photo-1558904541-efa843a96f01?q=80&w=800&auto=format&fit=crop"
+    imageUrl: "/Fotos Produtos 45 (800 x 600 px)/ASPIRADOR DE PÓ SH7000 MONSTRÃO - STONE HAMMER.jpg"
   }, {
     id: "EQUIPAMENTOS DE ACESSO A ALTURA",
     title: "Equipamentos de Acesso à Altura",
     icon: Package,
-    imageUrl: "https://images.unsplash.com/photo-1504307651254-35680f356dfd?q=80&w=800&auto=format&fit=crop"
+    imageUrl: "/Fotos Produtos 45 (800 x 600 px)/ESCADA EXTENSIVEL FIBRA DE VIDRO EF33 6,0X10,2M 33 DEGRAUS - SINTESE.jpg"
   }, {
     id: "EQUIPAMENTOS AGRÍCOLAS",
     title: "Equipamentos Agrícolas",
     icon: Trees,
-    imageUrl: "https://images.unsplash.com/photo-1625246333195-78d9c38ad449?q=80&w=800&auto=format&fit=crop"
+    imageUrl: "/Fotos Produtos 45 (800 x 600 px)/CORTADOR DE GRAMA 4 TEMPOS TLM560 -  TOYAMA.jpg"
   }, {
     id: "FERRAMENTAS À BATERIA",
     title: "Ferramentas à Bateria",
     icon: Zap,
-    imageUrl: "https://images.unsplash.com/photo-1572981779307-38b8cabb2407?q=80&w=800&auto=format&fit=crop"
+    imageUrl: "/Fotos Produtos 45 (800 x 600 px)/PARAFUSADEIRA FURADEIRA BATERIA BOSCH GSR 120 LI.jpg"
   }];
   const benefits = [{
     icon: CheckCircle2,
