@@ -2,9 +2,11 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 import { NavLink } from "@/components/NavLink";
 import { WhatsappCTA } from "@/components/WhatsappCTA";
+import { TopBar } from "@/components/TopBar";
 import { Menu, X } from "lucide-react";
 import { logoHeaderUrl } from "@/lib/constants";
 import { WHATSAPP } from "@/config/whatsapp";
+
 export const Header = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const hostname = window.location.hostname;
@@ -32,8 +34,10 @@ export const Header = () => {
       {label}
     </NavLink>;
   };
-  return <header className="sticky top-0 z-50 w-full bg-background border-b border-border shadow-soft">
-    <div className="container mx-auto px-4">
+  return <>
+    <TopBar />
+    <header className="sticky top-0 z-50 w-full bg-background border-b border-border shadow-soft">
+      <div className="container mx-auto px-4">
       <div className="flex h-20 items-center justify-between">
         {/* Logo */}
         {isAdminSubdomain ? <a href={mainDomain} className="flex items-center">
@@ -82,6 +86,7 @@ export const Header = () => {
           </div>
         </div>
       </nav>}
-    </div>
-  </header>;
+      </div>
+    </header>
+  </>;
 };

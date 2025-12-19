@@ -118,8 +118,8 @@ const Index = () => {
             <h1 className="mb-4 md:mb-6 leading-tight text-lm-plum drop-shadow-sm text-3xl md:text-4xl lg:text-5xl font-heading font-bold">
               Locação de Equipamentos e Ferramentas Especiais
             </h1>
-            <p className="text-base md:text-lg lg:text-xl mb-6 md:mb-8 leading-relaxed max-w-xl lg:max-w-2xl text-lm-ink/90">
-              Locação profissional para obras, indústrias e manutenção
+            <p className="text-base md:text-lg lg:text-xl mb-6 md:mb-8 leading-relaxed max-w-xl lg:max-w-2xl text-lm-ink/80">
+              Aluguel de Máquinas para Montagem de Infraestruturas, Obras Industriais e Construção Civil
             </p>
             <div className="flex flex-col sm:flex-row gap-3 md:gap-4">
               <WhatsappCTA text="Orçamento Rápido" href={WHATSAPP.homeHero} size="lg" className="text-base md:text-lg font-semibold" />
@@ -136,8 +136,8 @@ const Index = () => {
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
             <h2 className="mb-4">Principais Categorias</h2>
-            <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-              Equipamentos profissionais para todas as necessidades técnicas e industriais
+            <p className="text-lg text-muted-foreground max-w-3xl mx-auto font-medium">
+              A mais completa linha de equipamentos e ferramentas para Construção Civil e Montagens Industriais Eletromecânicas de nossa região!
             </p>
           </div>
           <CategoryCarousel categories={categories} onCategoryClick={handleCategoryClick} />
