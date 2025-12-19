@@ -3,7 +3,7 @@ import { CONTACT } from "@/config/contact";
 
 export const TopBar = () => {
   return (
-    <div className="w-full bg-lm-plum text-white py-2">
+    <div className="w-full bg-primary text-primary-foreground py-2">
       <div className="container mx-auto px-4">
         <div className="flex items-center justify-center gap-4 md:gap-8 text-sm">
           {/* Location */}
