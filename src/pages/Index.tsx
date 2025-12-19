@@ -107,7 +107,7 @@ const Index = () => {
       {/* Hero Section */}
       <section className="relative min-h-[600px] flex items-center">
         <div className="absolute inset-0 bg-cover bg-center bg-[url('/lovable-uploads/354cf962-9168-44e0-8c93-0a695e288f8d.webp')] opacity-95" style={{
-          backgroundImage: "url(\"/lovable-uploads/52684a69-eef2-4961-98c2-3b6c3c8475bb.png\")"
+          backgroundImage: "url(\"/lovable-uploads/9b0fdea8-cba4-4bde-a392-b33638822cbb.jpg\")"
         }} />
         <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10 py-20">
           <div className="max-w-3xl">
