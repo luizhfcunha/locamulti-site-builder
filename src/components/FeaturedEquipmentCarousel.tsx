@@ -59,7 +59,7 @@ export const FeaturedEquipmentCarousel = () => {
     return `https://wa.me/5562984194024?text=${encodeURIComponent(message)}`;
   };
   if (loading) {
-    return <section className="py-16 bg-lm-plum">
+    return <section className="py-16 bg-lm-orange">
         <div className="container mx-auto px-4">
           <div className="animate-pulse flex flex-col items-center">
             <div className="h-8 bg-white/20 rounded w-64 mb-8"></div>
@@ -71,7 +71,7 @@ export const FeaturedEquipmentCarousel = () => {
       </section>;
   }
   if (products.length === 0) return null;
-  return <section className="py-16 md:py-20 bg-lm-plum relative overflow-hidden">
+  return <section className="py-16 md:py-20 bg-lm-orange relative overflow-hidden">
       {/* Decorative elements */}
       <div className="absolute top-0 left-0 w-64 h-64 bg-lm-orange/10 rounded-full blur-3xl -translate-x-1/2 -translate-y-1/2" />
       <div className="absolute bottom-0 right-0 w-64 h-64 bg-lm-terrac/10 rounded-full blur-3xl translate-x-1/2 translate-y-1/2" />
@@ -144,8 +144,8 @@ export const FeaturedEquipmentCarousel = () => {
 
         {/* Ver Todos Button */}
         <div className="text-center mt-10 md:mt-12">
-          <Button asChild size="lg" variant="outline" className="border-2 border-white text-white hover:bg-white hover:text-lm-plum font-semibold text-base px-8">
-            <Link to="/catalogo" className="text-primary">
+          <Button asChild size="lg" variant="outline" className="border-2 border-white text-white hover:bg-white hover:text-lm-orange font-semibold text-base px-8">
+            <Link to="/catalogo" className="text-white">
               Ver Todos os Equipamentos
               <ArrowRight className="ml-2 h-5 w-5" />
             </Link>
