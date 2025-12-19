@@ -166,9 +166,9 @@ const Catalogo = () => {
       <Header />
 
       <main className="flex-1">
-        <div className="flex">
-          {/* Sidebar Desktop */}
-          <div className="hidden lg:block">
+        <div className="flex min-h-screen">
+          {/* Sidebar Desktop - largura fixa */}
+          <div className="hidden lg:block w-72 flex-shrink-0">
             <CatalogSidebar
               categories={categories}
               onSearch={setSearchQuery}
@@ -183,8 +183,8 @@ const Catalogo = () => {
             />
           </div>
 
-          {/* Área Principal */}
-          <div className="flex-1 min-h-screen">
+          {/* Área Principal - flex-1 com min-w-0 para evitar overflow */}
+          <div className="flex-1 min-w-0">
             {/* Header da página */}
             <div className="border-b border-border bg-background sticky top-0 z-10">
               <div className="container mx-auto px-4 py-6">
@@ -343,7 +343,7 @@ const Catalogo = () => {
               </div>
 
               {loading ? (
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+                <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-6">
                   {[...Array(8)].map((_, i) => (
                     <div key={i} className="space-y-3">
                       <Skeleton className="h-48 w-full rounded-card" />
@@ -361,7 +361,7 @@ const Catalogo = () => {
               ) : (
                 <>
                   {viewMode === "grid" ? (
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-6">
                       {sortedEquipments.map((equipment) => (
                         <EquipmentCard
                           key={equipment.id}
