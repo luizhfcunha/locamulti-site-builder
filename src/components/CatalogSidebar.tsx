@@ -58,39 +58,43 @@ export const CatalogSidebar = ({
             )}
 
             {/* Categories Accordion */}
-            <div className="space-y-1">
-              <h3 className="font-heading font-semibold text-foreground px-2 mb-3">Categorias</h3>
+            <div className="space-y-2">
+              <h3 className="font-heading font-semibold text-foreground text-sm uppercase tracking-wide px-3 mb-4 text-muted-foreground">
+                Categorias
+              </h3>
               <Accordion
                 type="single"
                 collapsible
                 value={expandedCategory || undefined}
                 onValueChange={(value) => onExpandedCategoryChange?.(value || null)}
+                className="space-y-1"
               >
                 {categories.map((item) => (
-                  <AccordionItem key={item.category} value={item.category} className="border-b-0 mb-1">
+                  <AccordionItem key={item.category} value={item.category} className="border-0">
                     <AccordionTrigger
-                      className="px-3 py-0 h-12 text-base font-heading font-semibold text-foreground hover:text-primary hover:bg-muted/50 rounded-md transition-colors data-[state=open]:bg-muted/50 data-[state=open]:text-primary hover:no-underline"
+                      className="px-3 py-2.5 text-sm font-heading font-semibold text-foreground hover:text-primary hover:bg-muted/50 rounded-lg transition-colors data-[state=open]:bg-primary/5 data-[state=open]:text-primary hover:no-underline"
                     >
                       {item.category}
                     </AccordionTrigger>
-                    <AccordionContent className="pb-0 pt-1">
-                      <div className="pl-4 border-l-2 border-border/50 ml-3 my-1">
+                    <AccordionContent className="pb-2 pt-1">
+                      <div className="ml-3 pl-3 border-l-2 border-border/60">
                         {/* Families nested accordion */}
                         <Accordion
                           type="single"
                           collapsible
                           value={expandedFamily || undefined}
                           onValueChange={(value) => onExpandedFamilyChange?.(value || null)}
+                          className="space-y-0.5"
                         >
                           {item.families.map((family) => (
-                            <AccordionItem key={family.name} value={family.name} className="border-b-0">
+                            <AccordionItem key={family.name} value={family.name} className="border-0">
                               <AccordionTrigger
-                                className="px-3 py-0 h-10 text-sm font-medium text-muted-foreground hover:text-foreground hover:bg-muted/30 rounded-md transition-colors data-[state=open]:text-foreground data-[state=open]:bg-muted/30 hover:no-underline"
+                                className="px-2.5 py-2 text-sm font-medium text-muted-foreground hover:text-foreground hover:bg-muted/40 rounded-md transition-colors data-[state=open]:text-foreground data-[state=open]:font-semibold hover:no-underline"
                               >
                                 {family.name}
                               </AccordionTrigger>
-                              <AccordionContent className="pb-1 pt-0">
-                                <div className="space-y-0.5 pl-3 pt-1">
+                              <AccordionContent className="pb-1.5 pt-0.5">
+                                <div className="space-y-0.5 ml-2 pl-2.5 border-l border-border/40">
                                   {family.subfamilies.map((subfamily) => {
                                     const isActive =
                                       selectedCategory === item.category &&
@@ -100,9 +104,9 @@ export const CatalogSidebar = ({
                                       <Button
                                         key={subfamily}
                                         variant="ghost"
-                                        className={`w-full justify-start text-sm h-9 px-3 rounded-md font-normal transition-all duration-200 ${isActive
+                                        className={`w-full justify-start text-[13px] h-8 px-2.5 rounded-md font-normal transition-all duration-200 ${isActive
                                           ? "bg-primary/10 text-primary font-medium hover:bg-primary/15 hover:text-primary"
-                                          : "text-muted-foreground hover:text-foreground hover:bg-muted/50 hover:pl-4"
+                                          : "text-muted-foreground hover:text-foreground hover:bg-muted/30"
                                           }`}
                                         onClick={() => onSubfamilyClick?.(item.category, family.name, subfamily)}
                                       >
