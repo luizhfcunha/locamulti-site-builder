@@ -54,10 +54,10 @@ const Catalogo = () => {
   const pageSize = 24;
 
   // Estados para filtros com accordion de 3 níveis
-  const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
+  const [selectedCategory, setSelectedCategory] = useState<string | null>(() => searchParams.get("categoria") || null);
   const [selectedFamily, setSelectedFamily] = useState<string | null>(null);
   const [selectedSubfamily, setSelectedSubfamily] = useState<string | null>(null);
-  const [expandedCategory, setExpandedCategory] = useState<string | null>(null);
+  const [expandedCategory, setExpandedCategory] = useState<string | null>(() => searchParams.get("categoria") || null);
   const [expandedFamily, setExpandedFamily] = useState<string | null>(null);
   const [isFilterOpen, setIsFilterOpen] = useState(false);
 
@@ -143,6 +143,17 @@ const Catalogo = () => {
     const urlQuery = searchParams.get("q") || "";
     if (urlQuery !== searchQuery) {
       setSearchQuery(urlQuery);
+    }
+  }, [searchParams]);
+
+  // Sincronizar categoria da URL quando parâmetro mudar
+  useEffect(() => {
+    const urlCategory = searchParams.get("categoria") || null;
+    if (urlCategory !== selectedCategory) {
+      setSelectedCategory(urlCategory);
+      setExpandedCategory(urlCategory);
+      setSelectedFamily(null);
+      setSelectedSubfamily(null);
     }
   }, [searchParams]);
 
