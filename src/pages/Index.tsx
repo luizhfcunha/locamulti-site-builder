@@ -144,7 +144,7 @@ Obras Industriais e Construção Civil
       <section id="categorias" className="py-20 bg-secondary">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
-            <h2 className="mb-4">Principais Categorias</h2>
+            <h2 className="mb-4">A mais completa linha de Equipamentos e Ferramentas para Construção Civil e Montagens Industriais Eletromecânicas de nossa Região!</h2>
             <p className="text-lg text-muted-foreground max-w-3xl mx-auto font-medium">
               A mais completa linha de equipamentos e ferramentas para Construção Civil e Montagens Industriais Eletromecânicas de nossa região!
             </p>
