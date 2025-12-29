@@ -99,8 +99,8 @@ export const FeaturedEquipmentCarousel = () => {
 
           {/* Embla Carousel */}
           <div className="overflow-hidden mx-6 md:mx-10" ref={emblaRef}>
-            <div className="flex gap-4 md:gap-6">
-              {products.map(product => <div key={product.id} className="flex-shrink-0 w-[280px] sm:w-[300px] md:w-[320px]">
+            <div className="flex">
+              {products.map(product => <div key={product.id} className="flex-shrink-0 w-[280px] sm:w-[300px] md:w-[320px] pr-4 md:pr-6">
                   <div className="bg-lm-muted rounded-2xl overflow-hidden shadow-lg hover:shadow-xl transition-all duration-300 h-full flex flex-col">
                     {/* Product Image */}
                     <div className="relative aspect-square bg-white p-4">
