@@ -187,14 +187,14 @@ export async function getCatalogItemByCode(code: string): Promise<CatalogItem | 
     .select('*')
     .eq('code', code)
     .eq('active', true)
-    .single();
+    .maybeSingle();
 
   if (error) {
     console.error('Error fetching item by code:', error);
     return null;
   }
 
-  return data as CatalogItem;
+  return data as CatalogItem | null;
 }
 
 /**
@@ -207,7 +207,7 @@ export async function getCategoryBySlug(categorySlug: string): Promise<{ name: s
     .eq('category_slug', categorySlug)
     .eq('active', true)
     .limit(1)
-    .single();
+    .maybeSingle();
 
   if (error) {
     console.error('Error fetching category by slug:', error);
