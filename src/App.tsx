@@ -83,6 +83,7 @@ const App = () => {
                       <ImportCatalogItems />
                     </AdminRoute>
                   }
+                />
                 <Route
                   path="/admin/missing-images"
                   element={
