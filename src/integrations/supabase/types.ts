@@ -127,6 +127,66 @@ export type Database = {
         }
         Relationships: []
       }
+      catalog_items: {
+        Row: {
+          active: boolean | null
+          category_name: string
+          category_no: number
+          category_order: number
+          category_slug: string
+          code: string
+          created_at: string | null
+          description: string
+          family_name: string
+          family_no: string
+          family_order: number
+          family_slug: string
+          id: string
+          image_url: string | null
+          item_order: number
+          item_type: string
+          updated_at: string | null
+        }
+        Insert: {
+          active?: boolean | null
+          category_name: string
+          category_no: number
+          category_order: number
+          category_slug: string
+          code: string
+          created_at?: string | null
+          description: string
+          family_name: string
+          family_no: string
+          family_order: number
+          family_slug: string
+          id?: string
+          image_url?: string | null
+          item_order: number
+          item_type: string
+          updated_at?: string | null
+        }
+        Update: {
+          active?: boolean | null
+          category_name?: string
+          category_no?: number
+          category_order?: number
+          category_slug?: string
+          code?: string
+          created_at?: string | null
+          description?: string
+          family_name?: string
+          family_no?: string
+          family_order?: number
+          family_slug?: string
+          id?: string
+          image_url?: string | null
+          item_order?: number
+          item_type?: string
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
       categories: {
         Row: {
           catalog_id: string | null

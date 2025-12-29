@@ -7,7 +7,9 @@ import WhatsAppButton from "@/components/WhatsAppButton";
 import { ScrollToTop } from "@/components/ScrollToTop";
 import { AdminRoute } from "@/components/admin/AdminRoute";
 import Index from "./pages/Index";
-import Catalogo from "./pages/Catalogo";
+import CatalogHome from "./pages/CatalogHome";
+import CatalogCategory from "./pages/CatalogCategory";
+import CatalogFamily from "./pages/CatalogFamily";
 import QuemSomos from "./pages/QuemSomos";
 import Contato from "./pages/Contato";
 import Login from "./pages/Login";
@@ -15,6 +17,7 @@ import AdminProdutos from "./pages/AdminProdutos";
 import AdminDashboard from "./pages/AdminDashboard";
 import Categories from "./pages/admin/Categories";
 import ImportCatalog from "./pages/admin/ImportCatalog";
+import ImportCatalogItems from "./pages/admin/ImportCatalogItems";
 import MissingImages from "./pages/admin/MissingImages";
 import NotFound from "./pages/NotFound";
 
@@ -74,6 +77,13 @@ const App = () => {
                   }
                 />
                 <Route
+                  path="/admin/import-catalog-items"
+                  element={
+                    <AdminRoute>
+                      <ImportCatalogItems />
+                    </AdminRoute>
+                  }
+                <Route
                   path="/admin/missing-images"
                   element={
                     <AdminRoute>
@@ -88,7 +98,10 @@ const App = () => {
               // Public Site Routes
               <>
                 <Route path="/" element={<Index />} />
-                <Route path="/catalogo" element={<Catalogo />} />
+                <Route path="/catalogo" element={<CatalogHome />} />
+                <Route path="/catalogo/:categoriaSlug" element={<CatalogCategory />} />
+                <Route path="/catalogo/:categoriaSlug/:familiaSlug" element={<CatalogFamily />} />
+                <Route path="/catalogo/:categoriaSlug/:familiaSlug/:code" element={<CatalogFamily />} />
                 <Route path="/quem-somos" element={<QuemSomos />} />
                 <Route path="/contato" element={<Contato />} />
                 {/* Login on public site redirects to admin subdomain */}
