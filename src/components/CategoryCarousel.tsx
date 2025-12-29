@@ -92,11 +92,11 @@ export const CategoryCarousel = ({ categories, onCategoryClick }: CategoryCarous
 
         {/* Embla Carousel */}
         <div className="overflow-hidden" ref={emblaRef}>
-          <div className="flex gap-4 md:gap-6">
+          <div className="flex">
             {categories.map((category) => (
               <div
                 key={category.id}
-                className="flex-shrink-0 w-[280px] sm:w-[300px] md:w-[340px]"
+                className="flex-shrink-0 w-[280px] sm:w-[300px] md:w-[340px] pr-4 md:pr-6"
               >
                 <CategoryCard
                   title={category.title}
