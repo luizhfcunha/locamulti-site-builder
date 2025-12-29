@@ -126,10 +126,8 @@ const Index = () => {
             <h1 className="mb-4 md:mb-6 leading-tight text-lm-plum drop-shadow-sm text-3xl md:text-4xl lg:text-5xl font-heading font-bold">
               Locação de Equipamentos e Ferramentas Especiais
             </h1>
-            <p className="text-base md:text-lg lg:text-xl mb-6 md:mb-8 leading-relaxed max-w-xl lg:max-w-2xl text-lm-ink/80">
-              Aluguel de Máquinas para Montagem de Infraestruturas, 
-Obras Industriais e Construção Civil
-            </p>
+            <p className="text-base md:text-lg lg:text-xl mb-6 md:mb-8 leading-relaxed max-w-xl lg:max-w-2xl text-lm-ink/80">Aluguel de Máquinas para Montagem de Infraestruturas, 
+Obras Industriais e Construção Civil</p>
             <div className="flex flex-col sm:flex-row gap-3 md:gap-4">
               <WhatsappCTA text="Orçamento Rápido" href={WHATSAPP.homeHero} size="lg" className="text-base md:text-lg font-semibold" />
               <Button size="lg" variant="outline" onClick={() => window.location.href = "/catalogo"} className="text-base md:text-lg font-semibold border-0 bg-primary text-secondary">
