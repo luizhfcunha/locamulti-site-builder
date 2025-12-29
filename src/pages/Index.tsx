@@ -177,7 +177,9 @@ const Index = () => {
                 Locação de Equipamentos e Ferramentas Especiais
               </h1>
               <p className="text-base md:text-lg lg:text-xl mb-6 md:mb-8 leading-relaxed max-w-xl lg:max-w-2xl text-lm-ink/80">
-                Aluguel de Máquinas para Montagem de Infraestruturas,  Obras Industriais e Construção Civil
+                Aluguel de Máquinas para Montagem de Infraestruturas,
+                <br />
+                Obras Industriais e Construção Civil.
               </p>
               <div className="flex flex-col sm:flex-row gap-3 md:gap-4">
                 <WhatsappCTA
