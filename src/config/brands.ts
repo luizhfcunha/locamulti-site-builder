@@ -12,9 +12,7 @@ import logoBovenau from "@/assets/brands/logo-bovenau.png";
 import logoDewalt from "@/assets/brands/logo-dewalt.png";
 import logoEsab from "@/assets/brands/logo-esab.png";
 import logoKarcher from "@/assets/brands/logo-karcher.png";
-import logoMakita from "@/assets/brands/logo-makita.png";
 import logoMerax from "@/assets/brands/logo-merax.png";
-import logoPersico from "@/assets/brands/logo-persico.png";
 import logoSumig from "@/assets/brands/logo-sumig.png";
 import logoToyama from "@/assets/brands/logo-toyama.png";
 
@@ -40,13 +38,6 @@ export const BRANDS_CAROUSEL: Brand[] = [
     slug: "bosch",
     logoUrl: logoBosch,
     websiteUrl: "https://www.bosch.com.br",
-  },
-  {
-    id: "makita",
-    name: "Makita",
-    slug: "makita",
-    logoUrl: logoMakita,
-    websiteUrl: "https://www.makita.com.br",
   },
   {
     id: "esab",
@@ -89,24 +80,16 @@ export const BRANDS_CAROUSEL: Brand[] = [
     slug: "merax",
     logoUrl: logoMerax,
   },
-  {
-    id: "persico",
-    name: "Persico",
-    slug: "persico",
-    logoUrl: logoPersico,
-  },
 ];
 
 // Supabase Storage URLs (for future use when uploaded to storage)
 export const BRANDS_STORAGE_URLS = {
   dewalt: `${import.meta.env.VITE_SUPABASE_URL}/storage/v1/object/public/brand-assets/brand/locamulti/partners/logo-dewalt.png`,
   bosch: `${import.meta.env.VITE_SUPABASE_URL}/storage/v1/object/public/brand-assets/brand/locamulti/partners/logo-bosch.png`,
-  makita: `${import.meta.env.VITE_SUPABASE_URL}/storage/v1/object/public/brand-assets/brand/locamulti/partners/logo-makita.png`,
   esab: `${import.meta.env.VITE_SUPABASE_URL}/storage/v1/object/public/brand-assets/brand/locamulti/partners/logo-esab.png`,
   sumig: `${import.meta.env.VITE_SUPABASE_URL}/storage/v1/object/public/brand-assets/brand/locamulti/partners/logo-sumig.png`,
   toyama: `${import.meta.env.VITE_SUPABASE_URL}/storage/v1/object/public/brand-assets/brand/locamulti/partners/logo-toyama.png`,
   karcher: `${import.meta.env.VITE_SUPABASE_URL}/storage/v1/object/public/brand-assets/brand/locamulti/partners/logo-karcher.png`,
   bovenau: `${import.meta.env.VITE_SUPABASE_URL}/storage/v1/object/public/brand-assets/brand/locamulti/partners/logo-bovenau.png`,
   merax: `${import.meta.env.VITE_SUPABASE_URL}/storage/v1/object/public/brand-assets/brand/locamulti/partners/logo-merax.png`,
-  persico: `${import.meta.env.VITE_SUPABASE_URL}/storage/v1/object/public/brand-assets/brand/locamulti/partners/logo-persico.png`,
 } as const;
