@@ -13,22 +13,14 @@ import {
   useSidebar,
 } from "@/components/ui/sidebar";
 import { ChevronRight } from "lucide-react";
+import { SidebarCategoryData } from "@/lib/catalogNew";
 
-export interface FamilyData {
-  name: string;
-  slug: string;
-  equipmentCount: number;
-  consumableCount: number;
-}
-
-export interface CategoryData {
-  name: string;
-  slug: string;
-  families: FamilyData[];
-}
+// Re-export for backwards compatibility
+export type CategoryData = SidebarCategoryData;
+export type FamilyData = SidebarCategoryData["families"][0];
 
 interface CatalogSidebarProps {
-  categories: CategoryData[];
+  categories: SidebarCategoryData[];
   selectedCategorySlug?: string | null;
   selectedFamilySlug?: string | null;
   expandedCategorySlug?: string | null;
