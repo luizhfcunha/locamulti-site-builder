@@ -245,3 +245,73 @@ export async function searchCatalog(query: string): Promise<SearchResult[]> {
     matchType: item.code.toLowerCase().includes(query.toLowerCase()) ? 'code' : 'description'
   }));
 }
+
+/**
+ * Sidebar hierarchy data structure
+ */
+export interface SidebarFamilyData {
+  name: string;
+  slug: string;
+  equipmentCount: number;
+  consumableCount: number;
+}
+
+export interface SidebarCategoryData {
+  name: string;
+  slug: string;
+  families: SidebarFamilyData[];
+}
+
+/**
+ * Get full hierarchy for sidebar (all categories with all families)
+ */
+export async function getCatalogHierarchy(): Promise<SidebarCategoryData[]> {
+  const { data, error } = await supabase
+    .from('catalog_items')
+    .select('*')
+    .eq('active', true)
+    .order('category_order', { ascending: true })
+    .order('family_order', { ascending: true });
+
+  if (error) {
+    console.error('Error fetching catalog hierarchy:', error);
+    return [];
+  }
+
+  // Build hierarchy
+  const categoryMap = new Map<string, SidebarCategoryData>();
+
+  data?.forEach(item => {
+    // Get or create category
+    let category = categoryMap.get(item.category_slug);
+    if (!category) {
+      category = {
+        name: item.category_name,
+        slug: item.category_slug,
+        families: []
+      };
+      categoryMap.set(item.category_slug, category);
+    }
+
+    // Get or create family
+    let family = category.families.find(f => f.slug === item.family_slug);
+    if (!family) {
+      family = {
+        name: item.family_name,
+        slug: item.family_slug,
+        equipmentCount: 0,
+        consumableCount: 0
+      };
+      category.families.push(family);
+    }
+
+    // Count items
+    if (item.item_type === 'equipamento') {
+      family.equipmentCount++;
+    } else {
+      family.consumableCount++;
+    }
+  });
+
+  return Array.from(categoryMap.values());
+}
