@@ -1,52 +1,63 @@
 import { Category, Family, Product } from '@/types/catalog';
-import catalogJson from '../../scripts/catalogo_locamulti_2026.json';
+import catalogJson from '../../locamulti_produtos.json';
 import { findImageForProduct } from '@/utils/imageMatcher';
 
+// Helper to generate slug from name
+const slugify = (str: string): string => {
+    return str
+        .toLowerCase()
+        .normalize('NFD')
+        .replace(/[\u0300-\u036f]/g, '') // Remove diacritics
+        .replace(/[^a-z0-9\s-]/g, '')
+        .replace(/\s+/g, '-')
+        .replace(/-+/g, '-')
+        .trim();
+};
+
 // Transform JSON structure to typed catalog
-// New structure: catalog[] → families[] → subfamilies[] (products)
+// Structure: categorias[] → familias[] → equipamentos[]
 const transformCatalog = (): Category[] => {
-    const rawCatalog = (catalogJson as any).catalog || [];
+    const rawCategories = (catalogJson as any).categorias || [];
 
-    return rawCatalog.map((cat: any) => {
-        const families: Family[] = (cat.families || []).map((fam: any) => {
-            const products: Product[] = (fam.subfamilies || []).map((item: any) => {
-                // In new JSON, "description" contains the product name + specs
-                // Extract product name from description (before the first " - " or " / ")
-                const fullDesc = item.description || '';
-                const nameParts = fullDesc.split(' - ');
-                const productName = nameParts[0].trim();
-                const specs = nameParts.length > 1 ? nameParts.slice(1).join(' - ').trim() : '';
+    return rawCategories.map((cat: any) => {
+        const categorySlug = slugify(cat.nome);
 
-                const matchedImage = findImageForProduct(productName);
+        const families: Family[] = (cat.familias || []).map((fam: any) => {
+            const familySlug = slugify(fam.nome);
+
+            const products: Product[] = (fam.equipamentos || []).map((eq: any) => {
+                // Check if it's a consumable based on description OR tipo field
+                const isConsumable = eq.descricao?.toUpperCase() === 'CONSUMÍVEL' || eq.tipo === 'consumivel';
+                const matchedImage = findImageForProduct(eq.nome);
 
                 return {
-                    id: item.id,
-                    order: item.id, // Use id as order (e.g., "1.1.1", "1.1.2")
-                    name: productName,
-                    description: item.is_consumable ? undefined : (specs || fullDesc),
-                    isConsumable: item.is_consumable || false,
-                    categoryOrder: parseInt(cat.id),
-                    category: cat.name,
-                    categorySlug: cat.slug,
-                    familyOrder: fam.id,
-                    family: fam.name,
-                    familySlug: fam.slug,
+                    id: eq.ordem || `${categorySlug}-${familySlug}-${slugify(eq.nome)}`,
+                    order: eq.ordem ? String(eq.ordem) : undefined,
+                    name: eq.nome,
+                    description: isConsumable ? undefined : eq.descricao,
+                    isConsumable,
+                    categoryOrder: cat.ordem,
+                    category: cat.nome,
+                    categorySlug,
+                    familyOrder: String(fam.ordem),
+                    family: fam.nome,
+                    familySlug,
                     image_url: matchedImage || undefined,
                 } as Product;
             });
 
             return {
-                order: fam.id,
-                name: fam.name,
-                slug: fam.slug,
+                order: String(fam.ordem),
+                name: fam.nome,
+                slug: familySlug,
                 products,
             } as Family;
         });
 
         return {
-            order: parseInt(cat.id),
-            name: cat.name,
-            slug: cat.slug,
+            order: cat.ordem,
+            name: cat.nome,
+            slug: categorySlug,
             families,
         } as Category;
     });
@@ -71,8 +82,13 @@ export const getAllProducts = (): Product[] => {
         });
     });
 
-    // Strict sorting by 'order' field (e.g., "1.1.1", "1.1.2", "2.1.1")
+    // Sort: equipments first, consumables last, both by order
     return products.sort((a, b) => {
+        // First sort by consumable status
+        if (a.isConsumable !== b.isConsumable) {
+            return a.isConsumable ? 1 : -1;
+        }
+        // Then sort by order field
         const orderA = a.order || "";
         const orderB = b.order || "";
         return orderA.localeCompare(orderB, undefined, { numeric: true, sensitivity: 'base' });

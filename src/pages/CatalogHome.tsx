@@ -115,9 +115,9 @@ const CatalogHome = () => {
     <div className="min-h-screen flex flex-col bg-background">
       <Header />
 
-      <main className="flex-1 flex flex-col pt-24">
+      <main className="flex-1 flex flex-col pt-20">
         {/* Main Layout Area */}
-        <div className="container mx-auto px-4 py-8 flex items-start gap-8 min-h-[calc(100vh-200px)]">
+        <div className="container mx-auto px-4 py-4 flex items-start gap-8 min-h-[calc(100vh-200px)]">
 
           {/* Sidebar (Desktop) */}
           <CatalogSidebar />
