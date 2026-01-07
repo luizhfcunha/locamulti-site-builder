@@ -1,14 +1,19 @@
+import { useState } from "react";
 import { Product } from "@/types/catalog";
-import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { MessageCircle } from "lucide-react";
+import { MessageCircle, ChevronDown, ChevronUp } from "lucide-react";
+import { ConsumableBadge } from "./ConsumableBadge";
 
 interface ProductCardProps {
     product: Product;
 }
 
 export const ProductCard = ({ product }: ProductCardProps) => {
+    const [isExpanded, setIsExpanded] = useState(false);
     const isConsumable = product.isConsumable || product.description?.toLowerCase().includes('consumível');
+
+    // Check if description is long (more than ~150 chars)
+    const isLongDescription = product.description && product.description.length > 150;
 
     // WhatsApp link with correct number
     const waNumber = "556298494024";
@@ -16,7 +21,7 @@ export const ProductCard = ({ product }: ProductCardProps) => {
     const waLink = `https://wa.me/${waNumber}?text=${message}`;
 
     return (
-        <div className="bg-white rounded-lg border border-border/50 shadow-sm hover:shadow-md transition-all duration-200 overflow-hidden flex flex-col sm:flex-row min-h-[120px]">
+        <div className="bg-white rounded-lg border border-border/50 shadow-sm hover:shadow-md transition-all duration-200 overflow-hidden flex flex-col sm:flex-row min-h-[120px] animate-in fade-in-50 duration-300">
             {/* Image Area - 120x120 */}
             <div className="w-full sm:w-[120px] h-[120px] sm:h-auto shrink-0 p-2 bg-gray-50 flex items-center justify-center border-b sm:border-b-0 sm:border-r border-border/10">
                 <img
@@ -33,17 +38,27 @@ export const ProductCard = ({ product }: ProductCardProps) => {
                     <h3 className="font-heading font-bold text-base sm:text-xl leading-tight text-foreground">
                         {product.name}
                     </h3>
-                    {isConsumable && (
-                        <Badge className="bg-orange-500 text-white hover:bg-orange-600 border-none px-3 py-1 rounded-full text-xs font-semibold shrink-0">
-                            CONSUMÍVEL
-                        </Badge>
-                    )}
+                    {isConsumable && <ConsumableBadge />}
                 </div>
 
                 {product.description && !isConsumable && (
-                    <p className="text-sm text-gray-500 line-clamp-2 mt-1">
-                        {product.description}
-                    </p>
+                    <div className="mt-1">
+                        <p className={`text-sm text-gray-500 ${!isExpanded && isLongDescription ? 'line-clamp-3' : ''}`}>
+                            {product.description}
+                        </p>
+                        {isLongDescription && (
+                            <button
+                                onClick={() => setIsExpanded(!isExpanded)}
+                                className="text-xs text-primary hover:underline mt-1 flex items-center gap-1"
+                            >
+                                {isExpanded ? (
+                                    <>Ver menos <ChevronUp className="h-3 w-3" /></>
+                                ) : (
+                                    <>Ver mais <ChevronDown className="h-3 w-3" /></>
+                                )}
+                            </button>
+                        )}
+                    </div>
                 )}
             </div>
 

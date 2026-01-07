@@ -156,6 +156,7 @@ const CatalogHome = () => {
                   products={products}
                   isLoading={loading}
                   onClearFilters={handleClearFilters}
+                  categoryName={activeCategoryName}
                 />
               </div>
             )}
