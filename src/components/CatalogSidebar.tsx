@@ -1,133 +1,138 @@
-import { SearchInput } from "@/components/SearchInput";
-import { Button } from "@/components/ui/button";
+import { useNavigate } from "react-router-dom";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { Separator } from "@/components/ui/separator";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
+import {
+  Sidebar,
+  SidebarContent,
+  SidebarHeader,
+  SidebarGroup,
+  SidebarGroupLabel,
+  SidebarMenu,
+  SidebarMenuItem,
+  SidebarMenuButton,
+  useSidebar,
+} from "@/components/ui/sidebar";
+import { ChevronRight } from "lucide-react";
+import { SidebarCategoryData } from "@/lib/catalogNew";
 
-interface FamilyWithSubfamilies {
-  name: string;
-  subfamilies: string[];
-}
-
-interface CategoryWithHierarchy {
-  category: string;
-  families: FamilyWithSubfamilies[];
-}
+// Re-export for backwards compatibility
+export type CategoryData = SidebarCategoryData;
+export type FamilyData = SidebarCategoryData["families"][0];
 
 interface CatalogSidebarProps {
-  categories: CategoryWithHierarchy[];
-  onSearch?: (query: string) => void;
-  onSubfamilyClick?: (category: string, family: string, subfamily: string) => void;
-  selectedCategory?: string | null;
-  selectedFamily?: string | null;
-  selectedSubfamily?: string | null;
-  expandedCategory?: string | null;
-  expandedFamily?: string | null;
-  onExpandedCategoryChange?: (category: string | null) => void;
-  onExpandedFamilyChange?: (family: string | null) => void;
+  categories: SidebarCategoryData[];
+  selectedCategorySlug?: string | null;
+  selectedFamilySlug?: string | null;
+  expandedCategorySlug?: string | null;
+  onExpandedCategoryChange?: (slug: string | null) => void;
 }
 
 export const CatalogSidebar = ({
   categories,
-  onSearch,
-  onSubfamilyClick,
-  selectedCategory,
-  selectedFamily,
-  selectedSubfamily,
-  expandedCategory,
-  expandedFamily,
+  selectedCategorySlug,
+  selectedFamilySlug,
+  expandedCategorySlug,
   onExpandedCategoryChange,
-  onExpandedFamilyChange,
 }: CatalogSidebarProps) => {
-  return (
-    <aside className="w-full lg:w-72 flex-shrink-0 bg-background border-r border-border">
-      <div className="sticky top-24 p-6">
-        <ScrollArea className="h-[calc(100vh-8rem)]">
-          <div className="space-y-6 pr-4">
-            {/* Search */}
-            {onSearch && (
-              <>
-                <div>
-                  <SearchInput
-                    onChange={(e) => onSearch(e.target.value)}
-                    placeholder="Buscar equipamentos..."
-                  />
-                </div>
-                <Separator />
-              </>
-            )}
+  const navigate = useNavigate();
+  const { state } = useSidebar();
+  const isCollapsed = state === "collapsed";
 
-            {/* Categories Accordion */}
-            <div className="space-y-1">
-              <h3 className="text-xs font-medium text-muted-foreground uppercase tracking-wider px-3 mb-3">
-                Categorias
-              </h3>
-              <Accordion
-                type="single"
-                collapsible
-                value={expandedCategory || undefined}
-                onValueChange={(value) => onExpandedCategoryChange?.(value || null)}
-                className="space-y-0.5"
-              >
-                {categories.map((item) => (
-                  <AccordionItem key={item.category} value={item.category} className="border-0">
-                    <AccordionTrigger
-                      className="w-full px-3 py-2 text-[14px] font-semibold text-foreground hover:text-primary hover:bg-muted/50 rounded-lg data-[state=open]:bg-primary/5 data-[state=open]:text-primary"
-                    >
-                      <span className="text-left break-words leading-tight">{item.category}</span>
-                    </AccordionTrigger>
+  const handleFamilyClick = (categorySlug: string, familySlug: string) => {
+    navigate(`/catalogo/${categorySlug}/${familySlug}`);
+  };
+
+  const handleCategoryClick = (categorySlug: string) => {
+    navigate(`/catalogo/${categorySlug}`);
+  };
+
+  return (
+    <Sidebar collapsible="icon" className="border-r border-border bg-background">
+      <SidebarHeader className="p-4 border-b border-border">
+        <h2 className={`font-semibold text-foreground ${isCollapsed ? 'sr-only' : 'text-lg'}`}>
+          Catálogo
+        </h2>
+      </SidebarHeader>
+
+      <SidebarContent>
+        <ScrollArea className="h-[calc(100vh-10rem)]">
+          <SidebarGroup>
+            <SidebarGroupLabel className="text-xs font-medium text-muted-foreground uppercase tracking-wider px-3 mb-2">
+              Categorias
+            </SidebarGroupLabel>
+
+            <Accordion
+              type="single"
+              collapsible
+              value={expandedCategorySlug || undefined}
+              onValueChange={(value) => onExpandedCategoryChange?.(value || null)}
+              className="space-y-0.5"
+            >
+              {categories.map((category) => {
+                const isSelected = selectedCategorySlug === category.slug;
+                const totalItems = category.families.reduce(
+                  (sum, f) => sum + f.equipmentCount + f.consumableCount,
+                  0
+                );
+
+                return (
+                  <AccordionItem key={category.slug} value={category.slug} className="border-0">
+                    <div className="flex items-center">
+                      <AccordionTrigger
+                        className={`flex-1 px-3 py-2.5 text-[14px] font-medium hover:bg-muted/50 rounded-lg transition-colors
+                          ${isSelected ? 'bg-primary/10 text-primary' : 'text-foreground'}
+                          [&[data-state=open]]:bg-primary/5 [&[data-state=open]]:text-primary`}
+                      >
+                        <span className="text-left break-words leading-tight flex-1">
+                          {!isCollapsed && category.name}
+                        </span>
+                        {!isCollapsed && (
+                          <span className="text-xs text-muted-foreground ml-2">
+                            ({totalItems})
+                          </span>
+                        )}
+                      </AccordionTrigger>
+                    </div>
+
                     <AccordionContent className="pb-1">
-                      <div className="ml-3 pl-3 border-l-2 border-border/50">
-                        {/* Families nested accordion */}
-                        <Accordion
-                          type="single"
-                          collapsible
-                          value={expandedFamily || undefined}
-                          onValueChange={(value) => onExpandedFamilyChange?.(value || null)}
-                          className="space-y-0"
-                        >
-                          {item.families.map((family) => (
-                            <AccordionItem key={family.name} value={family.name} className="border-0">
-                              <AccordionTrigger
-                                className="w-full px-2 py-1.5 text-[13px] font-medium text-muted-foreground hover:text-foreground hover:bg-muted/30 rounded-md data-[state=open]:text-foreground"
+                      <SidebarMenu className="ml-3 pl-3 border-l-2 border-border/50">
+                        {category.families.map((family) => {
+                          const isFamilySelected = 
+                            selectedCategorySlug === category.slug && 
+                            selectedFamilySlug === family.slug;
+                          const itemCount = family.equipmentCount + family.consumableCount;
+
+                          return (
+                            <SidebarMenuItem key={family.slug}>
+                              <SidebarMenuButton
+                                onClick={() => handleFamilyClick(category.slug, family.slug)}
+                                isActive={isFamilySelected}
+                                className={`w-full justify-between text-[13px] py-2 px-2 rounded-md
+                                  ${isFamilySelected 
+                                    ? 'bg-primary/10 text-primary font-medium' 
+                                    : 'text-muted-foreground hover:text-foreground hover:bg-muted/30'
+                                  }`}
                               >
-                                <span className="text-left break-words leading-snug">{family.name}</span>
-                              </AccordionTrigger>
-                              <AccordionContent className="pb-1">
-                                <div className="space-y-0 ml-2 pl-2 border-l border-border/30">
-                                  {family.subfamilies.map((subfamily) => {
-                                    const isActive =
-                                      selectedCategory === item.category &&
-                                      selectedFamily === family.name &&
-                                      selectedSubfamily === subfamily;
-                                    return (
-                                      <Button
-                                        key={subfamily}
-                                        variant="ghost"
-                                        className={`w-full justify-start text-left text-[12px] h-auto min-h-[28px] py-1 px-2 rounded font-normal whitespace-normal ${isActive
-                                          ? "bg-primary/10 text-primary font-medium hover:bg-primary/15"
-                                          : "text-muted-foreground hover:text-foreground hover:bg-muted/20"
-                                          }`}
-                                        onClick={() => onSubfamilyClick?.(item.category, family.name, subfamily)}
-                                      >
-                                        <span className="text-left break-words leading-snug">{subfamily}</span>
-                                      </Button>
-                                    );
-                                  })}
-                                </div>
-                              </AccordionContent>
-                            </AccordionItem>
-                          ))}
-                        </Accordion>
-                      </div>
+                                <span className="text-left break-words leading-snug flex-1">
+                                  {family.name}
+                                </span>
+                                <span className="text-xs opacity-60 ml-2 flex items-center gap-1">
+                                  {itemCount}
+                                  <ChevronRight className="h-3 w-3" />
+                                </span>
+                              </SidebarMenuButton>
+                            </SidebarMenuItem>
+                          );
+                        })}
+                      </SidebarMenu>
                     </AccordionContent>
                   </AccordionItem>
-                ))}
-              </Accordion>
-            </div>
-          </div>
+                );
+              })}
+            </Accordion>
+          </SidebarGroup>
         </ScrollArea>
-      </div>
-    </aside>
+      </SidebarContent>
+    </Sidebar>
   );
 };
