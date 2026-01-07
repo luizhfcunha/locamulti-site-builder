@@ -12,16 +12,16 @@ const getCategoryImage = (slug: string) => {
     // In a real scenario, this would map to actual images in /public/images/categorias/
     // For now we use High Quality Placeholders or local paths if available
     const images: Record<string, string> = {
-        'demolicao-e-perfuracao': '/images/categorias/demolicao-perfuracao.jpg',
-        'concretagem-e-acabamento': '/images/categorias/concretagem-acabamento.jpg',
-        'ferramentas-de-cortar-lixar-e-parafusar': '/images/categorias/ferramentas-cortar-lixar.jpg',
-        'bombas-geradores-e-compressores': '/images/categorias/bombas-geradores.jpg',
-        'elevacao-movimentacao-e-remocao': '/images/categorias/elevacao-movimentacao.jpg',
-        'maquinas-de-solda-e-montagem': '/images/categorias/maquinas-solda.jpg',
-        'conservacao-e-limpeza': '/images/categorias/conservacao-limpeza.jpg',
-        'equipamentos-de-acesso-a-altura': '/images/categorias/acesso-altura.jpg',
-        'equipamentos-de-jardinagem-e-agricolas': '/images/categorias/equipamentos-agricolas.jpg',
-        'ferramentas-a-bateria': '/images/categorias/ferramentas-bateria.jpg',
+        'demolicao-e-perfuracao': '/images/categories/martelo-demolidor.jpg',
+        'concretagem-e-acabamento': '/images/categories/betoneira.jpg',
+        'ferramentas-de-cortar-lixar-e-parafusar': '/images/categories/esmerilhadeira.jpg',
+        'bombas-geradores-e-compressores': '/images/categories/gerador.jpg',
+        'elevacao-movimentacao-e-remocao': '/images/categories/empilhadeira.jpg',
+        'maquinas-de-solda-e-montagem': '/images/categories/maquina-solda.jpg',
+        'conservacao-e-limpeza': '/images/categories/aspirador.jpg',
+        'equipamentos-de-acesso-a-altura': '/images/categories/escada.jpg',
+        'equipamentos-de-jardinagem-e-agricolas': '/images/categories/cortador-grama.jpg',
+        'ferramentas-a-bateria': '/images/categories/parafusadeira.jpg',
     };
 
     // Fallback to a nice placeholder if image not found
