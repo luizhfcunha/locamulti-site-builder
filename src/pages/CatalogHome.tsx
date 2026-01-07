@@ -82,13 +82,11 @@ const CatalogHome = () => {
   // Handlers
   const handleSelectCategory = (slug: string) => {
     setSearchParams({ categoria: slug });
-    window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   const handleClearFilters = () => {
     setSearchParams({});
     setSearchInput("");
-    window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   const handleClearFamily = () => {
@@ -116,14 +114,14 @@ const CatalogHome = () => {
       <Header />
 
       <main className="flex-1 flex flex-col pt-20">
-        {/* Main Layout Area */}
-        <div className="container mx-auto px-4 py-4 flex items-start gap-8 min-h-[calc(100vh-200px)]">
+        {/* Main Layout Area - Fixed height with independent scroll */}
+        <div className="container mx-auto px-4 py-4 flex items-start gap-8 h-[calc(100vh-5rem)] overflow-hidden">
 
           {/* Sidebar (Desktop) */}
           <CatalogSidebar />
 
-          {/* Content Area */}
-          <div className="flex-1 min-w-0">
+          {/* Content Area - Independent scroll */}
+          <div className="flex-1 min-w-0 overflow-y-auto h-full pr-2">
             {isGridView ? (
               /* SCENARIO 1: CATEGORY GRID */
               <div>

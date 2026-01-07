@@ -63,14 +63,15 @@ export const ProductCard = ({ product }: ProductCardProps) => {
             </div>
 
             {/* WhatsApp Button - Right Side */}
-            <div className="p-4 flex items-center justify-center border-t sm:border-t-0 sm:border-l border-border/10 bg-gray-50/50 sm:w-[200px] shrink-0">
+            <div className="p-4 flex items-center justify-center border-t sm:border-t-0 sm:border-l border-border/10 bg-gray-50/50 sm:w-[220px] shrink-0">
                 <Button
                     asChild
-                    className="w-full bg-green-600 hover:bg-green-700 text-white font-semibold shadow-sm"
+                    className="w-full bg-green-600 hover:bg-green-700 text-white font-semibold shadow-sm whitespace-nowrap"
                 >
-                    <a href={waLink} target="_blank" rel="noreferrer">
-                        <MessageCircle className="h-4 w-4 mr-2" />
-                        Orçamento WhatsApp
+                    <a href={waLink} target="_blank" rel="noreferrer" className="flex items-center justify-center gap-2">
+                        <MessageCircle className="h-4 w-4 shrink-0" />
+                        <span className="hidden sm:inline">Orçamento WhatsApp</span>
+                        <span className="sm:hidden">Orçamento</span>
                     </a>
                 </Button>
             </div>

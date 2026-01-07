@@ -160,7 +160,6 @@ export const CatalogSidebar = () => {
         }
 
         setIsMobileOpen(false);
-        window.scrollTo({ top: 0, behavior: 'smooth' });
     };
 
     return (
