@@ -12,55 +12,55 @@ import { WHATSAPP } from "@/config/whatsapp";
 import { Hammer, Zap, Wrench, Package, PaintBucket, Cog, Trees, Shield, Headphones, Truck, CheckCircle2, MessageCircle, Building2, HardHat, Factory, TruckIcon, Users, Sparkles } from "lucide-react";
 const Index = () => {
   const categories = [{
-    id: "DEMOLIÇÃO E PERFURAÇÃO",
+    id: "demolicao-e-perfuracao",
     title: "Demolição e Perfuração",
     icon: Hammer,
     imageUrl: "/images/categories/martelo-demolidor.jpg"
   }, {
-    id: "CONCRETAGEM E ACABAMENTO",
+    id: "concretagem-e-acabamento",
     title: "Concretagem e Acabamento",
     icon: Cog,
     imageUrl: "/images/categories/betoneira.jpg"
   }, {
-    id: "FERRAMENTAS DE CORTAR, LIXAR E PARAFUSAR",
+    id: "ferramentas-de-cortar-lixar-e-parafusar",
     title: "Ferramentas de Cortar, Lixar e Parafusar",
     icon: Wrench,
     imageUrl: "/images/categories/esmerilhadeira.jpg"
   }, {
-    id: "BOMBAS, GERADORES E COMPRESSORES",
+    id: "bombas-geradores-e-compressores",
     title: "Bombas, Geradores e Compressores",
     icon: Zap,
     imageUrl: "/images/categories/gerador.jpg"
   }, {
-    id: "ELEVAÇÃO, MOVIMENTAÇÃO E REMOÇÃO",
+    id: "elevacao-movimentacao-e-remocao",
     title: "Elevação, Movimentação e Remoção",
     icon: Package,
     imageUrl: "/images/categories/empilhadeira.jpg"
   }, {
-    id: "MÁQUINAS DE SOLDA E MONTAGEM",
+    id: "maquinas-de-solda-e-montagem",
     title: "Máquinas de Solda e Montagem",
     icon: Shield,
     imageUrl: "/images/categories/maquina-solda.jpg"
   }, {
-    id: "CONSERVAÇÃO E LIMPEZA",
+    id: "conservacao-e-limpeza",
     title: "Conservação e Limpeza",
     icon: PaintBucket,
     imageUrl: "/images/categories/aspirador.jpg"
   }, {
-    id: "EQUIPAMENTOS DE ACESSO A ALTURA",
+    id: "equipamentos-de-acesso-a-altura",
     title: "Equipamentos de Acesso à Altura",
     icon: Package,
     imageUrl: "/images/categories/escada.jpg"
   }, {
-    id: "EQUIPAMENTOS AGRÍCOLAS",
-    title: "Equipamentos Agrícolas",
-    icon: Trees,
-    imageUrl: "/images/categories/cortador-grama.jpg"
-  }, {
-    id: "FERRAMENTAS À BATERIA",
+    id: "equipamentos-a-bateria-e-eletricos-portateis", // Need to verify this matches catalog data slug
     title: "Ferramentas à Bateria",
     icon: Zap,
     imageUrl: "/images/categories/parafusadeira.jpg"
+  }, {
+    id: "equipamentos-de-jardinagem-e-agricolas",
+    title: "Equipamentos Agrícolas",
+    icon: Trees,
+    imageUrl: "/images/categories/cortador-grama.jpg"
   }];
   const benefits = [{
     icon: CheckCircle2,
