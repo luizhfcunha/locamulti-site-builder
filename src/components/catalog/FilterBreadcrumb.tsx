@@ -32,7 +32,7 @@ export const FilterBreadcrumb = ({
                 className="p-0 h-auto font-normal text-muted-foreground hover:text-foreground"
                 onClick={onClearFilters}
             >
-                Catálogo
+                Equipamentos
             </Button>
 
             {categoryName && (
