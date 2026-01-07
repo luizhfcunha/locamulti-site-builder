@@ -114,14 +114,14 @@ const CatalogHome = () => {
       <Header />
 
       <main className="flex-1 flex flex-col pt-20">
-        {/* Main Layout Area - Fixed height with independent scroll */}
-        <div className="container mx-auto px-4 py-4 flex items-start gap-8 h-[calc(100vh-5rem)] overflow-hidden">
+        {/* Main Layout Area - Responsive layout */}
+        <div className="container mx-auto px-4 md:px-6 py-4 md:py-6 flex flex-col lg:flex-row items-start gap-4 lg:gap-8">
 
           {/* Sidebar (Desktop) */}
           <CatalogSidebar />
 
-          {/* Content Area - Independent scroll */}
-          <div className="flex-1 min-w-0 overflow-y-auto h-full pr-2">
+          {/* Content Area - Responsive scroll */}
+          <div className="flex-1 w-full lg:min-w-0 lg:overflow-y-auto lg:max-h-[calc(100vh-8rem)] lg:pr-2">
             {isGridView ? (
               /* SCENARIO 1: CATEGORY GRID */
               <div>
@@ -134,18 +134,18 @@ const CatalogHome = () => {
                   </p>
 
                   {/* Search Bar */}
-                  <form onSubmit={handleSearch} className="flex gap-2 max-w-lg">
-                    <div className="relative flex-1">
+                  <form onSubmit={handleSearch} className="flex flex-col sm:flex-row gap-2 max-w-lg w-full">
+                    <div className="relative flex-1 w-full">
                       <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                       <Input
                         type="text"
                         placeholder="Buscar equipamento por nome ou descrição..."
                         value={searchInput}
                         onChange={(e) => setSearchInput(e.target.value)}
-                        className="pl-10"
+                        className="pl-10 w-full"
                       />
                     </div>
-                    <Button type="submit" disabled={!searchInput.trim()}>
+                    <Button type="submit" className="w-full sm:w-auto" disabled={!searchInput.trim()}>
                       Buscar
                     </Button>
                   </form>

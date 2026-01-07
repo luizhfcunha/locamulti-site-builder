@@ -20,9 +20,9 @@ export const ProductCard = ({ product }: ProductCardProps) => {
     const waLink = `https://wa.me/${waNumber}?text=${message}`;
 
     return (
-        <div className="bg-white rounded-lg border border-border/50 shadow-sm hover:shadow-md transition-all duration-200 overflow-hidden flex flex-col sm:flex-row p-4 gap-4 min-h-[100px] animate-in fade-in-50 duration-300">
-            {/* Image Area - Fixed 120x100 */}
-            <div className="w-full sm:w-[120px] h-[100px] shrink-0 bg-gray-50 rounded-md flex items-center justify-center">
+        <div className="bg-white rounded-lg border border-border/50 shadow-sm hover:shadow-md transition-all duration-200 overflow-hidden flex flex-row p-3 sm:p-4 gap-3 sm:gap-4 min-h-[100px] animate-in fade-in-50 duration-300">
+            {/* Image Area - Fixed size */}
+            <div className="w-[100px] sm:w-[120px] h-[100px] shrink-0 bg-gray-50 rounded-md flex items-center justify-center">
                 <img
                     src={product.image_url || "https://placehold.co/120x120/png?text=Equipamento"}
                     alt={product.name}
@@ -60,18 +60,19 @@ export const ProductCard = ({ product }: ProductCardProps) => {
                     </div>
                 )}
             </div>
+
             {/* WhatsApp CTA - Icon only on mobile/tablet, full text on desktop */}
             <div className="flex items-center justify-center shrink-0">
                 <a
                     href={waLink}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="flex items-center justify-center gap-2 p-3 lg:px-5 lg:py-3 bg-[#25D366] hover:bg-[#128C7E] text-white font-semibold rounded-xl transition-all duration-200 hover:scale-[1.02] shadow-md"
+                    className="flex items-center justify-center gap-2 p-3 lg:px-5 lg:py-3 bg-[#25D366] hover:bg-[#128C7E] text-white font-semibold rounded-xl transition-all duration-200 hover:scale-[1.02] shadow-md min-h-[44px]"
                 >
-                    <img 
-                        src="/lovable-uploads/c5861fea-0072-4651-9ee0-c32e148f0e85.png" 
-                        alt="WhatsApp" 
-                        className="w-6 h-6 shrink-0" 
+                    <img
+                        src="/lovable-uploads/c5861fea-0072-4651-9ee0-c32e148f0e85.png"
+                        alt="WhatsApp"
+                        className="w-6 h-6 shrink-0"
                     />
                     <span className="hidden lg:inline whitespace-nowrap">Orçamento WhatsApp</span>
                 </a>
