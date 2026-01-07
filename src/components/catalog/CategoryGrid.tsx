@@ -8,18 +8,18 @@ interface CategoryGridProps {
 
 export const CategoryGrid = ({ categories, onSelectCategory }: CategoryGridProps) => {
 
-    // Map slugs to local images
+    // Map slugs to local images (matching catalogo_locamulti_2026.json slugs)
     const images: Record<string, string> = {
-        'demolicao-e-perfuracao': '/images/categories/martelo-demolidor.jpg',
-        'concretagem-e-acabamento': '/images/categories/betoneira.jpg',
-        'ferramentas-de-cortar-lixar-e-parafusar': '/images/categories/esmerilhadeira.jpg',
-        'bombas-geradores-e-compressores': '/images/categories/gerador.jpg',
-        'elevacao-movimentacao-e-remocao': '/images/categories/empilhadeira.jpg',
-        'maquinas-de-solda-e-montagem': '/images/categories/maquina-solda.jpg',
-        'conservacao-e-limpeza': '/images/categories/aspirador.jpg',
-        'equipamentos-de-acesso-a-altura': '/images/categories/escada.jpg',
-        'equipamentos-de-jardinagem-e-agricolas': '/images/categories/cortador-grama.jpg',
-        'ferramentas-a-bateria': '/images/categories/parafusadeira.jpg',
+        'demolicaoeperfuracao': '/images/categories/martelo-demolidor.jpg',
+        'concretagemeacabamento': '/images/categories/betoneira.jpg',
+        'ferramentasdecortarlixareparafusar': '/images/categories/esmerilhadeira.jpg',
+        'bombasgeradoresecompressores': '/images/categories/gerador.jpg',
+        'elevacaomovimentacaoeremocao': '/images/categories/empilhadeira.jpg',
+        'maquinasdesoldaemontagem': '/images/categories/maquina-solda.jpg',
+        'conservacaoelimpeza': '/images/categories/aspirador.jpg',
+        'equipamentosdeacessoaaltura': '/images/categories/escada.jpg',
+        'equipamentosagricolas': '/images/categories/cortador-grama.jpg',
+        'ferramentasabateria': '/images/categories/parafusadeira.jpg',
     };
 
     return (
