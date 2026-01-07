@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { Product } from "@/types/catalog";
-import { Button } from "@/components/ui/button";
-import { MessageCircle, ChevronDown, ChevronUp } from "lucide-react";
+import { ChevronDown, ChevronUp } from "lucide-react";
 import { ConsumableBadge } from "./ConsumableBadge";
 
 interface ProductCardProps {
@@ -61,19 +60,21 @@ export const ProductCard = ({ product }: ProductCardProps) => {
                     </div>
                 )}
             </div>
-
-            {/* WhatsApp CTA - Fixed Width on Desktop */}
-            <div className="flex items-center justify-center sm:w-[180px] shrink-0">
-                <Button
-                    asChild
-                    className="w-full bg-green-600 hover:bg-green-700 text-white font-semibold shadow-sm"
+            {/* WhatsApp CTA - Icon only on mobile/tablet, full text on desktop */}
+            <div className="flex items-center justify-center shrink-0">
+                <a
+                    href={waLink}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex items-center justify-center gap-2 p-3 lg:px-5 lg:py-3 bg-[#25D366] hover:bg-[#128C7E] text-white font-semibold rounded-xl transition-all duration-200 hover:scale-[1.02] shadow-md"
                 >
-                    <a href={waLink} target="_blank" rel="noreferrer" className="flex items-center justify-center gap-2">
-                        <MessageCircle className="h-4 w-4 shrink-0" />
-                        <span>Orçamento</span>
-                        <span className="hidden md:inline">WhatsApp</span>
-                    </a>
-                </Button>
+                    <img 
+                        src="/lovable-uploads/c5861fea-0072-4651-9ee0-c32e148f0e85.png" 
+                        alt="WhatsApp" 
+                        className="w-6 h-6 shrink-0" 
+                    />
+                    <span className="hidden lg:inline whitespace-nowrap">Orçamento WhatsApp</span>
+                </a>
             </div>
         </div>
     );
