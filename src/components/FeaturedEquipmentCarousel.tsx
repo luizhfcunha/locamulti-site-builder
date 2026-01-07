@@ -129,6 +129,7 @@ export const FeaturedEquipmentCarousel = () => {
 
         {/* Embla Carousel */}
         <div className="overflow-hidden mx-6 md:mx-10" ref={emblaRef}>
+          {/* Spacing fix active: negative margin container + padded slides */}
           <div className="flex -ml-4 md:-ml-6">
             {products.map(product => <div key={product.id} className="flex-shrink-0 w-[280px] sm:w-[300px] md:w-[320px] pl-4 md:pl-6">
               <div className="bg-lm-muted rounded-2xl overflow-hidden shadow-lg hover:shadow-xl transition-all duration-300 h-full flex flex-col">
