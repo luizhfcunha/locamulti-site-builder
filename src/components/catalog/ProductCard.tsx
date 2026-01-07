@@ -21,21 +21,21 @@ export const ProductCard = ({ product }: ProductCardProps) => {
     const waLink = `https://wa.me/${waNumber}?text=${message}`;
 
     return (
-        <div className="bg-white rounded-lg border border-border/50 shadow-sm hover:shadow-md transition-all duration-200 overflow-hidden flex flex-col sm:flex-row min-h-[120px] animate-in fade-in-50 duration-300">
-            {/* Image Area - 120x120 */}
-            <div className="w-full sm:w-[120px] h-[120px] sm:h-auto shrink-0 p-2 bg-gray-50 flex items-center justify-center border-b sm:border-b-0 sm:border-r border-border/10">
+        <div className="bg-white rounded-lg border border-border/50 shadow-sm hover:shadow-md transition-all duration-200 overflow-hidden flex flex-col sm:flex-row p-4 gap-4 min-h-[100px] animate-in fade-in-50 duration-300">
+            {/* Image Area - Fixed 120x100 */}
+            <div className="w-full sm:w-[120px] h-[100px] shrink-0 bg-gray-50 rounded-md flex items-center justify-center">
                 <img
                     src={product.image_url || "https://placehold.co/120x120/png?text=Equipamento"}
                     alt={product.name}
-                    className="w-full h-full max-w-[100px] max-h-[100px] object-contain"
+                    className="w-full h-full max-w-[100px] max-h-[90px] object-contain"
                     loading="lazy"
                 />
             </div>
 
-            {/* Content - Middle */}
-            <div className="flex-1 p-4 flex flex-col justify-center gap-1 min-w-0">
+            {/* Content - Flexible Middle Area */}
+            <div className="flex-1 flex flex-col justify-center gap-1 min-w-0">
                 <div className="flex items-start gap-2 flex-wrap">
-                    <h3 className="font-heading font-bold text-base sm:text-xl leading-tight text-foreground">
+                    <h3 className="font-heading font-bold text-base sm:text-lg leading-tight text-foreground">
                         {product.name}
                     </h3>
                     {isConsumable && <ConsumableBadge />}
@@ -43,13 +43,13 @@ export const ProductCard = ({ product }: ProductCardProps) => {
 
                 {product.description && !isConsumable && (
                     <div className="mt-1">
-                        <p className={`text-sm text-gray-500 ${!isExpanded && isLongDescription ? 'line-clamp-3' : ''}`}>
+                        <p className={`text-sm text-muted-foreground ${!isExpanded && isLongDescription ? 'line-clamp-2' : ''}`}>
                             {product.description}
                         </p>
                         {isLongDescription && (
                             <button
                                 onClick={() => setIsExpanded(!isExpanded)}
-                                className="text-xs text-primary hover:underline mt-1 flex items-center gap-1"
+                                className="text-xs text-primary hover:underline mt-1 flex items-center gap-1 font-medium"
                             >
                                 {isExpanded ? (
                                     <>Ver menos <ChevronUp className="h-3 w-3" /></>
@@ -62,16 +62,16 @@ export const ProductCard = ({ product }: ProductCardProps) => {
                 )}
             </div>
 
-            {/* WhatsApp Button - Right Side */}
-            <div className="p-4 flex items-center justify-center border-t sm:border-t-0 sm:border-l border-border/10 bg-gray-50/50 sm:w-[220px] shrink-0">
+            {/* WhatsApp CTA - Fixed Width on Desktop */}
+            <div className="flex items-center justify-center sm:w-[180px] shrink-0">
                 <Button
                     asChild
-                    className="w-full bg-green-600 hover:bg-green-700 text-white font-semibold shadow-sm whitespace-nowrap"
+                    className="w-full bg-green-600 hover:bg-green-700 text-white font-semibold shadow-sm"
                 >
                     <a href={waLink} target="_blank" rel="noreferrer" className="flex items-center justify-center gap-2">
                         <MessageCircle className="h-4 w-4 shrink-0" />
-                        <span className="hidden sm:inline">Orçamento WhatsApp</span>
-                        <span className="sm:hidden">Orçamento</span>
+                        <span>Orçamento</span>
+                        <span className="hidden md:inline">WhatsApp</span>
                     </a>
                 </Button>
             </div>
