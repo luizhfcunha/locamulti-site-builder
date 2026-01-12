@@ -8,18 +8,18 @@ interface CategoryGridProps {
 
 export const CategoryGrid = ({ categories, onSelectCategory }: CategoryGridProps) => {
 
-    // Map slugs to local images (matching catalogo_locamulti_2026.json slugs)
+    // Map slugs to local images (matching slugify() output with hyphens)
     const images: Record<string, string> = {
-        'demolicaoeperfuracao': '/images/Carrossel Desktop/demolicao-perfuracao.jpg',
-        'concretagemeacabamento': '/images/Carrossel Desktop/concretagem-acabamento.jpg',
-        'ferramentasdecortarlixareparafusar': '/images/Carrossel Desktop/ferramentas-cortar-lixar-parafusar.jpg',
-        'bombasgeradoresecompressores': '/images/Carrossel Desktop/bombas-geradores-compressores.jpg',
-        'elevacaomovimentacaoeremocao': '/images/Carrossel Desktop/elevacao-movimentacao-remocao.jpg',
-        'maquinasdesoldaemontagem': '/images/Carrossel Desktop/maquinas-solda-montagem.jpg',
-        'conservacaoelimpeza': '/images/Carrossel Desktop/conservacao-limpeza.jpg',
-        'equipamentosdeacessoaaltura': '/images/Carrossel Desktop/equipamentos-acesso-altura.jpg',
-        'equipamentosagricolas': '/images/Carrossel Desktop/equipamentos-agricolas.jpg',
-        'ferramentasabateria': '/images/Carrossel Desktop/ferramentas-bateria.jpg',
+        'demolicao-e-perfuracao': '/images/Carrossel Desktop/demolicao-perfuracao.jpg',
+        'concretagem-e-acabamento': '/images/Carrossel Desktop/concretagem-acabamento.jpg',
+        'ferramentas-de-cortar-lixar-e-parafusar': '/images/Carrossel Desktop/ferramentas-cortar-lixar-parafusar.jpg',
+        'bombas-geradores-e-compressores': '/images/Carrossel Desktop/bombas-geradores-compressores.jpg',
+        'elevacao-movimentacao-e-remocao': '/images/Carrossel Desktop/elevacao-movimentacao-remocao.jpg',
+        'maquinas-de-solda-e-montagem': '/images/Carrossel Desktop/maquinas-solda-montagem.jpg',
+        'conservacao-e-limpeza': '/images/Carrossel Desktop/conservacao-limpeza.jpg',
+        'equipamentos-de-acesso-a-altura': '/images/Carrossel Desktop/equipamentos-acesso-altura.jpg',
+        'equipamentos-agricolas': '/images/Carrossel Desktop/equipamentos-agricolas.jpg',
+        'ferramentas-a-bateria': '/images/Carrossel Desktop/ferramentas-bateria.jpg',
     };
 
     return (
