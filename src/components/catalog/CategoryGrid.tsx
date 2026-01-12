@@ -1,5 +1,6 @@
 import { Category } from "@/types/catalog";
 import { Card, CardContent } from "@/components/ui/card";
+import { getCategoryImageBySlug } from "@/config/categories";
 
 interface CategoryGridProps {
     categories: Category[];
@@ -7,21 +8,6 @@ interface CategoryGridProps {
 }
 
 export const CategoryGrid = ({ categories, onSelectCategory }: CategoryGridProps) => {
-
-    // Map slugs to local images (matching slugify() output with hyphens)
-    const images: Record<string, string> = {
-        'demolicao-e-perfuracao': '/images/carrossel-desktop/demolicao-perfuracao.jpg',
-        'concretagem-e-acabamento': '/images/carrossel-desktop/concretagem-acabamento.jpg',
-        'ferramentas-de-cortar-lixar-e-parafusar': '/images/carrossel-desktop/ferramentas-cortar-lixar-parafusar.jpg',
-        'bombas-geradores-e-compressores': '/images/carrossel-desktop/bombas-geradores-compressores.jpg',
-        'elevacao-movimentacao-e-remocao': '/images/carrossel-desktop/elevacao-movimentacao-remocao.jpg',
-        'maquinas-de-solda-e-montagem': '/images/carrossel-desktop/maquinas-solda-montagem.jpg',
-        'conservacao-e-limpeza': '/images/carrossel-desktop/conservacao-limpeza.jpg',
-        'equipamentos-de-acesso-a-altura': '/images/carrossel-desktop/equipamentos-acesso-altura.jpg',
-        'equipamentos-agricolas': '/images/carrossel-desktop/equipamentos-agricolas.jpg',
-        'ferramentas-a-bateria': '/images/carrossel-desktop/ferramentas-bateria.jpg',
-    };
-
     return (
         <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-4 gap-3 sm:gap-4 lg:gap-6">
             {categories.map((category) => (
@@ -32,7 +18,7 @@ export const CategoryGrid = ({ categories, onSelectCategory }: CategoryGridProps
                 >
                     <div className="aspect-[4/3] overflow-hidden bg-white relative">
                         <img
-                            src={images[category.slug] || "/placeholder.svg"}
+                            src={getCategoryImageBySlug(category.slug)}
                             alt={category.name}
                             className="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-500"
                             loading="lazy"

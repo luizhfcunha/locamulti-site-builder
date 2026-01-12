@@ -9,15 +9,8 @@ import { BenefitCard } from "@/components/BenefitCard";
 import { SegmentCard } from "@/components/SegmentCard";
 import { BRANDS_CAROUSEL } from "@/config/brands";
 import { WHATSAPP } from "@/config/whatsapp";
+import { CATEGORIES_CONFIG } from "@/config/categories";
 import {
-  Hammer,
-  Zap,
-  Wrench,
-  Package,
-  PaintBucket,
-  Cog,
-  Trees,
-  Shield,
   Headphones,
   Truck,
   CheckCircle2,
@@ -28,70 +21,13 @@ import {
   TruckIcon,
   Users,
   Sparkles,
+  Shield,
+  Trees,
+  Wrench,
 } from "lucide-react";
+
 const Index = () => {
-  const categories = [
-    {
-      id: "DEMOLIÇÃO E PERFURAÇÃO",
-      title: "Demolição e Perfuração",
-      icon: Hammer,
-      imageUrl: "/images/carrossel-desktop/demolicao-perfuracao.jpg",
-    },
-    {
-      id: "CONCRETAGEM E ACABAMENTO",
-      title: "Concretagem e Acabamento",
-      icon: Cog,
-      imageUrl: "/images/carrossel-desktop/concretagem-acabamento.jpg",
-    },
-    {
-      id: "FERRAMENTAS DE CORTAR, LIXAR E PARAFUSAR",
-      title: "Ferramentas de Cortar, Lixar e Parafusar",
-      icon: Wrench,
-      imageUrl: "/images/carrossel-desktop/ferramentas-cortar-lixar-parafusar.jpg",
-    },
-    {
-      id: "BOMBAS, GERADORES E COMPRESSORES",
-      title: "Bombas, Geradores e Compressores",
-      icon: Zap,
-      imageUrl: "/images/carrossel-desktop/bombas-geradores-compressores.jpg",
-    },
-    {
-      id: "ELEVAÇÃO, MOVIMENTAÇÃO E REMOÇÃO",
-      title: "Elevação, Movimentação e Remoção",
-      icon: Package,
-      imageUrl: "/images/carrossel-desktop/elevacao-movimentacao-remocao.jpg",
-    },
-    {
-      id: "MÁQUINAS DE SOLDA E MONTAGEM",
-      title: "Máquinas de Solda e Montagem",
-      icon: Shield,
-      imageUrl: "/images/carrossel-desktop/maquinas-solda-montagem.jpg",
-    },
-    {
-      id: "CONSERVAÇÃO E LIMPEZA",
-      title: "Conservação e Limpeza",
-      icon: PaintBucket,
-      imageUrl: "/images/carrossel-desktop/conservacao-limpeza.jpg",
-    },
-    {
-      id: "EQUIPAMENTOS DE ACESSO A ALTURA",
-      title: "Equipamentos de Acesso à Altura",
-      icon: Package,
-      imageUrl: "/images/carrossel-desktop/equipamentos-acesso-altura.jpg",
-    },
-    {
-      id: "EQUIPAMENTOS AGRÍCOLAS",
-      title: "Equipamentos Agrícolas",
-      icon: Trees,
-      imageUrl: "/images/carrossel-desktop/equipamentos-agricolas.jpg",
-    },
-    {
-      id: "FERRAMENTAS À BATERIA",
-      title: "Ferramentas à Bateria",
-      icon: Zap,
-      imageUrl: "/images/carrossel-desktop/ferramentas-bateria.jpg",
-    },
-  ];
+  const categories = CATEGORIES_CONFIG;
   const benefits = [
     {
       icon: CheckCircle2,
