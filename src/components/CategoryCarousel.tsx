@@ -93,7 +93,7 @@ export const CategoryCarousel = ({ categories, onCategoryClick }: CategoryCarous
         {/* Embla Carousel */}
         <div className="overflow-hidden" ref={emblaRef}>
           <div className="flex">
-            {categories.map((category) => (
+            {categories.map((category, index) => (
               <div
                 key={category.id}
                 className="flex-shrink-0 w-[280px] sm:w-[300px] md:w-[340px] pr-4 md:pr-6"
@@ -103,6 +103,7 @@ export const CategoryCarousel = ({ categories, onCategoryClick }: CategoryCarous
                   icon={category.icon}
                   imageUrl={category.imageUrl}
                   onClick={() => onCategoryClick?.(category.id)}
+                  priority={index < 3 ? 'high' : 'low'}
                 />
               </div>
             ))}
