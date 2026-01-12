@@ -7,9 +7,10 @@ interface CategoryCardProps {
   icon: LucideIcon;
   imageUrl?: string;
   onClick?: () => void;
+  priority?: 'high' | 'low';
 }
 
-export const CategoryCard = ({ title, icon: Icon, imageUrl, onClick }: CategoryCardProps) => {
+export const CategoryCard = ({ title, icon: Icon, imageUrl, onClick, priority = 'low' }: CategoryCardProps) => {
   const [isLoaded, setIsLoaded] = useState(false);
   const [hasError, setHasError] = useState(false);
 
@@ -33,9 +34,9 @@ export const CategoryCard = ({ title, icon: Icon, imageUrl, onClick }: CategoryC
               alt={title}
               width={800}
               height={600}
-              loading="lazy"
+              loading={priority === 'high' ? 'eager' : 'lazy'}
               decoding="async"
-              fetchPriority="low"
+              fetchPriority={priority}
               onLoad={() => setIsLoaded(true)}
               onError={() => setHasError(true)}
               className={`w-full h-full object-cover group-hover:scale-105 transition-all duration-500 ${isLoaded ? 'opacity-100 blur-0' : 'opacity-0 blur-sm'}`}

@@ -10,7 +10,7 @@ interface CategoryGridProps {
 export const CategoryGrid = ({ categories, onSelectCategory }: CategoryGridProps) => {
     return (
         <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-4 gap-3 sm:gap-4 lg:gap-6">
-            {categories.map((category) => (
+            {categories.map((category, index) => (
                 <Card
                     key={category.slug}
                     className="group cursor-pointer hover:shadow-lg transition-all duration-300 border-none bg-muted/30 overflow-hidden"
@@ -21,7 +21,9 @@ export const CategoryGrid = ({ categories, onSelectCategory }: CategoryGridProps
                             src={getCategoryImageBySlug(category.slug)}
                             alt={category.name}
                             className="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-500"
-                            loading="lazy"
+                            loading={index < 4 ? 'eager' : 'lazy'}
+                            decoding="async"
+                            fetchPriority={index < 4 ? 'high' : 'low'}
                         />
                         <div className="absolute inset-0 bg-black/20 group-hover:bg-black/10 transition-colors" />
                     </div>
