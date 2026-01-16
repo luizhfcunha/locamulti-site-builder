@@ -1,10 +1,17 @@
 import { useEffect, useState } from "react";
+import { format, subDays, subMonths, startOfDay, endOfDay } from "date-fns";
+import { ptBR } from "date-fns/locale";
 import { supabase } from "@/integrations/supabase/client";
 import { AdminLayout } from "@/components/admin/AdminLayout";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Package, FolderTree, CheckCircle, XCircle, Calendar, TrendingUp } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Calendar } from "@/components/ui/calendar";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Package, FolderTree, CheckCircle, XCircle, Calendar as CalendarIcon, TrendingUp } from "lucide-react";
 import { toast } from "@/hooks/use-toast";
+import { cn } from "@/lib/utils";
 import {
   BarChart,
   Bar,
@@ -19,6 +26,13 @@ import {
 } from "recharts";
 import { AnalyticsDashboard } from "@/components/admin/AnalyticsDashboard";
 
+type DateRange = {
+  from: Date | undefined;
+  to: Date | undefined;
+};
+
+type PresetPeriod = "all" | "7d" | "30d" | "90d" | "6m" | "1y" | "custom";
+
 interface DashboardStats {
   totalItems: number;
   totalCategories: number;
@@ -30,12 +44,25 @@ interface DashboardStats {
   itemsByCategory: { name: string; count: number }[];
   itemsByFamily: { name: string; count: number }[];
   itemsByType: { name: string; count: number }[];
+  itemsByMonth: { month: string; count: number }[];
 }
 
 const COLORS = ["#DB5A34", "#B94935", "#3E2229", "#373435", "#F6F3F2", "#DB5A3480", "#B9493580"];
 
+const PRESET_PERIODS: { value: PresetPeriod; label: string }[] = [
+  { value: "all", label: "Todo o período" },
+  { value: "7d", label: "Últimos 7 dias" },
+  { value: "30d", label: "Últimos 30 dias" },
+  { value: "90d", label: "Últimos 90 dias" },
+  { value: "6m", label: "Últimos 6 meses" },
+  { value: "1y", label: "Último ano" },
+  { value: "custom", label: "Período personalizado" },
+];
+
 const AdminDashboard = () => {
   const [loading, setLoading] = useState(true);
+  const [presetPeriod, setPresetPeriod] = useState<PresetPeriod>("all");
+  const [dateRange, setDateRange] = useState<DateRange>({ from: undefined, to: undefined });
   const [stats, setStats] = useState<DashboardStats>({
     totalItems: 0,
     totalCategories: 0,
@@ -47,37 +74,65 @@ const AdminDashboard = () => {
     itemsByCategory: [],
     itemsByFamily: [],
     itemsByType: [],
+    itemsByMonth: [],
   });
+
+  // Calculate date range based on preset
+  const getDateRangeFromPreset = (preset: PresetPeriod): DateRange => {
+    const now = new Date();
+    switch (preset) {
+      case "7d":
+        return { from: subDays(now, 7), to: now };
+      case "30d":
+        return { from: subDays(now, 30), to: now };
+      case "90d":
+        return { from: subDays(now, 90), to: now };
+      case "6m":
+        return { from: subMonths(now, 6), to: now };
+      case "1y":
+        return { from: subMonths(now, 12), to: now };
+      case "custom":
+        return dateRange;
+      default:
+        return { from: undefined, to: undefined };
+    }
+  };
+
+  const effectiveDateRange = presetPeriod === "custom" ? dateRange : getDateRangeFromPreset(presetPeriod);
 
   useEffect(() => {
     fetchDashboardData();
-  }, []);
+  }, [presetPeriod, dateRange]);
 
   const fetchDashboardData = async () => {
     setLoading(true);
     try {
-      // Fetch all data from catalog_items in parallel
-      const [
-        { data: allItems, count: totalItems },
-        { count: activeItems },
-        { count: inactiveItems },
-        { count: equipmentCount },
-        { count: consumableCount },
-      ] = await Promise.all([
-        supabase.from("catalog_items").select("*", { count: "exact" }),
-        supabase.from("catalog_items").select("*", { count: "exact", head: true }).eq("active", true),
-        supabase.from("catalog_items").select("*", { count: "exact", head: true }).eq("active", false),
-        supabase.from("catalog_items").select("*", { count: "exact", head: true }).eq("item_type", "equipamento"),
-        supabase.from("catalog_items").select("*", { count: "exact", head: true }).eq("item_type", "consumivel"),
-      ]);
+      // Build query with date filters
+      let baseQuery = supabase.from("catalog_items").select("*", { count: "exact" });
+      
+      if (effectiveDateRange.from) {
+        baseQuery = baseQuery.gte("created_at", startOfDay(effectiveDateRange.from).toISOString());
+      }
+      if (effectiveDateRange.to) {
+        baseQuery = baseQuery.lte("created_at", endOfDay(effectiveDateRange.to).toISOString());
+      }
+
+      const { data: allItems, count: totalItems } = await baseQuery;
+
+      // Filter items for other counts
+      const filteredItems = allItems || [];
+      const activeItems = filteredItems.filter(item => item.active === true).length;
+      const inactiveItems = filteredItems.filter(item => item.active === false).length;
+      const equipmentCount = filteredItems.filter(item => item.item_type === "equipamento").length;
+      const consumableCount = filteredItems.filter(item => item.item_type === "consumivel").length;
 
       // Calculate unique categories and families from items
-      const uniqueCategories = new Set((allItems || []).map(item => item.category_slug));
-      const uniqueFamilies = new Set((allItems || []).map(item => item.family_slug));
+      const uniqueCategories = new Set(filteredItems.map(item => item.category_slug));
+      const uniqueFamilies = new Set(filteredItems.map(item => item.family_slug));
 
       // Items by category
       const categoryMap = new Map<string, number>();
-      (allItems || []).forEach((item) => {
+      filteredItems.forEach((item) => {
         const name = item.category_name;
         categoryMap.set(name, (categoryMap.get(name) || 0) + 1);
       });
@@ -87,7 +142,7 @@ const AdminDashboard = () => {
 
       // Items by family (top 10)
       const familyMap = new Map<string, number>();
-      (allItems || []).forEach((item) => {
+      filteredItems.forEach((item) => {
         const name = item.family_name;
         familyMap.set(name, (familyMap.get(name) || 0) + 1);
       });
@@ -98,21 +153,48 @@ const AdminDashboard = () => {
 
       // Items by type
       const itemsByType = [
-        { name: "Equipamentos", count: equipmentCount || 0 },
-        { name: "Consumíveis", count: consumableCount || 0 },
+        { name: "Equipamentos", count: equipmentCount },
+        { name: "Consumíveis", count: consumableCount },
       ];
+
+      // Items by month (last 6 months)
+      const now = new Date();
+      const monthMap = new Map<string, number>();
+      const last6Months: string[] = [];
+      for (let i = 5; i >= 0; i--) {
+        const date = new Date(now.getFullYear(), now.getMonth() - i, 1);
+        const monthKey = date.toLocaleDateString("pt-BR", { month: "short", year: "2-digit" });
+        last6Months.push(monthKey);
+        monthMap.set(monthKey, 0);
+      }
+
+      filteredItems.forEach((item) => {
+        if (item.created_at) {
+          const date = new Date(item.created_at);
+          const monthKey = date.toLocaleDateString("pt-BR", { month: "short", year: "2-digit" });
+          if (monthMap.has(monthKey)) {
+            monthMap.set(monthKey, (monthMap.get(monthKey) || 0) + 1);
+          }
+        }
+      });
+
+      const itemsByMonth = last6Months.map((month) => ({
+        month,
+        count: monthMap.get(month) || 0,
+      }));
 
       setStats({
         totalItems: totalItems || 0,
         totalCategories: uniqueCategories.size,
         totalFamilies: uniqueFamilies.size,
-        activeItems: activeItems || 0,
-        inactiveItems: inactiveItems || 0,
-        equipmentCount: equipmentCount || 0,
-        consumableCount: consumableCount || 0,
+        activeItems,
+        inactiveItems,
+        equipmentCount,
+        consumableCount,
         itemsByCategory,
         itemsByFamily,
         itemsByType,
+        itemsByMonth,
       });
     } catch (error) {
       console.error("Error fetching dashboard data:", error);
@@ -150,6 +232,90 @@ const AdminDashboard = () => {
         </div>
 
         <TabsContent value="products" className="space-y-6">
+          {/* Period Filter */}
+          <Card>
+            <CardHeader className="pb-3">
+              <CardTitle className="text-base">Filtrar por período</CardTitle>
+              <CardDescription>Selecione um período para analisar os dados do catálogo</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className="flex flex-wrap items-center gap-4">
+                <Select value={presetPeriod} onValueChange={(value: PresetPeriod) => setPresetPeriod(value)}>
+                  <SelectTrigger className="w-[200px]">
+                    <SelectValue placeholder="Selecione o período" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {PRESET_PERIODS.map((period) => (
+                      <SelectItem key={period.value} value={period.value}>
+                        {period.label}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+
+                {presetPeriod === "custom" && (
+                  <div className="flex items-center gap-2">
+                    <Popover>
+                      <PopoverTrigger asChild>
+                        <Button
+                          variant="outline"
+                          className={cn(
+                            "w-[140px] justify-start text-left font-normal",
+                            !dateRange.from && "text-muted-foreground"
+                          )}
+                        >
+                          <CalendarIcon className="mr-2 h-4 w-4" />
+                          {dateRange.from ? format(dateRange.from, "dd/MM/yyyy") : "Data início"}
+                        </Button>
+                      </PopoverTrigger>
+                      <PopoverContent className="w-auto p-0" align="start">
+                        <Calendar
+                          mode="single"
+                          selected={dateRange.from}
+                          onSelect={(date) => setDateRange(prev => ({ ...prev, from: date }))}
+                          initialFocus
+                          className={cn("p-3 pointer-events-auto")}
+                          locale={ptBR}
+                        />
+                      </PopoverContent>
+                    </Popover>
+                    <span className="text-muted-foreground">até</span>
+                    <Popover>
+                      <PopoverTrigger asChild>
+                        <Button
+                          variant="outline"
+                          className={cn(
+                            "w-[140px] justify-start text-left font-normal",
+                            !dateRange.to && "text-muted-foreground"
+                          )}
+                        >
+                          <CalendarIcon className="mr-2 h-4 w-4" />
+                          {dateRange.to ? format(dateRange.to, "dd/MM/yyyy") : "Data fim"}
+                        </Button>
+                      </PopoverTrigger>
+                      <PopoverContent className="w-auto p-0" align="start">
+                        <Calendar
+                          mode="single"
+                          selected={dateRange.to}
+                          onSelect={(date) => setDateRange(prev => ({ ...prev, to: date }))}
+                          initialFocus
+                          className={cn("p-3 pointer-events-auto")}
+                          locale={ptBR}
+                        />
+                      </PopoverContent>
+                    </Popover>
+                  </div>
+                )}
+
+                {effectiveDateRange.from && effectiveDateRange.to && (
+                  <p className="text-sm text-muted-foreground">
+                    Exibindo: {format(effectiveDateRange.from, "dd/MM/yyyy")} - {format(effectiveDateRange.to, "dd/MM/yyyy")}
+                  </p>
+                )}
+              </div>
+            </CardContent>
+          </Card>
+
           {/* Stats Cards */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
             <Card>
@@ -237,6 +403,34 @@ const AdminDashboard = () => {
                     />
                     <Bar dataKey="count" fill="#DB5A34" radius={[0, 4, 4, 0]} barSize={20} />
                   </BarChart>
+                </ResponsiveContainer>
+              </CardContent>
+            </Card>
+
+            {/* Items by Month - Temporal Chart */}
+            <Card className="col-span-1">
+              <CardHeader>
+                <CardTitle>Evolução de Cadastros</CardTitle>
+                <CardDescription>Itens cadastrados nos últimos 6 meses</CardDescription>
+              </CardHeader>
+              <CardContent className="h-[300px]">
+                <ResponsiveContainer width="100%" height="100%">
+                  <LineChart data={stats.itemsByMonth}>
+                    <CartesianGrid strokeDasharray="3 3" />
+                    <XAxis dataKey="month" />
+                    <YAxis />
+                    <Tooltip 
+                      contentStyle={{ borderRadius: '8px', border: 'none', boxShadow: '0 4px 12px rgba(0,0,0,0.1)' }}
+                    />
+                    <Line 
+                      type="monotone" 
+                      dataKey="count" 
+                      stroke="#DB5A34" 
+                      strokeWidth={2}
+                      dot={{ fill: '#DB5A34', strokeWidth: 2 }}
+                      activeDot={{ r: 6, fill: '#B94935' }}
+                    />
+                  </LineChart>
                 </ResponsiveContainer>
               </CardContent>
             </Card>
