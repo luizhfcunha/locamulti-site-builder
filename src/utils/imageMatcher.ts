@@ -32,7 +32,7 @@ export const findImageForProduct = (productName: string): string | undefined => 
     });
 
     if (bestMatch) {
-        return `/images/Fotos equipamentos/${bestMatch}`;
+        return `/images/fotos_equipamentos/${bestMatch}`;
     }
 
     return undefined;
