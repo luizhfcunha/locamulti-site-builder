@@ -28,7 +28,7 @@ const transformCatalog = (): Category[] => {
             const products: Product[] = (fam.equipamentos || []).map((eq: any) => {
                 // Check if it's a consumable based on description OR tipo field
                 const isConsumable = eq.descricao?.toUpperCase() === 'CONSUMÍVEL' || eq.tipo === 'consumivel';
-                const matchedImage = findImageForProduct(eq.nome);
+                const matchedImage = findImageForProduct(eq.nome, eq.descricao);
 
                 return {
                     id: eq.ordem || `${categorySlug}-${familySlug}-${slugify(eq.nome)}`,

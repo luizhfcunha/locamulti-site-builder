@@ -4,35 +4,43 @@ const normalize = (str: string) => {
     return str
         .toLowerCase()
         .normalize('NFD')
-        .replace(/[^a-z0-9 ]/g, '')
+        .replace(/[^a-z0-9 ]/g, ' ')
+        .replace(/\s+/g, ' ')
         .trim();
 };
 
-export const findImageForProduct = (productName: string): string | undefined => {
+export const findImageForProduct = (
+    productName: string,
+    productDescription?: string
+): string | undefined => {
     if (!productName) return undefined;
 
-    const normalizedProduct = normalize(productName);
+    // Combine name + description for more precise matching
+    const fullText = `${productName} ${productDescription || ''}`;
+    const normalizedProduct = normalize(fullText);
+    const productTokens = normalizedProduct.split(' ').filter(t => t.length > 2);
 
-    const bestMatch = availableProductImages.find((filename) => {
-        const normalizedFile = normalize(filename.replace(/\.jpg$/i, '').replace(/\.png$/i, ''));
+    let bestMatch: { filename: string; score: number } | null = null;
 
-        // Check strict inclusion
-        if (normalizedFile.includes(normalizedProduct) || normalizedProduct.includes(normalizedFile)) {
-            return true;
-        }
-
-        // Check if significant words match
-        const productTokens = normalizedProduct.split(' ').filter(t => t.length > 2);
+    for (const filename of availableProductImages) {
+        const normalizedFile = normalize(filename.replace(/\.(jpg|png|webp)$/i, ''));
         const fileTokens = normalizedFile.split(' ').filter(t => t.length > 2);
 
-        const matchingTokens = productTokens.filter(token => fileTokens.includes(token));
-        const matchRatio = matchingTokens.length / productTokens.length;
+        // Count matching tokens with flexible comparison
+        const matchingTokens = productTokens.filter(token =>
+            fileTokens.some(ft => ft.includes(token) || token.includes(ft))
+        );
 
-        return matchRatio > 0.8;
-    });
+        // Calculate score based on matched tokens
+        const score = matchingTokens.length / Math.max(Math.min(productTokens.length, 4), 1);
+
+        if (score > 0.5 && (!bestMatch || score > bestMatch.score)) {
+            bestMatch = { filename, score };
+        }
+    }
 
     if (bestMatch) {
-        return `/images/fotos_equipamentos/${bestMatch}`;
+        return `/images/fotos_equipamentos/${bestMatch.filename}`;
     }
 
     return undefined;
