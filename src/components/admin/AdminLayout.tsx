@@ -17,7 +17,7 @@ import { toast } from "@/hooks/use-toast";
 
 const menuItems = [
   { title: "Dashboard", url: "/admin/dashboard", icon: BarChart3 },
-  { title: "Produtos", url: "/admin/produtos", icon: Package },
+  { title: "Catálogo", url: "/admin/produtos", icon: Package },
   { title: "Sem Imagem", url: "/admin/missing-images", icon: ImageOff },
   { title: "Categorias", url: "/admin/categories", icon: FolderTree },
   { title: "Importar Catálogo", url: "/admin/import-catalog", icon: Upload },

@@ -46,16 +46,26 @@ export const BulkImageUpload = ({ onClose, onSuccess }: BulkImageUploadProps) =>
   const fetchProducts = async () => {
     try {
       const { data, error } = await supabase
-        .from("products")
-        .select("id, name, supplier_code, image_url, brand")
-        .order("name");
+        .from("catalog_items")
+        .select("id, code, description, image_url, category_name, family_name")
+        .order("category_order", { ascending: true })
+        .order("family_order", { ascending: true })
+        .order("item_order", { ascending: true });
 
       if (error) throw error;
-      setProducts(data || []);
+      // Map to expected format for compatibility
+      const mapped = (data || []).map(item => ({
+        id: item.id,
+        name: item.description,
+        supplier_code: item.code,
+        image_url: item.image_url,
+        brand: item.category_name,
+      }));
+      setProducts(mapped);
     } catch (error) {
-      console.error("Error fetching products:", error);
+      console.error("Error fetching catalog items:", error);
       toast({
-        title: "Erro ao carregar produtos",
+        title: "Erro ao carregar itens do catálogo",
         variant: "destructive",
       });
     } finally {
@@ -193,9 +203,9 @@ export const BulkImageUpload = ({ onClose, onSuccess }: BulkImageUploadProps) =>
           .from('product-images')
           .getPublicUrl(filePath);
 
-        // 3. Update product
+        // 3. Update catalog_items
         const { error: updateError } = await supabase
-          .from("products")
+          .from("catalog_items")
           .update({ image_url: publicUrl })
           .eq("id", match.product.id);
 

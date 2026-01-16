@@ -16,34 +16,31 @@ import {
   Loader2,
   Filter,
   Package,
-  AlertTriangle
+  AlertTriangle,
+  CheckCircle2
 } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { findImageForProduct } from "@/utils/imageMatcher";
 
-interface Product {
+interface CatalogItem {
   id: string;
-  name: string;
-  brand: string | null;
-  supplier_code: string | null;
-  category_id: string | null;
-  family_id: string | null;
-  subcategory_id: string | null;
-}
-
-interface Category {
-  id: string;
-  name: string;
+  code: string;
+  description: string;
+  category_name: string;
+  family_name: string;
+  item_type: string;
+  image_url: string | null;
 }
 
 export default function MissingImages() {
-  const [products, setProducts] = useState<Product[]>([]);
-  const [categories, setCategories] = useState<Category[]>([]);
+  const [items, setItems] = useState<CatalogItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState("");
   const [selectedCategory, setSelectedCategory] = useState<string>("all");
-  const [selectedBrand, setSelectedBrand] = useState<string>("all");
-  const [totalProducts, setTotalProducts] = useState(0);
-  const [totalWithImages, setTotalWithImages] = useState(0);
+  const [selectedType, setSelectedType] = useState<string>("all");
+  const [totalItems, setTotalItems] = useState(0);
+  const [totalWithDbImages, setTotalWithDbImages] = useState(0);
+  const [totalWithFallback, setTotalWithFallback] = useState(0);
 
   useEffect(() => {
     fetchData();
@@ -52,37 +49,38 @@ export default function MissingImages() {
   const fetchData = async () => {
     setLoading(true);
     try {
-      // Fetch all products to get totals
-      const { count: total } = await supabase
-        .from("products")
-        .select("*", { count: "exact", head: true });
+      // Fetch all catalog items
+      const { data, error } = await supabase
+        .from("catalog_items")
+        .select("id, code, description, category_name, family_name, item_type, image_url")
+        .eq("active", true)
+        .order("category_order", { ascending: true })
+        .order("family_order", { ascending: true })
+        .order("item_order", { ascending: true });
 
-      const { count: withImages } = await supabase
-        .from("products")
-        .select("*", { count: "exact", head: true })
-        .not("image_url", "is", null);
+      if (error) throw error;
 
-      setTotalProducts(total || 0);
-      setTotalWithImages(withImages || 0);
+      const allItems = data || [];
+      setTotalItems(allItems.length);
+      
+      // Count items with DB images
+      const withDbImages = allItems.filter(i => i.image_url).length;
+      setTotalWithDbImages(withDbImages);
 
-      // Fetch products without images
-      const { data: productsData, error: productsError } = await supabase
-        .from("products")
-        .select("id, name, brand, supplier_code, category_id, family_id, subcategory_id")
-        .is("image_url", null)
-        .order("name");
+      // Count items with fallback images (local matching)
+      const withFallback = allItems.filter(i => 
+        !i.image_url && findImageForProduct(i.code, i.description)
+      ).length;
+      setTotalWithFallback(withFallback);
 
-      if (productsError) throw productsError;
-      setProducts(productsData || []);
+      // Filter to only show items without ANY image (no DB image AND no fallback)
+      const noImageItems = allItems.filter(item => {
+        if (item.image_url) return false;
+        const fallback = findImageForProduct(item.code, item.description);
+        return !fallback;
+      });
 
-      // Fetch categories
-      const { data: categoriesData, error: categoriesError } = await supabase
-        .from("categories")
-        .select("id, name")
-        .order("name");
-
-      if (categoriesError) throw categoriesError;
-      setCategories(categoriesData || []);
+      setItems(noImageItems);
 
     } catch (error) {
       console.error("Error fetching data:", error);
@@ -91,33 +89,36 @@ export default function MissingImages() {
     }
   };
 
-  // Get unique brands from products
-  const brands = [...new Set(products.map(p => p.brand).filter(Boolean))].sort() as string[];
+  // Get unique categories
+  const categories = [...new Set(items.map(i => i.category_name))].sort();
 
-  // Filter products
-  const filteredProducts = products.filter(product => {
+  // Filter items
+  const filteredItems = items.filter(item => {
     const matchesSearch = search === "" || 
-      product.name.toLowerCase().includes(search.toLowerCase()) ||
-      product.supplier_code?.toLowerCase().includes(search.toLowerCase()) ||
-      product.brand?.toLowerCase().includes(search.toLowerCase());
+      item.code.toLowerCase().includes(search.toLowerCase()) ||
+      item.description.toLowerCase().includes(search.toLowerCase());
 
-    const matchesCategory = selectedCategory === "all" || product.category_id === selectedCategory;
-    const matchesBrand = selectedBrand === "all" || product.brand === selectedBrand;
+    const matchesCategory = selectedCategory === "all" || item.category_name === selectedCategory;
+    const matchesType = selectedType === "all" || item.item_type === selectedType;
 
-    return matchesSearch && matchesCategory && matchesBrand;
+    return matchesSearch && matchesCategory && matchesType;
   });
 
   // Calculate statistics
-  const missingCount = products.length;
-  const percentage = totalProducts > 0 ? Math.round((totalWithImages / totalProducts) * 100) : 0;
+  const missingCount = items.length;
+  const coveragePercentage = totalItems > 0 
+    ? Math.round(((totalWithDbImages + totalWithFallback) / totalItems) * 100) 
+    : 0;
 
   // Export to CSV
   const exportToCsv = () => {
-    const headers = ["Nome", "Marca", "Código Fornecedor"];
-    const rows = filteredProducts.map(p => [
-      p.name,
-      p.brand || "",
-      p.supplier_code || ""
+    const headers = ["Código", "Descrição", "Categoria", "Família", "Tipo"];
+    const rows = filteredItems.map(i => [
+      i.code,
+      i.description,
+      i.category_name,
+      i.family_name,
+      i.item_type
     ]);
 
     const csvContent = [
@@ -128,7 +129,7 @@ export default function MissingImages() {
     const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
     const link = document.createElement("a");
     link.href = URL.createObjectURL(blob);
-    link.download = `produtos-sem-imagem-${new Date().toISOString().split('T')[0]}.csv`;
+    link.download = `itens-sem-imagem-${new Date().toISOString().split('T')[0]}.csv`;
     link.click();
   };
 
@@ -139,10 +140,10 @@ export default function MissingImages() {
         <div className="flex justify-between items-start">
           <div>
             <h1 className="text-2xl font-heading font-bold text-foreground">
-              Produtos sem Imagem
+              Itens sem Imagem
             </h1>
             <p className="text-muted-foreground mt-1">
-              Relatório de equipamentos que precisam de fotos
+              Relatório de itens do catálogo que precisam de fotos
             </p>
           </div>
           <div className="flex gap-2">
@@ -150,7 +151,7 @@ export default function MissingImages() {
               <RefreshCw className={cn("w-4 h-4 mr-2", loading && "animate-spin")} />
               Atualizar
             </Button>
-            <Button variant="outline" onClick={exportToCsv} disabled={filteredProducts.length === 0}>
+            <Button variant="outline" onClick={exportToCsv} disabled={filteredItems.length === 0}>
               <Download className="w-4 h-4 mr-2" />
               Exportar CSV
             </Button>
@@ -158,7 +159,7 @@ export default function MissingImages() {
         </div>
 
         {/* Statistics Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
           <Card>
             <CardContent className="pt-6">
               <div className="flex items-center gap-3">
@@ -166,8 +167,8 @@ export default function MissingImages() {
                   <Package className="w-5 h-5 text-primary" />
                 </div>
                 <div>
-                  <p className="text-sm text-muted-foreground">Total de Produtos</p>
-                  <p className="text-2xl font-bold">{totalProducts}</p>
+                  <p className="text-sm text-muted-foreground">Total Catálogo</p>
+                  <p className="text-2xl font-bold">{totalItems}</p>
                 </div>
               </div>
             </CardContent>
@@ -177,11 +178,25 @@ export default function MissingImages() {
             <CardContent className="pt-6">
               <div className="flex items-center gap-3">
                 <div className="p-2 rounded-lg bg-green-500/10">
-                  <Package className="w-5 h-5 text-green-500" />
+                  <CheckCircle2 className="w-5 h-5 text-green-500" />
                 </div>
                 <div>
-                  <p className="text-sm text-muted-foreground">Com Imagem</p>
-                  <p className="text-2xl font-bold text-green-600">{totalWithImages}</p>
+                  <p className="text-sm text-muted-foreground">Com Imagem (DB)</p>
+                  <p className="text-2xl font-bold text-green-600">{totalWithDbImages}</p>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardContent className="pt-6">
+              <div className="flex items-center gap-3">
+                <div className="p-2 rounded-lg bg-blue-500/10">
+                  <Package className="w-5 h-5 text-blue-500" />
+                </div>
+                <div>
+                  <p className="text-sm text-muted-foreground">Fallback Local</p>
+                  <p className="text-2xl font-bold text-blue-600">{totalWithFallback}</p>
                 </div>
               </div>
             </CardContent>
@@ -209,7 +224,7 @@ export default function MissingImages() {
                 </div>
                 <div>
                   <p className="text-sm text-muted-foreground">Cobertura</p>
-                  <p className="text-2xl font-bold">{percentage}%</p>
+                  <p className="text-2xl font-bold">{coveragePercentage}%</p>
                 </div>
               </div>
             </CardContent>
@@ -230,7 +245,7 @@ export default function MissingImages() {
                 <div className="relative">
                   <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
                   <Input
-                    placeholder="Buscar por nome, código ou marca..."
+                    placeholder="Buscar por código ou descrição..."
                     value={search}
                     onChange={(e) => setSearch(e.target.value)}
                     className="pl-9"
@@ -245,34 +260,31 @@ export default function MissingImages() {
                 <SelectContent>
                   <SelectItem value="all">Todas as categorias</SelectItem>
                   {categories.map((cat) => (
-                    <SelectItem key={cat.id} value={cat.id}>
-                      {cat.name}
+                    <SelectItem key={cat} value={cat}>
+                      {cat}
                     </SelectItem>
                   ))}
                 </SelectContent>
               </Select>
 
-              <Select value={selectedBrand} onValueChange={setSelectedBrand}>
-                <SelectTrigger className="w-[200px]">
-                  <SelectValue placeholder="Marca" />
+              <Select value={selectedType} onValueChange={setSelectedType}>
+                <SelectTrigger className="w-[150px]">
+                  <SelectValue placeholder="Tipo" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="all">Todas as marcas</SelectItem>
-                  {brands.map((brand) => (
-                    <SelectItem key={brand} value={brand}>
-                      {brand}
-                    </SelectItem>
-                  ))}
+                  <SelectItem value="all">Todos os tipos</SelectItem>
+                  <SelectItem value="equipamento">Equipamento</SelectItem>
+                  <SelectItem value="consumivel">Consumível</SelectItem>
                 </SelectContent>
               </Select>
 
-              {(search || selectedCategory !== "all" || selectedBrand !== "all") && (
+              {(search || selectedCategory !== "all" || selectedType !== "all") && (
                 <Button
                   variant="ghost"
                   onClick={() => {
                     setSearch("");
                     setSelectedCategory("all");
-                    setSelectedBrand("all");
+                    setSelectedType("all");
                   }}
                 >
                   Limpar filtros
@@ -282,14 +294,14 @@ export default function MissingImages() {
           </CardContent>
         </Card>
 
-        {/* Products Table */}
+        {/* Items Table */}
         <Card>
           <CardHeader className="border-b">
             <div className="flex justify-between items-center">
               <CardTitle className="text-base">
-                Produtos sem Imagem
+                Itens sem Imagem
                 <Badge variant="outline" className="ml-2">
-                  {filteredProducts.length} {filteredProducts.length === 1 ? 'produto' : 'produtos'}
+                  {filteredItems.length} {filteredItems.length === 1 ? 'item' : 'itens'}
                 </Badge>
               </CardTitle>
             </div>
@@ -299,18 +311,18 @@ export default function MissingImages() {
               <div className="flex items-center justify-center py-12">
                 <Loader2 className="w-8 h-8 animate-spin text-muted-foreground" />
               </div>
-            ) : filteredProducts.length === 0 ? (
+            ) : filteredItems.length === 0 ? (
               <div className="flex flex-col items-center justify-center py-12 text-muted-foreground">
-                {products.length === 0 ? (
+                {items.length === 0 ? (
                   <>
                     <Package className="w-12 h-12 mb-3 opacity-50" />
-                    <p className="font-medium">Todos os produtos têm imagem! 🎉</p>
-                    <p className="text-sm">Nenhum produto pendente de foto.</p>
+                    <p className="font-medium">Todos os itens têm imagem! 🎉</p>
+                    <p className="text-sm">Nenhum item pendente de foto.</p>
                   </>
                 ) : (
                   <>
                     <Search className="w-12 h-12 mb-3 opacity-50" />
-                    <p className="font-medium">Nenhum produto encontrado</p>
+                    <p className="font-medium">Nenhum item encontrado</p>
                     <p className="text-sm">Tente ajustar os filtros de busca.</p>
                   </>
                 )}
@@ -321,40 +333,49 @@ export default function MissingImages() {
                   <TableHeader>
                     <TableRow>
                       <TableHead className="w-[50px]">#</TableHead>
-                      <TableHead>Nome do Produto</TableHead>
-                      <TableHead className="w-[150px]">Marca</TableHead>
-                      <TableHead className="w-[150px]">Código</TableHead>
+                      <TableHead className="w-[120px]">Código</TableHead>
+                      <TableHead>Descrição</TableHead>
+                      <TableHead className="w-[180px]">Categoria</TableHead>
+                      <TableHead className="w-[180px]">Família</TableHead>
+                      <TableHead className="w-[100px]">Tipo</TableHead>
                     </TableRow>
                   </TableHeader>
                   <TableBody>
-                    {filteredProducts.map((product, index) => (
-                      <TableRow key={product.id}>
+                    {filteredItems.map((item, index) => (
+                      <TableRow key={item.id}>
                         <TableCell className="text-muted-foreground">
                           {index + 1}
+                        </TableCell>
+                        <TableCell>
+                          <code className="text-xs bg-muted px-2 py-1 rounded">
+                            {item.code}
+                          </code>
                         </TableCell>
                         <TableCell>
                           <div className="flex items-center gap-3">
                             <div className="w-10 h-10 rounded bg-muted flex items-center justify-center flex-shrink-0">
                               <ImageOff className="w-5 h-5 text-muted-foreground" />
                             </div>
-                            <span className="font-medium">{product.name}</span>
+                            <span className="font-medium truncate max-w-[250px]" title={item.description}>
+                              {item.description}
+                            </span>
                           </div>
                         </TableCell>
                         <TableCell>
-                          {product.brand ? (
-                            <Badge variant="outline">{product.brand}</Badge>
-                          ) : (
-                            <span className="text-muted-foreground text-sm">—</span>
-                          )}
+                          <Badge variant="outline">{item.category_name}</Badge>
                         </TableCell>
                         <TableCell>
-                          {product.supplier_code ? (
-                            <code className="text-xs bg-muted px-2 py-1 rounded">
-                              {product.supplier_code}
-                            </code>
-                          ) : (
-                            <span className="text-muted-foreground text-sm">—</span>
-                          )}
+                          <span className="text-sm text-muted-foreground">
+                            {item.family_name}
+                          </span>
+                        </TableCell>
+                        <TableCell>
+                          <Badge 
+                            variant={item.item_type === "equipamento" ? "default" : "secondary"}
+                            className="text-xs"
+                          >
+                            {item.item_type === "equipamento" ? "Equip." : "Cons."}
+                          </Badge>
                         </TableCell>
                       </TableRow>
                     ))}
