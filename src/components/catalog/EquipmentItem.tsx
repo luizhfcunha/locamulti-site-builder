@@ -1,6 +1,7 @@
 import { Package, ExternalLink } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import type { CatalogItem } from "@/lib/catalogNew";
+import { findImageForProduct } from "@/utils/imageMatcher";
 
 interface EquipmentItemProps {
   item: CatalogItem;
@@ -8,14 +9,17 @@ interface EquipmentItemProps {
 }
 
 export function EquipmentItem({ item, onViewDetails }: EquipmentItemProps) {
+  // Fallback: se image_url é null, tentar encontrar via matching
+  const imageUrl = item.image_url || findImageForProduct(item.code, item.description);
+
   return (
     <div className="bg-card border border-border rounded-xl p-5 hover:border-primary/50 hover:shadow-md transition-all duration-300">
       <div className="flex flex-col md:flex-row md:items-start gap-4">
         {/* Icon/Image */}
         <div className="flex-shrink-0">
-          {item.image_url ? (
+          {imageUrl ? (
             <img 
-              src={item.image_url} 
+              src={imageUrl} 
               alt={item.code}
               className="w-20 h-20 object-contain rounded-lg bg-muted"
             />

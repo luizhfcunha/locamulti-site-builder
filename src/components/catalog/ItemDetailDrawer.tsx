@@ -9,6 +9,7 @@ import {
 } from "@/components/ui/sheet";
 import { WHATSAPP } from "@/config/whatsapp";
 import type { CatalogItem } from "@/lib/catalogNew";
+import { findImageForProduct } from "@/utils/imageMatcher";
 
 const WHATSAPP_NUMBER = "5562984194024";
 
@@ -22,6 +23,9 @@ export function ItemDetailDrawer({ item, open, onClose }: ItemDetailDrawerProps)
   if (!item) return null;
 
   const isConsumivel = item.item_type === 'consumivel';
+  
+  // Fallback: se image_url é null, tentar encontrar via matching
+  const imageUrl = item.image_url || findImageForProduct(item.code, item.description);
 
   const handleWhatsAppClick = () => {
     const message = encodeURIComponent(
@@ -60,10 +64,10 @@ export function ItemDetailDrawer({ item, open, onClose }: ItemDetailDrawerProps)
         </SheetHeader>
 
         {/* Image */}
-        {item.image_url && (
+        {imageUrl && (
           <div className="mb-6">
             <img 
-              src={item.image_url} 
+              src={imageUrl} 
               alt={item.code}
               className="w-full h-64 object-contain rounded-xl bg-muted"
             />
