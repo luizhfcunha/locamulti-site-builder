@@ -27,6 +27,9 @@ const App = () => {
   // Check if we are on the admin subdomain
   const hostname = window.location.hostname;
   const isAdminSubdomain = hostname.startsWith("admin.");
+  
+  // Check if we're in Lovable preview environment
+  const isPreviewEnv = hostname.includes("lovableproject.com") || hostname.includes("lovable.app");
 
   return (
     <QueryClientProvider client={queryClient}>
@@ -96,7 +99,7 @@ const App = () => {
                 <Route path="*" element={<Navigate to="/" replace />} />
               </>
             ) : (
-              // Public Site Routes
+              // Public Site Routes (and Preview Environment)
               <>
                 <Route path="/" element={<Index />} />
                 <Route path="/catalogo" element={<CatalogHome />} />
@@ -105,11 +108,72 @@ const App = () => {
                 <Route path="/catalogo/:categoriaSlug/:familiaSlug/:code" element={<CatalogFamily />} />
                 <Route path="/quem-somos" element={<QuemSomos />} />
                 <Route path="/contato" element={<Contato />} />
-                {/* Login on public site redirects to admin subdomain */}
+                
+                {/* Login - In preview env, show login page. In prod, redirect to admin subdomain */}
                 <Route
                   path="/login"
-                  element={<Navigate to="https://admin.locamulti.com" replace />}
+                  element={
+                    isPreviewEnv ? (
+                      <Login />
+                    ) : (
+                      <ExternalRedirect url="https://admin.locamulti.com" />
+                    )
+                  }
                 />
+                
+                {/* Admin routes accessible in preview environment */}
+                {isPreviewEnv && (
+                  <>
+                    <Route
+                      path="/admin/dashboard"
+                      element={
+                        <AdminRoute>
+                          <AdminDashboard />
+                        </AdminRoute>
+                      }
+                    />
+                    <Route
+                      path="/admin/produtos"
+                      element={
+                        <AdminRoute>
+                          <AdminProdutos />
+                        </AdminRoute>
+                      }
+                    />
+                    <Route
+                      path="/admin/categories"
+                      element={
+                        <AdminRoute>
+                          <Categories />
+                        </AdminRoute>
+                      }
+                    />
+                    <Route
+                      path="/admin/import-catalog"
+                      element={
+                        <AdminRoute>
+                          <ImportCatalog />
+                        </AdminRoute>
+                      }
+                    />
+                    <Route
+                      path="/admin/import-catalog-items"
+                      element={
+                        <AdminRoute>
+                          <ImportCatalogItems />
+                        </AdminRoute>
+                      }
+                    />
+                    <Route
+                      path="/admin/missing-images"
+                      element={
+                        <AdminRoute>
+                          <MissingImages />
+                        </AdminRoute>
+                      }
+                    />
+                  </>
+                )}
 
                 {/* Catch-all for public site */}
                 <Route path="*" element={<NotFound />} />
@@ -120,6 +184,12 @@ const App = () => {
       </TooltipProvider>
     </QueryClientProvider>
   );
+};
+
+// Component for external redirects (avoids cross-origin issues with Navigate)
+const ExternalRedirect = ({ url }: { url: string }) => {
+  window.location.href = url;
+  return null;
 };
 
 export default App;
