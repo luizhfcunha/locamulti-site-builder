@@ -68,14 +68,6 @@ export const FeaturedEquipmentCarousel = () => {
     return `https://wa.me/5562984194024?text=${encodeURIComponent(message)}`;
   };
 
-  // Extract brand from description (usually after " - ")
-  const extractBrand = (description: string): string | null => {
-    const parts = description.split(" - ");
-    if (parts.length > 1) {
-      return parts[parts.length - 1].split(" ")[0];
-    }
-    return null;
-  };
 
   // Truncate description for display
   const getDisplayName = (description: string): string => {
@@ -127,7 +119,6 @@ export const FeaturedEquipmentCarousel = () => {
             <div className="flex">
               {items.map(item => {
                 const imageUrl = item.image_url || findImageForProduct(item.code, item.description);
-                const brand = extractBrand(item.description);
                 const displayName = getDisplayName(item.description);
                 
                 return (
@@ -136,9 +127,6 @@ export const FeaturedEquipmentCarousel = () => {
                       {/* Product Image */}
                       <div className="relative aspect-square bg-white p-4">
                         <img src={imageUrl || "/placeholder.svg"} alt={item.description} className="w-full h-full object-contain" loading="lazy" />
-                        {brand && <span className="absolute top-3 left-3 bg-lm-plum text-white text-xs font-semibold px-2 py-1 rounded">
-                            {brand}
-                          </span>}
                       </div>
 
                       {/* Product Info */}
