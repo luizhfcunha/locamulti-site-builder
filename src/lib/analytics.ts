@@ -23,16 +23,12 @@ const getUtmParams = () => {
 
 interface TrackEventParams {
   event_type: 'product_view' | 'whatsapp_click' | 'catalog_visit';
-  product_id?: string;
-  category_id?: string;
-  subcategory_id?: string;
+  catalog_item_id?: string;
 }
 
 export const trackEvent = async ({
   event_type,
-  product_id,
-  category_id,
-  subcategory_id,
+  catalog_item_id,
 }: TrackEventParams) => {
   try {
     const utm = getUtmParams();
@@ -40,9 +36,6 @@ export const trackEvent = async ({
 
     await supabase.from('analytics_events').insert({
       event_type,
-      product_id: product_id || null,
-      category_id: category_id || null,
-      subcategory_id: subcategory_id || null,
       utm_source: utm.utm_source,
       utm_medium: utm.utm_medium,
       utm_campaign: utm.utm_campaign,
@@ -57,17 +50,17 @@ export const trackEvent = async ({
   }
 };
 
-// Hook para rastrear visualização de produto
-export const useTrackProductView = (productId?: string) => {
-  if (productId) {
-    trackEvent({ event_type: 'product_view', product_id: productId });
+// Hook para rastrear visualização de item do catálogo
+export const useTrackProductView = (catalogItemId?: string) => {
+  if (catalogItemId) {
+    trackEvent({ event_type: 'product_view', catalog_item_id: catalogItemId });
   }
 };
 
 // Função para rastrear clique no WhatsApp
-export const trackWhatsAppClick = (productId?: string) => {
+export const trackWhatsAppClick = (catalogItemId?: string) => {
   trackEvent({ 
     event_type: 'whatsapp_click', 
-    product_id: productId || undefined 
+    catalog_item_id: catalogItemId || undefined 
   });
 };

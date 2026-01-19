@@ -1,23 +1,9 @@
 import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Eye, MessageCircle, TrendingUp, Activity } from "lucide-react";
 import { LineChart, Line, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend } from "recharts";
-
-interface ProductAnalytics {
-  product_id: string;
-  product_name: string;
-  supplier_code: string;
-  image_url: string;
-  category_name: string;
-  total_views: number;
-  total_conversions: number;
-  conversion_rate: number;
-  last_activity: string;
-}
 
 interface DailyStats {
   date: string;
@@ -27,7 +13,6 @@ interface DailyStats {
 }
 
 export const AnalyticsDashboard = () => {
-  const [topProducts, setTopProducts] = useState<ProductAnalytics[]>([]);
   const [dailyStats, setDailyStats] = useState<DailyStats[]>([]);
   const [totalViews, setTotalViews] = useState(0);
   const [totalConversions, setTotalConversions] = useState(0);
@@ -35,31 +20,14 @@ export const AnalyticsDashboard = () => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    refreshMaterializedView();
+    fetchAnalytics();
   }, []);
 
   const fetchAnalytics = async () => {
     try {
       setLoading(true);
 
-      // Buscar produtos mais visualizados
-      const { data: productsData, error: productsError } = await supabase
-        .from('product_analytics_summary')
-        .select('*')
-        .order('total_views', { ascending: false })
-        .limit(10);
-
-      if (productsError) throw productsError;
-      setTopProducts(productsData || []);
-
-      // Calcular totais
-      const views = (productsData || []).reduce((sum, p) => sum + p.total_views, 0);
-      const conversions = (productsData || []).reduce((sum, p) => sum + p.total_conversions, 0);
-      setTotalViews(views);
-      setTotalConversions(conversions);
-      setAvgConversionRate(views > 0 ? (conversions / views) * 100 : 0);
-
-      // Buscar estatísticas diárias dos últimos 30 dias
+      // Buscar estatísticas dos últimos 30 dias
       const thirtyDaysAgo = new Date();
       thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
 
@@ -72,19 +40,27 @@ export const AnalyticsDashboard = () => {
 
       // Agrupar por dia
       const dailyMap = new Map<string, { views: number; conversions: number }>();
+      let totalViewsCount = 0;
+      let totalConversionsCount = 0;
 
       (eventsData || []).forEach(event => {
-        const date = new Date(event.created_at).toISOString().split('T')[0];
+        const date = new Date(event.created_at!).toISOString().split('T')[0];
         const current = dailyMap.get(date) || { views: 0, conversions: 0 };
 
         if (event.event_type === 'product_view') {
           current.views++;
+          totalViewsCount++;
         } else if (event.event_type === 'whatsapp_click') {
           current.conversions++;
+          totalConversionsCount++;
         }
 
         dailyMap.set(date, current);
       });
+
+      setTotalViews(totalViewsCount);
+      setTotalConversions(totalConversionsCount);
+      setAvgConversionRate(totalViewsCount > 0 ? (totalConversionsCount / totalViewsCount) * 100 : 0);
 
       const dailyArray: DailyStats[] = Array.from(dailyMap.entries())
         .map(([date, stats]) => ({
@@ -104,17 +80,6 @@ export const AnalyticsDashboard = () => {
     }
   };
 
-  const refreshMaterializedView = async () => {
-    try {
-      setLoading(true);
-      await supabase.rpc('refresh_product_analytics_summary');
-      await fetchAnalytics();
-    } catch (error) {
-      console.error('Error refreshing analytics:', error);
-      setLoading(false);
-    }
-  };
-
   if (loading) {
     return (
       <div className="flex items-center justify-center h-64">
@@ -127,7 +92,7 @@ export const AnalyticsDashboard = () => {
     <div className="space-y-6">
       <div className="flex justify-end">
         <button
-          onClick={refreshMaterializedView}
+          onClick={fetchAnalytics}
           className="text-sm text-primary hover:underline flex items-center gap-2"
         >
           <Activity className="h-4 w-4" />
@@ -144,7 +109,7 @@ export const AnalyticsDashboard = () => {
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">{totalViews.toLocaleString()}</div>
-            <p className="text-xs text-muted-foreground">Visualizações de produtos</p>
+            <p className="text-xs text-muted-foreground">Últimos 30 dias</p>
           </CardContent>
         </Card>
 
@@ -171,77 +136,11 @@ export const AnalyticsDashboard = () => {
         </Card>
       </div>
 
-      {/* Tabs com gráficos e tabelas */}
-      <Tabs defaultValue="products" className="space-y-4">
+      {/* Tabs com gráficos */}
+      <Tabs defaultValue="trends" className="space-y-4">
         <TabsList>
-          <TabsTrigger value="products">Produtos Mais Visualizados</TabsTrigger>
           <TabsTrigger value="trends">Tendências</TabsTrigger>
         </TabsList>
-
-        <TabsContent value="products" className="space-y-4">
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <Activity className="h-5 w-5" />
-                Top 10 Produtos por Visualizações
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <Table>
-                <TableHeader>
-                  <TableRow>
-                    <TableHead className="w-[60px]"></TableHead>
-                    <TableHead>Produto</TableHead>
-                    <TableHead>Categoria</TableHead>
-                    <TableHead className="text-right">Visualizações</TableHead>
-                    <TableHead className="text-right">Conversões</TableHead>
-                    <TableHead className="text-right">Taxa</TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {topProducts.map((product) => (
-                    <TableRow key={product.product_id}>
-                      <TableCell>
-                        {product.image_url ? (
-                          <img
-                            src={product.image_url}
-                            alt={product.product_name}
-                            className="w-10 h-10 object-cover rounded"
-                          />
-                        ) : (
-                          <div className="w-10 h-10 bg-muted rounded" />
-                        )}
-                      </TableCell>
-                      <TableCell>
-                        <div className="font-medium">{product.product_name}</div>
-                        {product.supplier_code && (
-                          <div className="text-xs text-muted-foreground">
-                            Cód: {product.supplier_code}
-                          </div>
-                        )}
-                      </TableCell>
-                      <TableCell>{product.category_name || '-'}</TableCell>
-                      <TableCell className="text-right font-semibold">
-                        {product.total_views}
-                      </TableCell>
-                      <TableCell className="text-right font-semibold text-green-600">
-                        {product.total_conversions}
-                      </TableCell>
-                      <TableCell className="text-right">
-                        <Badge
-                          variant={product.conversion_rate > 10 ? "default" : "secondary"}
-                          className={product.conversion_rate > 10 ? "bg-green-600" : ""}
-                        >
-                          {product.conversion_rate.toFixed(1)}%
-                        </Badge>
-                      </TableCell>
-                    </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
-            </CardContent>
-          </Card>
-        </TabsContent>
 
         <TabsContent value="trends" className="space-y-4">
           <Card>

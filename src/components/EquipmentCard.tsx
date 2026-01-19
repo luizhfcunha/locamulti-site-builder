@@ -29,7 +29,7 @@ export const EquipmentCard = ({
     if (id) {
       // Use a small timeout to avoid blocking render and to debounce rapid scrolls if needed in future
       const timer = setTimeout(() => {
-        trackEvent({ event_type: 'product_view', product_id: id });
+        trackEvent({ event_type: 'product_view', catalog_item_id: id });
       }, 1000);
       return () => clearTimeout(timer);
     }
