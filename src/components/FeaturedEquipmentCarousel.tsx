@@ -6,15 +6,18 @@ import { Button } from "@/components/ui/button";
 import { ChevronLeft, ChevronRight, ArrowRight } from "lucide-react";
 import useEmblaCarousel from "embla-carousel-react";
 import Autoplay from "embla-carousel-autoplay";
-interface Product {
+import { findImageForProduct } from "@/utils/imageMatcher";
+
+interface FeaturedItem {
   id: string;
-  name: string;
+  code: string;
+  description: string;
   image_url: string | null;
-  brand: string | null;
-  category_id: string | null;
+  category_name: string;
+  item_type: string;
 }
 export const FeaturedEquipmentCarousel = () => {
-  const [products, setProducts] = useState<Product[]>([]);
+  const [items, setItems] = useState<FeaturedItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [emblaRef, emblaApi] = useEmblaCarousel({
     loop: true,
@@ -26,18 +29,23 @@ export const FeaturedEquipmentCarousel = () => {
   })]);
   const [selectedIndex, setSelectedIndex] = useState(0);
   const [scrollSnaps, setScrollSnaps] = useState<number[]>([]);
+
   useEffect(() => {
-    const fetchProducts = async () => {
-      const {
-        data,
-        error
-      } = await supabase.from("products").select("id, name, image_url, brand, category_id").eq("active", true).not("image_url", "is", null).limit(8);
+    const fetchItems = async () => {
+      const { data, error } = await supabase
+        .from("catalog_items")
+        .select("id, code, description, image_url, category_name, item_type")
+        .eq("active", true)
+        .eq("item_type", "equipamento")
+        .order("category_order", { ascending: true })
+        .limit(12);
+
       if (!error && data) {
-        setProducts(data);
+        setItems(data);
       }
       setLoading(false);
     };
-    fetchProducts();
+    fetchItems();
   }, []);
   useEffect(() => {
     if (!emblaApi) return;
@@ -54,9 +62,26 @@ export const FeaturedEquipmentCarousel = () => {
   const scrollPrev = () => emblaApi?.scrollPrev();
   const scrollNext = () => emblaApi?.scrollNext();
   const scrollTo = (index: number) => emblaApi?.scrollTo(index);
-  const getWhatsAppMessage = (productName: string) => {
-    const message = `Olá! Gostaria de solicitar um orçamento para o equipamento: ${productName}`;
+
+  const getWhatsAppMessage = (itemName: string) => {
+    const message = `Olá! Gostaria de solicitar um orçamento para o equipamento: ${itemName}`;
     return `https://wa.me/5562984194024?text=${encodeURIComponent(message)}`;
+  };
+
+  // Extract brand from description (usually after " - ")
+  const extractBrand = (description: string): string | null => {
+    const parts = description.split(" - ");
+    if (parts.length > 1) {
+      return parts[parts.length - 1].split(" ")[0];
+    }
+    return null;
+  };
+
+  // Truncate description for display
+  const getDisplayName = (description: string): string => {
+    const maxLength = 50;
+    if (description.length <= maxLength) return description;
+    return description.substring(0, maxLength).trim() + "...";
   };
   if (loading) {
     return <section className="py-16 bg-lm-orange">
@@ -70,7 +95,7 @@ export const FeaturedEquipmentCarousel = () => {
         </div>
       </section>;
   }
-  if (products.length === 0) return null;
+  if (items.length === 0 && !loading) return null;
   return <section className="py-16 md:py-20 bg-lm-orange relative overflow-hidden">
       {/* Decorative elements */}
       <div className="absolute top-0 left-0 w-64 h-64 bg-lm-orange/10 rounded-full blur-3xl -translate-x-1/2 -translate-y-1/2" />
@@ -100,39 +125,47 @@ export const FeaturedEquipmentCarousel = () => {
           {/* Embla Carousel */}
           <div className="overflow-hidden mx-6 md:mx-10" ref={emblaRef}>
             <div className="flex">
-              {products.map(product => <div key={product.id} className="flex-shrink-0 w-[280px] sm:w-[300px] md:w-[320px] pr-4 md:pr-6">
-                  <div className="bg-lm-muted rounded-2xl overflow-hidden shadow-lg hover:shadow-xl transition-all duration-300 h-full flex flex-col">
-                    {/* Product Image */}
-                    <div className="relative aspect-square bg-white p-4">
-                      <img src={product.image_url || "/placeholder.svg"} alt={product.name} className="w-full h-full object-contain" loading="lazy" />
-                      {product.brand && <span className="absolute top-3 left-3 bg-lm-plum text-white text-xs font-semibold px-2 py-1 rounded">
-                          {product.brand}
-                        </span>}
-                    </div>
+              {items.map(item => {
+                const imageUrl = item.image_url || findImageForProduct(item.code, item.description);
+                const brand = extractBrand(item.description);
+                const displayName = getDisplayName(item.description);
+                
+                return (
+                  <div key={item.id} className="flex-shrink-0 w-[280px] sm:w-[300px] md:w-[320px] pr-4 md:pr-6">
+                    <div className="bg-lm-muted rounded-2xl overflow-hidden shadow-lg hover:shadow-xl transition-all duration-300 h-full flex flex-col">
+                      {/* Product Image */}
+                      <div className="relative aspect-square bg-white p-4">
+                        <img src={imageUrl || "/placeholder.svg"} alt={item.description} className="w-full h-full object-contain" loading="lazy" />
+                        {brand && <span className="absolute top-3 left-3 bg-lm-plum text-white text-xs font-semibold px-2 py-1 rounded">
+                            {brand}
+                          </span>}
+                      </div>
 
-                    {/* Product Info */}
-                    <div className="p-4 flex flex-col flex-1">
-                      <h3 className="font-heading font-bold text-lm-ink text-sm md:text-base uppercase line-clamp-2 mb-3">
-                        {product.name}
-                      </h3>
+                      {/* Product Info */}
+                      <div className="p-4 flex flex-col flex-1">
+                        <h3 className="font-heading font-bold text-lm-ink text-sm md:text-base uppercase line-clamp-2 mb-3">
+                          {displayName}
+                        </h3>
 
-                      <Link to={`/catalogo?q=${encodeURIComponent(product.name)}`} className="text-lm-orange hover:text-lm-terrac font-semibold text-sm flex items-center gap-1 mb-4 transition-colors">
-                        + Detalhes do equipamento
-                        <ArrowRight className="h-4 w-4" />
-                      </Link>
+                        <Link to={`/catalogo?q=${encodeURIComponent(item.description.split(" - ")[0])}`} className="text-lm-orange hover:text-lm-terrac font-semibold text-sm flex items-center gap-1 mb-4 transition-colors">
+                          + Detalhes do equipamento
+                          <ArrowRight className="h-4 w-4" />
+                        </Link>
 
-                      <div className="mt-auto space-y-2">
-                        <a href={getWhatsAppMessage(product.name)} target="_blank" rel="noopener noreferrer" className="flex items-center justify-center gap-2 w-full py-2.5 bg-[#25D366] hover:bg-[#128C7E] text-white font-semibold rounded-lg transition-all duration-200 text-sm">
-                          <img src="/lovable-uploads/c5861fea-0072-4651-9ee0-c32e148f0e85.png" alt="WhatsApp" className="w-4 h-4" />
-                          WhatsApp
-                        </a>
-                        <a href={WHATSAPP.homeHero} target="_blank" rel="noopener noreferrer" className="flex items-center justify-center w-full py-2.5 bg-lm-orange hover:bg-lm-terrac text-white font-semibold rounded-lg transition-all duration-200 text-sm">
-                          Orçamento Rápido
-                        </a>
+                        <div className="mt-auto space-y-2">
+                          <a href={getWhatsAppMessage(item.description)} target="_blank" rel="noopener noreferrer" className="flex items-center justify-center gap-2 w-full py-2.5 bg-[#25D366] hover:bg-[#128C7E] text-white font-semibold rounded-lg transition-all duration-200 text-sm">
+                            <img src="/lovable-uploads/c5861fea-0072-4651-9ee0-c32e148f0e85.png" alt="WhatsApp" className="w-4 h-4" />
+                            WhatsApp
+                          </a>
+                          <a href={WHATSAPP.homeHero} target="_blank" rel="noopener noreferrer" className="flex items-center justify-center w-full py-2.5 bg-lm-orange hover:bg-lm-terrac text-white font-semibold rounded-lg transition-all duration-200 text-sm">
+                            Orçamento Rápido
+                          </a>
+                        </div>
                       </div>
                     </div>
                   </div>
-                </div>)}
+                );
+              })}
             </div>
           </div>
 
