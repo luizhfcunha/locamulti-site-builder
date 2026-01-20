@@ -9,6 +9,17 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { 
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
+import { 
   ImageOff, 
   Search, 
   Download, 
@@ -17,10 +28,13 @@ import {
   Filter,
   Package,
   AlertTriangle,
-  CheckCircle2
+  CheckCircle2,
+  Trash2,
+  Upload
 } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { findImageForProduct } from "@/utils/imageMatcher";
+import { BulkImageUpload } from "@/components/admin/BulkImageUpload";
+import { toast } from "@/hooks/use-toast";
 
 interface CatalogItem {
   id: string;
@@ -34,13 +48,15 @@ interface CatalogItem {
 
 export default function MissingImages() {
   const [items, setItems] = useState<CatalogItem[]>([]);
+  const [allItems, setAllItems] = useState<CatalogItem[]>([]);
   const [loading, setLoading] = useState(true);
+  const [clearing, setClearing] = useState(false);
   const [search, setSearch] = useState("");
   const [selectedCategory, setSelectedCategory] = useState<string>("all");
   const [selectedType, setSelectedType] = useState<string>("all");
   const [totalItems, setTotalItems] = useState(0);
   const [totalWithDbImages, setTotalWithDbImages] = useState(0);
-  const [totalWithFallback, setTotalWithFallback] = useState(0);
+  const [showBulkUpload, setShowBulkUpload] = useState(false);
 
   useEffect(() => {
     fetchData();
@@ -60,32 +76,70 @@ export default function MissingImages() {
 
       if (error) throw error;
 
-      const allItems = data || [];
-      setTotalItems(allItems.length);
+      const fetchedItems = data || [];
+      setAllItems(fetchedItems);
+      setTotalItems(fetchedItems.length);
       
       // Count items with DB images
-      const withDbImages = allItems.filter(i => i.image_url).length;
+      const withDbImages = fetchedItems.filter(i => i.image_url).length;
       setTotalWithDbImages(withDbImages);
 
-      // Count items with fallback images (local matching)
-      const withFallback = allItems.filter(i => 
-        !i.image_url && findImageForProduct(i.code, i.description)
-      ).length;
-      setTotalWithFallback(withFallback);
-
-      // Filter to only show items without ANY image (no DB image AND no fallback)
-      const noImageItems = allItems.filter(item => {
-        if (item.image_url) return false;
-        const fallback = findImageForProduct(item.code, item.description);
-        return !fallback;
-      });
-
+      // Filter to only show items without image_url
+      const noImageItems = fetchedItems.filter(item => !item.image_url);
       setItems(noImageItems);
 
     } catch (error) {
       console.error("Error fetching data:", error);
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleClearAllImages = async () => {
+    setClearing(true);
+    try {
+      // 1. List all files in the bucket
+      const { data: files, error: listError } = await supabase.storage
+        .from('product-images')
+        .list('', { limit: 1000 });
+
+      if (listError) throw listError;
+
+      // 2. Delete all files from the bucket
+      if (files && files.length > 0) {
+        const filePaths = files.map(f => f.name);
+        const { error: deleteError } = await supabase.storage
+          .from('product-images')
+          .remove(filePaths);
+
+        if (deleteError) throw deleteError;
+      }
+
+      // 3. Clear all image_url in catalog_items
+      const { error: updateError } = await supabase
+        .from("catalog_items")
+        .update({ image_url: null })
+        .not("image_url", "is", null);
+
+      if (updateError) throw updateError;
+
+      toast({
+        title: "Limpeza concluída",
+        description: `${files?.length || 0} arquivos removidos e URLs limpas do banco.`,
+      });
+
+      // Refresh data
+      fetchData();
+
+    } catch (error: any) {
+      console.error("Error clearing images:", error);
+      toast({
+        title: "Erro ao limpar imagens",
+        description: error.message,
+        variant: "destructive",
+      });
+    } finally {
+      setClearing(false);
     }
   };
 
@@ -107,7 +161,7 @@ export default function MissingImages() {
   // Calculate statistics
   const missingCount = items.length;
   const coveragePercentage = totalItems > 0 
-    ? Math.round(((totalWithDbImages + totalWithFallback) / totalItems) * 100) 
+    ? Math.round((totalWithDbImages / totalItems) * 100) 
     : 0;
 
   // Export to CSV
@@ -133,6 +187,20 @@ export default function MissingImages() {
     link.click();
   };
 
+  if (showBulkUpload) {
+    return (
+      <AdminLayout>
+        <BulkImageUpload
+          onClose={() => setShowBulkUpload(false)}
+          onSuccess={() => {
+            setShowBulkUpload(false);
+            fetchData();
+          }}
+        />
+      </AdminLayout>
+    );
+  }
+
   return (
     <AdminLayout>
       <div className="space-y-6">
@@ -140,10 +208,10 @@ export default function MissingImages() {
         <div className="flex justify-between items-start">
           <div>
             <h1 className="text-2xl font-heading font-bold text-foreground">
-              Itens sem Imagem
+              Gerenciar Imagens do Catálogo
             </h1>
             <p className="text-muted-foreground mt-1">
-              Relatório de itens do catálogo que precisam de fotos
+              Limpe as imagens existentes e faça upload de novas imagens
             </p>
           </div>
           <div className="flex gap-2">
@@ -151,9 +219,44 @@ export default function MissingImages() {
               <RefreshCw className={cn("w-4 h-4 mr-2", loading && "animate-spin")} />
               Atualizar
             </Button>
-            <Button variant="outline" onClick={exportToCsv} disabled={filteredItems.length === 0}>
-              <Download className="w-4 h-4 mr-2" />
-              Exportar CSV
+
+            <AlertDialog>
+              <AlertDialogTrigger asChild>
+                <Button variant="destructive" disabled={clearing || totalWithDbImages === 0}>
+                  <Trash2 className={cn("w-4 h-4 mr-2", clearing && "animate-spin")} />
+                  Limpar Todas as Imagens
+                </Button>
+              </AlertDialogTrigger>
+              <AlertDialogContent>
+                <AlertDialogHeader>
+                  <AlertDialogTitle>Limpar todas as imagens?</AlertDialogTitle>
+                  <AlertDialogDescription>
+                    Esta ação irá:
+                    <ul className="list-disc ml-4 mt-2 space-y-1">
+                      <li>Excluir todos os arquivos do bucket de imagens</li>
+                      <li>Limpar todas as URLs de imagem do banco de dados</li>
+                      <li>Todos os {totalWithDbImages} itens com imagem ficarão sem foto</li>
+                    </ul>
+                    <p className="mt-3 font-semibold text-destructive">
+                      Esta ação não pode ser desfeita!
+                    </p>
+                  </AlertDialogDescription>
+                </AlertDialogHeader>
+                <AlertDialogFooter>
+                  <AlertDialogCancel>Cancelar</AlertDialogCancel>
+                  <AlertDialogAction 
+                    onClick={handleClearAllImages}
+                    className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+                  >
+                    Sim, limpar tudo
+                  </AlertDialogAction>
+                </AlertDialogFooter>
+              </AlertDialogContent>
+            </AlertDialog>
+
+            <Button onClick={() => setShowBulkUpload(true)}>
+              <Upload className="w-4 h-4 mr-2" />
+              Upload em Massa
             </Button>
           </div>
         </div>
@@ -183,20 +286,6 @@ export default function MissingImages() {
                 <div>
                   <p className="text-sm text-muted-foreground">Com Imagem (DB)</p>
                   <p className="text-2xl font-bold text-green-600">{totalWithDbImages}</p>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-
-          <Card>
-            <CardContent className="pt-6">
-              <div className="flex items-center gap-3">
-                <div className="p-2 rounded-lg bg-blue-500/10">
-                  <Package className="w-5 h-5 text-blue-500" />
-                </div>
-                <div>
-                  <p className="text-sm text-muted-foreground">Fallback Local</p>
-                  <p className="text-2xl font-bold text-blue-600">{totalWithFallback}</p>
                 </div>
               </div>
             </CardContent>
