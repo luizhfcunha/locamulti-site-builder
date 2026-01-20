@@ -14,7 +14,6 @@ import QuemSomos from "./pages/QuemSomos";
 import Contato from "./pages/Contato";
 import Login from "./pages/Login";
 import AdminDashboard from "./pages/AdminDashboard";
-import ImportCatalog from "./pages/admin/ImportCatalog";
 import ImportCatalogItems from "./pages/admin/ImportCatalogItems";
 import MissingImages from "./pages/admin/MissingImages";
 import NotFound from "./pages/NotFound";
@@ -134,14 +133,6 @@ const App = () => {
                   path="/admin/import-catalog"
                   element={
                     <AdminRoute>
-                      <ImportCatalog />
-                    </AdminRoute>
-                  }
-                />
-                <Route
-                  path="/admin/import-catalog-items"
-                  element={
-                    <AdminRoute>
                       <ImportCatalogItems />
                     </AdminRoute>
                   }
@@ -201,14 +192,6 @@ const App = () => {
                     />
                     <Route
                       path="/admin/import-catalog"
-                      element={
-                        <AdminRoute>
-                          <ImportCatalog />
-                        </AdminRoute>
-                      }
-                    />
-                    <Route
-                      path="/admin/import-catalog-items"
                       element={
                         <AdminRoute>
                           <ImportCatalogItems />
