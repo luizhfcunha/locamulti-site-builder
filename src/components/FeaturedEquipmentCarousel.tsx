@@ -117,7 +117,7 @@ export const FeaturedEquipmentCarousel = () => {
           {/* Embla Carousel */}
           <div className="overflow-hidden mx-6 md:mx-10" ref={emblaRef}>
             <div className="flex">
-              {items.map(item => {
+            {items.map((item, index) => {
                 const imageUrl = item.image_url || findImageForProduct(item.code, item.description);
                 const displayName = getDisplayName(item.description);
                 
@@ -126,7 +126,17 @@ export const FeaturedEquipmentCarousel = () => {
                     <div className="bg-lm-muted rounded-2xl overflow-hidden shadow-lg hover:shadow-xl transition-all duration-300 h-full flex flex-col">
                       {/* Product Image */}
                       <div className="relative aspect-square bg-white p-4">
-                        <img src={imageUrl || "/placeholder.svg"} alt={item.description} className="w-full h-full object-contain" loading="lazy" />
+                        <img 
+                          src={imageUrl || "/placeholder.svg"} 
+                          alt={item.description} 
+                          width={280}
+                          height={280}
+                          loading={index < 3 ? "eager" : "lazy"}
+                          fetchPriority={index < 3 ? "high" : undefined}
+                          decoding="async"
+                          className="w-full h-full object-contain"
+                          style={{ backgroundColor: '#ffffff' }}
+                        />
                       </div>
 
                       {/* Product Info */}

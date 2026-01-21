@@ -48,6 +48,10 @@ export const EquipmentCard = ({
           <img
             src={imageUrl}
             alt={name}
+            width={400}
+            height={224}
+            loading="lazy"
+            decoding="async"
             className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-slow"
           />
         ) : (
