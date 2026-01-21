@@ -14,6 +14,7 @@ export interface CatalogItem {
   item_order: number;
   code: string;
   item_type: 'equipamento' | 'consumivel';
+  name: string;
   description: string;
   image_url: string | null;
   active: boolean;

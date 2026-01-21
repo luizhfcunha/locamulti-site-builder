@@ -1,5 +1,5 @@
 import { useState, useMemo, useEffect } from "react";
-import { useSearchParams } from "react-router-dom";
+import { useSearchParams, useNavigate } from "react-router-dom";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { CatalogSidebar } from "@/components/catalog/CatalogSidebar";
@@ -8,8 +8,9 @@ import { ProductList } from "@/components/catalog/ProductList";
 import { FilterBreadcrumb } from "@/components/catalog/FilterBreadcrumb";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { getAllProducts, getAllCategories } from "@/data/catalogData";
-import { Product } from "@/types/catalog";
+import { getCatalogCategories, getCatalogFamilies, CatalogCategory, CatalogItem } from "@/lib/catalogNew";
+import { supabase } from "@/integrations/supabase/client";
+import { Category } from "@/types/catalog";
 import { X, Search } from "lucide-react";
 
 // Helper to normalize text for search (remove accents, lowercase)
@@ -20,9 +21,33 @@ const normalizeText = (text: string): string => {
     .replace(/[\u0300-\u036f]/g, '');
 };
 
+// Transform CatalogCategory to Category for CategoryGrid compatibility
+const transformCategories = async (catalogCategories: CatalogCategory[]): Promise<Category[]> => {
+  const categories: Category[] = [];
+  
+  for (const cat of catalogCategories) {
+    const families = await getCatalogFamilies(cat.category_slug);
+    categories.push({
+      order: cat.category_order,
+      name: cat.category_name,
+      slug: cat.category_slug,
+      families: families.map(f => ({
+        order: String(f.family_order),
+        name: f.family_name,
+        slug: f.family_slug,
+        products: []
+      }))
+    });
+  }
+  
+  return categories;
+};
+
 const CatalogHome = () => {
   const [searchParams, setSearchParams] = useSearchParams();
-  const [products, setProducts] = useState<Product[]>([]);
+  const navigate = useNavigate();
+  const [products, setProducts] = useState<CatalogItem[]>([]);
+  const [categories, setCategories] = useState<Category[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchInput, setSearchInput] = useState("");
 
@@ -36,9 +61,17 @@ const CatalogHome = () => {
     setSearchInput(searchQuery);
   }, [searchQuery]);
 
-  // Derived Data
-  const categories = useMemo(() => getAllCategories(), []);
+  // Fetch categories from Supabase
+  useEffect(() => {
+    const fetchCategories = async () => {
+      const catalogCategories = await getCatalogCategories();
+      const transformed = await transformCategories(catalogCategories);
+      setCategories(transformed);
+    };
+    fetchCategories();
+  }, []);
 
+  // Derived data
   const activeCategoryName = useMemo(() =>
     categories.find(c => c.slug === selectedCategorySlug)?.name,
     [selectedCategorySlug, categories]);
@@ -52,31 +85,54 @@ const CatalogHome = () => {
   // Determine View Mode
   const isGridView = !selectedCategorySlug && !searchQuery;
 
-  // Filter products
+  // Filter products from Supabase
   useEffect(() => {
-    setLoading(true);
-    const timer = setTimeout(() => {
-      let filtered = getAllProducts();
+    const fetchProducts = async () => {
+      setLoading(true);
+      
+      try {
+        let query = supabase
+          .from('catalog_items')
+          .select('*')
+          .eq('active', true)
+          .order('category_order', { ascending: true })
+          .order('family_order', { ascending: true })
+          .order('item_order', { ascending: true });
 
-      if (selectedCategorySlug) {
-        filtered = filtered.filter((p: any) => p.categorySlug === selectedCategorySlug);
-      }
-      if (selectedFamilySlug) {
-        filtered = filtered.filter((p: any) => p.familySlug === selectedFamilySlug);
-      }
-      if (searchQuery) {
-        const normalizedQuery = normalizeText(searchQuery);
-        filtered = filtered.filter(p =>
-          normalizeText(p.name).includes(normalizedQuery) ||
-          (p.description && normalizeText(p.description).includes(normalizedQuery))
-        );
-      }
+        if (selectedCategorySlug) {
+          query = query.eq('category_slug', selectedCategorySlug);
+        }
+        if (selectedFamilySlug) {
+          query = query.eq('family_slug', selectedFamilySlug);
+        }
+        if (searchQuery) {
+          const normalizedQuery = `%${searchQuery}%`;
+          query = query.or(`code.ilike.${normalizedQuery},description.ilike.${normalizedQuery},name.ilike.${normalizedQuery}`);
+        }
 
-      setProducts(filtered);
+        const { data, error } = await query;
+
+        if (error) {
+          console.error('Error fetching products:', error);
+          setProducts([]);
+        } else {
+          setProducts((data || []) as CatalogItem[]);
+        }
+      } catch (err) {
+        console.error('Error:', err);
+        setProducts([]);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    // Only fetch products if we have a filter active
+    if (selectedCategorySlug || searchQuery) {
+      fetchProducts();
+    } else {
+      setProducts([]);
       setLoading(false);
-    }, 100);
-
-    return () => clearTimeout(timer);
+    }
   }, [selectedCategorySlug, selectedFamilySlug, searchQuery]);
 
   // Handlers
