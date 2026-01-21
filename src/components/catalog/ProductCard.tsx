@@ -27,8 +27,12 @@ export const ProductCard = ({ product }: ProductCardProps) => {
                 <img
                     src={product.image_url || "https://placehold.co/120x120/png?text=Equipamento"}
                     alt={displayName}
-                    className="w-full h-full max-w-[100px] max-h-[90px] object-contain"
+                    width={100}
+                    height={90}
                     loading="lazy"
+                    decoding="async"
+                    className="w-full h-full max-w-[100px] max-h-[90px] object-contain"
+                    style={{ backgroundColor: '#f6f3f2' }}
                 />
             </div>
 
