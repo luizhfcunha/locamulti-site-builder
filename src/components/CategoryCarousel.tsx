@@ -10,6 +10,7 @@ import { useNavigate } from "react-router-dom";
 interface Category {
   id: string;
   title: string;
+  slug: string;
   icon: LucideIcon;
   imageUrl?: string;
 }
@@ -102,7 +103,7 @@ export const CategoryCarousel = ({ categories, onCategoryClick }: CategoryCarous
                   title={category.title}
                   icon={category.icon}
                   imageUrl={category.imageUrl}
-                  onClick={() => onCategoryClick?.(category.id)}
+                  onClick={() => onCategoryClick?.(category.slug)}
                   priority={index < 3 ? 'high' : 'low'}
                 />
               </div>

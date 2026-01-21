@@ -90,8 +90,8 @@ const Index = () => {
       icon: Users,
     },
   ];
-  const handleCategoryClick = (categoryId: string) => {
-    window.location.href = `/catalogo?categoria=${encodeURIComponent(categoryId)}`;
+  const handleCategoryClick = (categorySlug: string) => {
+    window.location.href = `/catalogo?categoria=${categorySlug}`;
   };
   return (
     <div className="min-h-screen flex flex-col">
