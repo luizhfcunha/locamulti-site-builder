@@ -25,10 +25,13 @@ export const CategoryGrid = ({ categories, onSelectCategory }: CategoryGridProps
                             <img
                                 src={getCategoryImageBySlug(category.slug)}
                                 alt={category.name}
+                                width={400}
+                                height={300}
                                 className="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-500"
                                 loading={index < 4 ? 'eager' : 'lazy'}
                                 decoding="async"
                                 fetchPriority={index < 4 ? 'high' : 'low'}
+                                style={{ backgroundColor: '#f6f3f2' }}
                             />
                         </picture>
                         <div className="absolute inset-0 bg-black/20 group-hover:bg-black/10 transition-colors" />
