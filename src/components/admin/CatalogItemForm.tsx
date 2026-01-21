@@ -14,6 +14,7 @@ import { findImageForProduct } from "@/utils/imageMatcher";
 interface CatalogItem {
   id: string;
   code: string;
+  name: string;
   description: string;
   category_name: string;
   category_slug: string;
@@ -46,7 +47,8 @@ const slugify = (str: string): string => {
 export function CatalogItemForm({ item, onClose }: CatalogItemFormProps) {
   const [formData, setFormData] = useState({
     code: item.code,
-    description: item.description,
+    name: item.name || "",
+    description: item.description || "",
     category_name: item.category_name,
     family_name: item.family_name,
     item_type: item.item_type,
@@ -58,7 +60,7 @@ export function CatalogItemForm({ item, onClose }: CatalogItemFormProps) {
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
 
   // Get fallback image for preview
-  const fallbackImage = findImageForProduct(item.code, item.description);
+  const fallbackImage = findImageForProduct(item.code, item.name || item.description);
   const displayImage = formData.image_url || fallbackImage || null;
 
   useEffect(() => {
@@ -130,6 +132,7 @@ export function CatalogItemForm({ item, onClose }: CatalogItemFormProps) {
     try {
       const updateData = {
         code: formData.code,
+        name: formData.name,
         description: formData.description,
         category_name: formData.category_name,
         category_slug: slugify(formData.category_name),
@@ -197,12 +200,22 @@ export function CatalogItemForm({ item, onClose }: CatalogItemFormProps) {
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="description">Descrição</Label>
+                <Label htmlFor="name">Nome do Equipamento</Label>
+                <Input
+                  id="name"
+                  value={formData.name}
+                  onChange={(e) => handleChange("name", e.target.value)}
+                  placeholder="Ex: MARTELO DEMOLIDOR 30 Kg"
+                />
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="description">Especificações Técnicas</Label>
                 <Textarea
                   id="description"
                   value={formData.description}
                   onChange={(e) => handleChange("description", e.target.value)}
-                  placeholder="Descrição técnica do equipamento"
+                  placeholder="Ex: D25980 / POTÊNCIA 2000W / TENSÃO 220V..."
                   rows={4}
                 />
               </div>

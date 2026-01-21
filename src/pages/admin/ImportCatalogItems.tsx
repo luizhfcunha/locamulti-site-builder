@@ -49,6 +49,7 @@ interface PreparedItem {
   item_order: number;
   code: string;
   item_type: string;
+  name: string;
   description: string;
   active: boolean;
 }
@@ -88,11 +89,13 @@ export default function ImportCatalogItems() {
           const itemParts = equip.ordem.split(".");
           const itemOrder = parseInt(itemParts[2], 10);
           
-          // Build description: nome + " - " + descricao (unless descricao is just "CONSUMÍVEL")
-          let description = equip.nome;
-          if (equip.descricao && equip.descricao !== "CONSUMÍVEL") {
-            description = `${equip.nome} - ${equip.descricao}`;
-          }
+          // Nome do equipamento
+          const name = equip.nome;
+          
+          // Descrição técnica (especificações), sem o nome
+          let description = equip.descricao && equip.descricao !== "CONSUMÍVEL" 
+            ? equip.descricao 
+            : "";
 
           items.push({
             category_order: categoryOrder,
@@ -106,6 +109,7 @@ export default function ImportCatalogItems() {
             item_order: itemOrder,
             code: equip.ordem,  // Código hierárquico preservado
             item_type: equip.tipo.toLowerCase(),
+            name: name,
             description: description,
             active: true
           });

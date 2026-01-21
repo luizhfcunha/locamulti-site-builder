@@ -16,6 +16,7 @@ import Login from "./pages/Login";
 import AdminDashboard from "./pages/AdminDashboard";
 import ImportCatalogItems from "./pages/admin/ImportCatalogItems";
 import MissingImages from "./pages/admin/MissingImages";
+import AdminCategories from "./pages/admin/AdminCategories";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -145,6 +146,14 @@ const App = () => {
                     </AdminRoute>
                   }
                 />
+                <Route
+                  path="/admin/categories"
+                  element={
+                    <AdminRoute>
+                      <AdminCategories />
+                    </AdminRoute>
+                  }
+                />
                 {/* Redirect any unknown admin route to dashboard or login */}
                 <Route path="*" element={<Navigate to="/" replace />} />
               </>
@@ -203,6 +212,14 @@ const App = () => {
                       element={
                         <AdminRoute>
                           <MissingImages />
+                        </AdminRoute>
+                      }
+                    />
+                    <Route
+                      path="/admin/categories"
+                      element={
+                        <AdminRoute>
+                          <AdminCategories />
                         </AdminRoute>
                       }
                     />
