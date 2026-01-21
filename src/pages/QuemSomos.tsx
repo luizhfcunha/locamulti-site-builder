@@ -231,7 +231,7 @@ const QuemSomos = () => {
     },
     {
       question: "Qual o horário de expediente?",
-      answer: "De segunda à sexta-feira de 8:00h às 18:00h e sábados de 8:00h às 12:00h."
+      answer: "De segunda à sexta-feira de 7:30h às 17:30h e sábados de 8h às 11:30h."
     },
     {
       question: "Posso fazer retirada ou locação por terceiros?",
@@ -259,7 +259,7 @@ const QuemSomos = () => {
     },
     {
       question: "Qual o horário para devolução dos equipamentos?",
-      answer: "A locação dos equipamentos será sempre feita de segunda a sábado, entre 8:00h e 12:00h, sendo que a devolução deve ser realizada até o mesmo horário em que foi coletado."
+      answer: "A locação e devolução dos equipamentos pode ser feita de segunda a sexta, das 7:30h às 17:30h, e aos sábados das 8h às 11:30h. A devolução deve ser realizada dentro do horário de funcionamento."
     },
     {
       question: "E se eu não devolver o equipamento dentro do prazo?",

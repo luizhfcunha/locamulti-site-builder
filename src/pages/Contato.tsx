@@ -28,7 +28,7 @@ const Contato = () => {
   }, {
     icon: Clock,
     title: "Horário de Atendimento",
-    content: "Segunda a Sexta: 7h às 17h\nSábado: 8h às 11:30h"
+    content: "Segunda a Sexta: 7:30h às 17:30h\nSábado: 8h às 11:30h"
   }];
   return <div className="min-h-screen flex flex-col">
     <Header />

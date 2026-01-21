@@ -80,7 +80,7 @@ export const Footer = () => {
               </li>
               <li className="flex items-center gap-2 justify-center md:justify-start">
                 <Clock className="h-5 w-5 flex-shrink-0" />
-                <span>Seg-Sex: 7h às 17h | Sáb: 8h às 11:30h</span>
+                <span>Seg-Sex: 7:30h às 17:30h | Sáb: 8h às 11:30h</span>
               </li>
             </ul>
           </div>
