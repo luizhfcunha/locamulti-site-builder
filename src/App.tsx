@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -6,6 +7,13 @@ import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import WhatsAppButton from "@/components/WhatsAppButton";
 import { ScrollToTop } from "@/components/ScrollToTop";
 import { AdminRoute } from "@/components/admin/AdminRoute";
+import { AdminLayout } from "@/components/admin/AdminLayout";
+import { CatalogItemList } from "@/components/admin/CatalogItemList";
+import { CatalogItemForm } from "@/components/admin/CatalogItemForm";
+import { BulkImageUpload } from "@/components/admin/BulkImageUpload";
+import { Dialog, DialogContent } from "@/components/ui/dialog";
+import { Button } from "@/components/ui/button";
+import { Upload } from "lucide-react";
 import Index from "./pages/Index";
 import CatalogHome from "./pages/CatalogHome";
 import CatalogCategory from "./pages/CatalogCategory";
@@ -22,14 +30,6 @@ import NotFound from "./pages/NotFound";
 const queryClient = new QueryClient();
 
 // Admin catalog page component - inline to avoid deleted file dependency
-import { useState } from "react";
-import { AdminLayout } from "@/components/admin/AdminLayout";
-import { CatalogItemList } from "@/components/admin/CatalogItemList";
-import { CatalogItemForm } from "@/components/admin/CatalogItemForm";
-import { BulkImageUpload } from "@/components/admin/BulkImageUpload";
-import { Dialog, DialogContent } from "@/components/ui/dialog";
-import { Button } from "@/components/ui/button";
-import { Upload } from "lucide-react";
 
 const AdminCatalogo = () => {
   const [showBulkUpload, setShowBulkUpload] = useState(false);
