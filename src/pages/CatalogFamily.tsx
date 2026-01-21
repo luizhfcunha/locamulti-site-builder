@@ -1,12 +1,13 @@
-import { useEffect, useState } from "react";
-import { useParams, useSearchParams } from "react-router-dom";
+import { useEffect, useState, useMemo } from "react";
+import { useParams, useNavigate } from "react-router-dom";
 import { Helmet } from "react-helmet-async";
-import { Loader2, Package } from "lucide-react";
+import { X } from "lucide-react";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
-import { CatalogBreadcrumb } from "@/components/catalog/CatalogBreadcrumb";
-import { CatalogSearch } from "@/components/catalog/CatalogSearch";
-import { ProductCard } from "@/components/catalog/ProductCard";
+import { CatalogSidebar } from "@/components/catalog/CatalogSidebar";
+import { ProductList } from "@/components/catalog/ProductList";
+import { FilterBreadcrumb } from "@/components/catalog/FilterBreadcrumb";
+import { Button } from "@/components/ui/button";
 import { 
   getCatalogFamilyItems,
   type CatalogItem 
@@ -17,8 +18,7 @@ export default function CatalogFamily() {
     categoriaSlug: string; 
     familiaSlug: string;
   }>();
-  const [searchParams] = useSearchParams();
-  const highlightCode = searchParams.get('highlight');
+  const navigate = useNavigate();
   
   const [allItems, setAllItems] = useState<CatalogItem[]>([]);
   const [category, setCategory] = useState<{ name: string; slug: string } | null>(null);
@@ -44,19 +44,18 @@ export default function CatalogFamily() {
     loadData();
   }, [familiaSlug]);
 
-  // Handle highlight from search
-  useEffect(() => {
-    if (highlightCode && !isLoading) {
-      const element = document.getElementById(`item-${highlightCode}`);
-      if (element) {
-        element.scrollIntoView({ behavior: 'smooth', block: 'center' });
-        element.classList.add('ring-2', 'ring-primary', 'ring-offset-2');
-        setTimeout(() => {
-          element.classList.remove('ring-2', 'ring-primary', 'ring-offset-2');
-        }, 3000);
-      }
+  // Handlers
+  const handleClearFilters = () => {
+    navigate('/catalogo');
+  };
+
+  const handleClearFamily = () => {
+    if (category) {
+      navigate(`/catalogo?categoria=${category.slug}`);
+    } else {
+      navigate('/catalogo');
     }
-  }, [highlightCode, isLoading, allItems]);
+  };
 
   return (
     <>
@@ -68,73 +67,66 @@ export default function CatalogFamily() {
         />
       </Helmet>
       
-      <Header />
-      
-      <main className="min-h-screen bg-background pt-24 pb-16">
-        <div className="container mx-auto px-4">
-          {/* Breadcrumb */}
-          <CatalogBreadcrumb 
-            items={[
-              category ? { label: category.name, href: `/catalogo/${category.slug}` } : { label: '...' },
-              family ? { label: family.name } : { label: '...' }
-            ]}
-          />
-
-          {/* Header */}
-          <div className="mb-8">
-            <div className="flex items-center gap-3 mb-4">
-              <div className="w-12 h-12 bg-primary/10 rounded-xl flex items-center justify-center">
-                <Package className="h-6 w-6 text-primary" />
-              </div>
-              <div>
-                <h1 className="font-heading text-3xl md:text-4xl font-bold text-foreground">
-                  {family?.name || 'Carregando...'}
-                </h1>
-                <p className="text-muted-foreground">
-                  {allItems.length} {allItems.length === 1 ? 'item' : 'itens'} disponíveis
-                </p>
-              </div>
-            </div>
+      <div className="min-h-screen flex flex-col bg-background">
+        <Header />
+        
+        <main className="flex-1 flex flex-col pt-20">
+          {/* Main Layout Area - Same structure as CatalogHome */}
+          <div className="container mx-auto px-4 md:px-6 py-4 md:py-6 flex flex-col lg:flex-row items-start gap-4 lg:gap-8">
             
-            {/* Search */}
-            <CatalogSearch className="max-w-xl" />
-          </div>
+            {/* Sidebar (Desktop) */}
+            <CatalogSidebar />
 
-          {isLoading ? (
-            <div className="flex items-center justify-center py-20">
-              <Loader2 className="h-8 w-8 animate-spin text-primary" />
-            </div>
-          ) : (
-            <div className="space-y-4">
-              {/* Lista unificada de itens */}
-              {allItems.length > 0 ? (
-                allItems.map((item, index) => (
-                  <div 
-                    key={item.code} 
-                    id={`item-${item.code}`} 
-                    className="transition-all duration-300 animate-in fade-in-50"
-                    style={{ animationDelay: `${index * 50}ms` }}
-                  >
-                    <ProductCard product={item} />
+            {/* Content Area - Responsive scroll */}
+            <div className="flex-1 w-full lg:min-w-0 lg:overflow-y-auto lg:max-h-[calc(100vh-8rem)] lg:pr-2">
+              {/* Header Section */}
+              <div className="mb-6 space-y-4">
+                <div className="flex flex-col gap-2">
+                  {/* Breadcrumb */}
+                  <FilterBreadcrumb
+                    categoryName={category?.name}
+                    familyName={family?.name}
+                    onClearFilters={handleClearFilters}
+                    onClearFamily={handleClearFamily}
+                  />
+
+                  <div className="flex items-center justify-between flex-wrap gap-4">
+                    <h1 className="text-2xl md:text-3xl font-heading font-bold text-foreground">
+                      {family?.name || "Carregando..."}
+                    </h1>
+                    <span className="text-muted-foreground font-medium text-sm">
+                      {allItems.length} {allItems.length === 1 ? 'produto' : 'produtos'} encontrados
+                    </span>
                   </div>
-                ))
-              ) : (
-                <div className="text-center py-20">
-                  <Package className="h-16 w-16 text-muted-foreground/30 mx-auto mb-4" />
-                  <h2 className="text-xl font-heading font-semibold text-muted-foreground mb-2">
-                    Nenhum item encontrado
-                  </h2>
-                  <p className="text-muted-foreground">
-                    Não há equipamentos ou consumíveis nesta família.
-                  </p>
                 </div>
-              )}
+
+                {/* Clear Button */}
+                <div className="flex items-center gap-2 flex-wrap">
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={handleClearFilters}
+                    className="h-8 text-xs hover:bg-destructive/10 hover:text-destructive hover:border-destructive/30"
+                  >
+                    <X className="h-3 w-3 mr-2" />
+                    Limpar Tudo e Voltar
+                  </Button>
+                </div>
+              </div>
+
+              {/* Product List */}
+              <ProductList
+                products={allItems}
+                isLoading={isLoading}
+                onClearFilters={handleClearFilters}
+                categoryName={category?.name}
+              />
             </div>
-          )}
-        </div>
-      </main>
-      
-      <Footer />
+          </div>
+        </main>
+        
+        <Footer />
+      </div>
     </>
   );
 }

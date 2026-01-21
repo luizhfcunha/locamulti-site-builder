@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useSearchParams, useNavigate } from "react-router-dom";
+import { useSearchParams, useNavigate, useParams } from "react-router-dom";
 import { ChevronRight, ChevronDown, Menu } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
@@ -110,6 +110,7 @@ const SidebarContent = ({
 export const CatalogSidebar = () => {
     const [searchParams, setSearchParams] = useSearchParams();
     const navigate = useNavigate();
+    const { categoriaSlug, familiaSlug } = useParams<{ categoriaSlug?: string; familiaSlug?: string }>();
     const [expandedCategories, setExpandedCategories] = useState<string[]>([]);
     const [isMobileOpen, setIsMobileOpen] = useState(false);
     const [categories, setCategories] = useState<SidebarCategoryData[]>([]);
@@ -119,8 +120,10 @@ export const CatalogSidebar = () => {
         getCatalogHierarchy().then(setCategories);
     }, []);
 
-    const activeCategory = searchParams.get("categoria");
-    const activeFamily = searchParams.get("familia");
+    // Combine route params with query params for active state
+    // Route params take precedence (from /catalogo/:cat/:fam)
+    const activeCategory = categoriaSlug || searchParams.get("categoria");
+    const activeFamily = familiaSlug || searchParams.get("familia");
 
     // Sync state with URL on mount and updates
     useEffect(() => {
