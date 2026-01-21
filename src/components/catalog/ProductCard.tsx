@@ -1,31 +1,32 @@
 import { useState } from "react";
-import { Product } from "@/types/catalog";
+import { CatalogItem } from "@/lib/catalogNew";
 import { ChevronDown, ChevronUp } from "lucide-react";
 import { ConsumableBadge } from "./ConsumableBadge";
 
 interface ProductCardProps {
-    product: Product;
+    product: CatalogItem;
 }
 
 export const ProductCard = ({ product }: ProductCardProps) => {
     const [isExpanded, setIsExpanded] = useState(false);
-    const isConsumable = product.isConsumable || product.description?.toLowerCase().includes('consumível');
+    const isConsumable = product.item_type === 'consumivel';
 
     // Check if description is long (more than ~150 chars)
     const isLongDescription = product.description && product.description.length > 150;
 
     // WhatsApp link with correct number
     const waNumber = "556298494024";
-    const message = encodeURIComponent(`Olá! Gostaria de um orçamento para: ${product.name}`);
+    const displayName = product.name || product.code;
+    const message = encodeURIComponent(`Olá! Gostaria de um orçamento para: ${displayName}`);
     const waLink = `https://wa.me/${waNumber}?text=${message}`;
 
     return (
-        <div className="bg-white rounded-lg border border-border/50 shadow-sm hover:shadow-md transition-all duration-200 overflow-hidden flex flex-row p-3 sm:p-4 gap-3 sm:gap-4 min-h-[100px] animate-in fade-in-50 duration-300">
+        <div className="bg-card rounded-lg border border-border/50 shadow-sm hover:shadow-md transition-all duration-200 overflow-hidden flex flex-row p-3 sm:p-4 gap-3 sm:gap-4 min-h-[100px] animate-in fade-in-50 duration-300">
             {/* Image Area - Fixed size */}
-            <div className="w-[100px] sm:w-[120px] h-[100px] shrink-0 bg-gray-50 rounded-md flex items-center justify-center">
+            <div className="w-[100px] sm:w-[120px] h-[100px] shrink-0 bg-muted/30 rounded-md flex items-center justify-center">
                 <img
                     src={product.image_url || "https://placehold.co/120x120/png?text=Equipamento"}
-                    alt={product.name}
+                    alt={displayName}
                     className="w-full h-full max-w-[100px] max-h-[90px] object-contain"
                     loading="lazy"
                 />
@@ -35,7 +36,7 @@ export const ProductCard = ({ product }: ProductCardProps) => {
             <div className="flex-1 flex flex-col justify-center gap-1 min-w-0">
                 <div className="flex items-start gap-2 flex-wrap">
                     <h3 className="font-heading font-bold text-base sm:text-lg leading-tight text-foreground">
-                        {product.name}
+                        {displayName}
                     </h3>
                     {isConsumable && <ConsumableBadge />}
                 </div>

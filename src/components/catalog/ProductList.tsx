@@ -1,10 +1,10 @@
-import { Product } from "@/types/catalog";
+import { CatalogItem } from "@/lib/catalogNew";
 import { ProductCard } from "./ProductCard";
 import { Button } from "@/components/ui/button";
 import { Layers, ArrowLeft } from "lucide-react";
 
 interface ProductListProps {
-    products: Product[];
+    products: CatalogItem[];
     isLoading: boolean;
     onClearFilters?: () => void;
     categoryName?: string;
@@ -55,15 +55,15 @@ export const ProductList = ({ products, isLoading, onClearFilters, categoryName 
     }
 
     // Separate into equipment first, consumables last
-    const equipments = products.filter(p => !p.isConsumable);
-    const consumables = products.filter(p => p.isConsumable);
+    const equipments = products.filter(p => p.item_type === 'equipamento');
+    const consumables = products.filter(p => p.item_type === 'consumivel');
     const sortedProducts = [...equipments, ...consumables];
 
     return (
         <div className="flex flex-col gap-4">
             {sortedProducts.map((product, index) => (
                 <div
-                    key={product.id || product.name}
+                    key={product.id || product.code}
                     style={{ animationDelay: `${index * 50}ms` }}
                     className="animate-in fade-in-50 slide-in-from-bottom-2"
                 >

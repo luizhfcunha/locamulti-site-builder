@@ -1,12 +1,11 @@
 import { useState, useEffect } from "react";
-import { useSearchParams } from "react-router-dom";
+import { useSearchParams, useNavigate } from "react-router-dom";
 import { ChevronRight, ChevronDown, Menu } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Sheet, SheetContent, SheetTrigger, SheetHeader, SheetTitle } from "@/components/ui/sheet";
-import { getAllCategories } from "@/data/catalogData";
-import { Category } from "@/types/catalog";
+import { getCatalogHierarchy, SidebarCategoryData } from "@/lib/catalogNew";
 
 const SidebarContent = ({
     categories,
@@ -16,7 +15,7 @@ const SidebarContent = ({
     toggleCategory,
     onFamilySelect
 }: {
-    categories: Category[];
+    categories: SidebarCategoryData[];
     activeCategory: string | null;
     activeFamily: string | null;
     expandedCategories: string[];
@@ -85,13 +84,13 @@ const SidebarContent = ({
                                                     key={family.slug}
                                                     variant="ghost"
                                                     size="sm"
-                                                    className={cn(
-                                                        "w-full justify-start text-xs h-auto py-1.5 whitespace-normal text-left",
-                                                        isFamilyActive
-                                                            ? "bg-orange-100 border-l-4 border-orange-500 text-orange-900 rounded-r-md rounded-l-none pl-2"
-                                                            : "text-muted-foreground hover:text-foreground"
-                                                    )}
-                                                    onClick={() => onFamilySelect(category.slug, family.slug)}
+                                                className={cn(
+                                                    "w-full justify-start text-xs h-auto py-1.5 whitespace-normal text-left",
+                                                    isFamilyActive
+                                                        ? "bg-primary/10 border-l-4 border-primary text-primary rounded-r-md rounded-l-none pl-2"
+                                                        : "text-muted-foreground hover:text-foreground"
+                                                )}
+                                                onClick={() => onFamilySelect(category.slug, family.slug)}
                                                 >
                                                     {family.name}
                                                 </Button>
@@ -110,10 +109,15 @@ const SidebarContent = ({
 
 export const CatalogSidebar = () => {
     const [searchParams, setSearchParams] = useSearchParams();
+    const navigate = useNavigate();
     const [expandedCategories, setExpandedCategories] = useState<string[]>([]);
     const [isMobileOpen, setIsMobileOpen] = useState(false);
+    const [categories, setCategories] = useState<SidebarCategoryData[]>([]);
 
-    const categories = getAllCategories();
+    // Fetch categories from Supabase
+    useEffect(() => {
+        getCatalogHierarchy().then(setCategories);
+    }, []);
 
     const activeCategory = searchParams.get("categoria");
     const activeFamily = searchParams.get("familia");
@@ -139,21 +143,20 @@ export const CatalogSidebar = () => {
     };
 
     const handleFamilySelect = (categorySlug: string, familySlug: string | null) => {
-        const newParams = new URLSearchParams(searchParams);
-
-        if (categorySlug) {
-            newParams.set("categoria", categorySlug);
-            if (familySlug) {
-                newParams.set("familia", familySlug);
-            } else {
-                newParams.delete("familia");
-            }
+        if (!categorySlug) {
+            // Clear all filters - go to catalog home
+            setSearchParams({});
+        } else if (familySlug) {
+            // Navigate to family page using route params (where images work)
+            navigate(`/catalogo/${categorySlug}/${familySlug}`);
         } else {
-            newParams.delete("categoria");
+            // Select category only - use query params for category-level view
+            const newParams = new URLSearchParams(searchParams);
+            newParams.set("categoria", categorySlug);
             newParams.delete("familia");
+            setSearchParams(newParams);
         }
 
-        setSearchParams(newParams);
         // Expand the selected category if not expanded
         if (categorySlug && !expandedCategories.includes(categorySlug)) {
             toggleCategory(categorySlug);
