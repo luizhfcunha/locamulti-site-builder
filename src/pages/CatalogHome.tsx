@@ -113,13 +113,11 @@ const CatalogHome = () => {
         const { data, error } = await query;
 
         if (error) {
-          console.error('Error fetching products:', error);
           setProducts([]);
         } else {
           setProducts((data || []) as CatalogItem[]);
         }
       } catch (err) {
-        console.error('Error:', err);
         setProducts([]);
       } finally {
         setLoading(false);

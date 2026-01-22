@@ -1,3 +1,6 @@
+// Official WhatsApp 3D Icon URL
+export const WHATSAPP_ICON_URL = "/icons/whatsapp-3d-icon.png";
+
 export const WHATSAPP = {
   header: "https://api.whatsapp.com/send?phone=5562984194024&text=Ol%C3%A1!%20Vim%20pelo%20site%20e%20quero%20um%20or%C3%A7amento%20imediato.&utm_source=site&utm_medium=whatsapp&utm_campaign=conversao&utm_content=header_cta",
   geral: "https://api.whatsapp.com/send?phone=5562984194024&text=Ol%C3%A1!%20Gostaria%20de%20solicitar%20um%20or%C3%A7amento%20na%20LocaMulti.&utm_source=site&utm_medium=whatsapp&utm_campaign=conversao&utm_content=geral",

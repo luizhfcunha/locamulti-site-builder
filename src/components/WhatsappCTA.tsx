@@ -1,4 +1,4 @@
-import { WHATSAPP_ICON_URL } from "@/config/icons";
+import { WHATSAPP_ICON_URL } from "@/config/whatsapp";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 interface WhatsappCTAProps {

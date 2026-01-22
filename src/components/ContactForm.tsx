@@ -106,7 +106,6 @@ export const ContactForm = () => {
         message: "",
       });
     } catch (error) {
-      console.error('Error sending email:', error);
       toast({
         title: "Erro ao enviar",
         description: "Ocorreu um erro ao enviar sua mensagem. Tente novamente ou entre em contato pelo WhatsApp.",

@@ -27,7 +27,6 @@ export function CatalogSearch({ className }: CatalogSearchProps) {
       const searchResults = await searchCatalog(searchQuery);
       setResults(searchResults);
     } catch (error) {
-      console.error('Search error:', error);
       setResults([]);
     } finally {
       setIsLoading(false);
