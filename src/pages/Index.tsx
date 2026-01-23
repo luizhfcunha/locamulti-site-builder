@@ -1,3 +1,4 @@
+import { useNavigate } from "react-router-dom";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { Button } from "@/components/ui/button";
@@ -27,6 +28,7 @@ import {
 } from "lucide-react";
 
 const Index = () => {
+  const navigate = useNavigate();
   const categories = CATEGORIES_CONFIG;
   const benefits = [
     {
@@ -91,7 +93,7 @@ const Index = () => {
     },
   ];
   const handleCategoryClick = (categorySlug: string) => {
-    window.location.href = `/catalogo?categoria=${categorySlug}`;
+    navigate(`/catalogo?categoria=${categorySlug}`);
   };
   return (
     <div className="min-h-screen flex flex-col">
@@ -135,7 +137,7 @@ const Index = () => {
                 <Button
                   size="lg"
                   variant="outline"
-                  onClick={() => (window.location.href = "/catalogo")}
+                  onClick={() => navigate("/catalogo")}
                   className="text-base md:text-lg font-semibold border-0 bg-primary text-secondary"
                 >
                   Ver Catálogo Completo
