@@ -27,7 +27,15 @@ import MissingImages from "./pages/admin/MissingImages";
 import AdminCategories from "./pages/admin/AdminCategories";
 import NotFound from "./pages/NotFound";
 
-const queryClient = new QueryClient();
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      retry: 1,
+      refetchOnWindowFocus: false,
+      staleTime: 5 * 60 * 1000, // 5 minutos
+    },
+  },
+});
 
 // Admin catalog page component - inline to avoid deleted file dependency
 

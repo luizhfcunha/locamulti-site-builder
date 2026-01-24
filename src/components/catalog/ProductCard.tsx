@@ -2,6 +2,7 @@ import { useState } from "react";
 import { CatalogItem } from "@/lib/catalogNew";
 import { ChevronDown, ChevronUp } from "lucide-react";
 import { ConsumableBadge } from "./ConsumableBadge";
+import { EquipmentLightbox } from "@/components/lightbox/EquipmentLightbox";
 
 interface ProductCardProps {
     product: CatalogItem;
@@ -9,6 +10,7 @@ interface ProductCardProps {
 
 export const ProductCard = ({ product }: ProductCardProps) => {
     const [isExpanded, setIsExpanded] = useState(false);
+    const [lightboxOpen, setLightboxOpen] = useState(false);
     const isConsumable = product.item_type === 'consumivel';
 
     // Check if description is long (more than ~150 chars)
@@ -22,8 +24,13 @@ export const ProductCard = ({ product }: ProductCardProps) => {
 
     return (
         <div className="bg-card rounded-lg border border-border/50 shadow-sm hover:shadow-md transition-all duration-200 overflow-hidden flex flex-row p-3 sm:p-4 gap-3 sm:gap-4 min-h-[100px] animate-in fade-in-50 duration-300">
-            {/* Image Area - Fixed size */}
-            <div className="w-[100px] sm:w-[120px] h-[100px] shrink-0 bg-muted/30 rounded-md flex items-center justify-center">
+            {/* Image Area - Fixed size - Clickable para lightbox */}
+            <button
+                type="button"
+                onClick={() => setLightboxOpen(true)}
+                className="w-[100px] sm:w-[120px] h-[100px] shrink-0 bg-muted/30 rounded-md flex items-center justify-center cursor-pointer hover:opacity-80 transition-opacity focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2"
+                aria-label={`Ver imagens de ${displayName}`}
+            >
                 <img
                     src={product.image_url || "https://placehold.co/120x120/png?text=Equipamento"}
                     alt={displayName}
@@ -31,10 +38,10 @@ export const ProductCard = ({ product }: ProductCardProps) => {
                     height={90}
                     loading="lazy"
                     decoding="async"
-                    className="w-full h-full max-w-[100px] max-h-[90px] object-contain"
+                    className="w-full h-full max-w-[100px] max-h-[90px] object-contain pointer-events-none"
                     style={{ backgroundColor: '#f6f3f2' }}
                 />
-            </div>
+            </button>
 
             {/* Content - Flexible Middle Area */}
             <div className="flex-1 flex flex-col justify-center gap-1 min-w-0">
@@ -82,6 +89,14 @@ export const ProductCard = ({ product }: ProductCardProps) => {
                     <span className="hidden lg:inline whitespace-nowrap">Orçamento WhatsApp</span>
                 </a>
             </div>
+
+            {/* Lightbox Modal */}
+            <EquipmentLightbox
+                equipmentId={product.id}
+                equipmentName={displayName}
+                isOpen={lightboxOpen}
+                onClose={() => setLightboxOpen(false)}
+            />
         </div>
     );
 };

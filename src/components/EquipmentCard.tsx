@@ -1,9 +1,10 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { WhatsappCTA } from "@/components/WhatsappCTA";
 import { WHATSAPP } from "@/config/whatsapp";
 import { trackEvent, trackWhatsAppClick } from "@/lib/analytics";
+import { EquipmentLightbox } from "@/components/lightbox/EquipmentLightbox";
 
 interface EquipmentCardProps {
   id?: string;
@@ -24,6 +25,8 @@ export const EquipmentCard = ({
   specifications = [],
   brand
 }: EquipmentCardProps) => {
+  const [lightboxOpen, setLightboxOpen] = useState(false);
+
   // Track product view on mount
   useEffect(() => {
     if (id) {
@@ -43,7 +46,12 @@ export const EquipmentCard = ({
 
   return (
     <Card className="group overflow-hidden border-border hover:shadow-medium transition-all duration-base rounded-card h-full flex flex-col">
-      <div className="relative h-56 bg-muted overflow-hidden">
+      <button
+        type="button"
+        onClick={() => setLightboxOpen(true)}
+        className="relative h-56 bg-muted overflow-hidden w-full cursor-pointer hover:opacity-90 transition-opacity focus:outline-none focus:ring-2 focus:ring-primary"
+        aria-label={`Ver imagens de ${name}`}
+      >
         {imageUrl ? (
           <img
             src={imageUrl}
@@ -52,14 +60,14 @@ export const EquipmentCard = ({
             height={224}
             loading="lazy"
             decoding="async"
-            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-slow"
+            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-slow pointer-events-none"
           />
         ) : (
           <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-lm-muted to-secondary">
             <span className="text-4xl text-lm-ink/20">📦</span>
           </div>
         )}
-      </div>
+      </button>
 
       <CardHeader className="pb-3">
         <div className="flex items-start justify-between gap-2 mb-2">
@@ -98,6 +106,16 @@ export const EquipmentCard = ({
           onClick={handleWhatsAppClick}
         />
       </CardFooter>
+
+      {/* Lightbox Modal */}
+      {id && (
+        <EquipmentLightbox
+          equipmentId={id}
+          equipmentName={name}
+          isOpen={lightboxOpen}
+          onClose={() => setLightboxOpen(false)}
+        />
+      )}
     </Card>
   );
 };

@@ -1,6 +1,22 @@
 import { supabase } from "@/integrations/supabase/client";
 
 // Types
+// Equipment Images (multiple images per equipment)
+export interface EquipmentImage {
+  id: string;
+  equipment_id: string;
+  storage_path: string;
+  public_url: string;
+  alt_text: string | null;
+  sort_order: number;
+  is_primary: boolean;
+  width?: number | null;
+  height?: number | null;
+  file_size_bytes?: number | null;
+  created_at: string;
+  updated_at: string;
+}
+
 export interface CatalogItem {
   id: string;
   category_order: number;
@@ -16,8 +32,17 @@ export interface CatalogItem {
   item_type: 'equipamento' | 'consumivel';
   name: string;
   description: string;
-  image_url: string | null;
+  image_url: string | null; // DEPRECATED mas mantido para compatibilidade
   active: boolean;
+
+  // NOVO: campos opcionais para imagens múltiplas
+  images?: EquipmentImage[];
+  primary_image?: EquipmentImage | null;
+}
+
+// Extended version with images always present
+export interface CatalogItemWithImages extends CatalogItem {
+  images: EquipmentImage[];
 }
 
 export interface CatalogCategory {
