@@ -7,9 +7,11 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Switch } from "@/components/ui/switch";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { toast } from "@/hooks/use-toast";
-import { ArrowLeft, Save, Loader2, ImageIcon, ImageOff, Upload } from "lucide-react";
+import { ArrowLeft, Save, Loader2, ImageIcon, ImageOff, Upload, Images } from "lucide-react";
 import { findImageForProduct } from "@/utils/imageMatcher";
+import { EquipmentImagesManager } from "@/components/admin/EquipmentImagesManager";
 
 interface CatalogItem {
   id: string;
@@ -274,97 +276,127 @@ export function CatalogItemForm({ item, onClose }: CatalogItemFormProps) {
               </div>
             </div>
 
-            {/* Right Column - Image */}
+            {/* Right Column - Images */}
             <div className="space-y-4">
-              <Label>Imagem do Produto</Label>
-              
-              <div className="border rounded-lg p-4 bg-muted/50">
-                {/* Image Preview */}
-                <div className="aspect-square w-full max-w-[300px] mx-auto mb-4 rounded-lg border bg-background flex items-center justify-center overflow-hidden">
-                  {previewUrl || displayImage ? (
-                    <img
-                      src={previewUrl || displayImage || ""}
-                      alt={formData.code}
-                      className="w-full h-full object-contain"
-                    />
-                  ) : (
-                    <div className="text-center text-muted-foreground">
-                      <ImageOff className="w-12 h-12 mx-auto mb-2 opacity-50" />
-                      <p className="text-sm">Sem imagem</p>
+              <Label>Imagens do Produto</Label>
+
+              <Tabs defaultValue="gallery" className="w-full">
+                <TabsList className="grid w-full grid-cols-2">
+                  <TabsTrigger value="gallery" className="gap-2">
+                    <Images className="w-4 h-4" />
+                    Galeria
+                  </TabsTrigger>
+                  <TabsTrigger value="legacy" className="gap-2">
+                    <ImageIcon className="w-4 h-4" />
+                    Imagem Legada
+                  </TabsTrigger>
+                </TabsList>
+
+                {/* Gallery Tab */}
+                <TabsContent value="gallery" className="border rounded-lg p-4 bg-muted/50">
+                  <EquipmentImagesManager
+                    equipmentId={item.id}
+                    equipmentCode={formData.code}
+                    equipmentName={formData.name || formData.code}
+                  />
+                </TabsContent>
+
+                {/* Legacy Single Image Tab */}
+                <TabsContent value="legacy" className="border rounded-lg p-4 bg-muted/50">
+                  <div className="space-y-4">
+                    {/* Image Preview */}
+                    <div className="aspect-square w-full max-w-[300px] mx-auto rounded-lg border bg-background flex items-center justify-center overflow-hidden">
+                      {previewUrl || displayImage ? (
+                        <img
+                          src={previewUrl || displayImage || ""}
+                          alt={formData.code}
+                          className="w-full h-full object-contain"
+                        />
+                      ) : (
+                        <div className="text-center text-muted-foreground">
+                          <ImageOff className="w-12 h-12 mx-auto mb-2 opacity-50" />
+                          <p className="text-sm">Sem imagem</p>
+                        </div>
+                      )}
                     </div>
-                  )}
-                </div>
 
-                {/* Image Source Info */}
-                {!formData.image_url && fallbackImage && (
-                  <p className="text-xs text-muted-foreground text-center mb-4">
-                    ⚡ Imagem via correspondência automática (não salva no banco)
-                  </p>
-                )}
-                {formData.image_url && (
-                  <p className="text-xs text-green-600 text-center mb-4">
-                    ✓ Imagem salva no banco de dados
-                  </p>
-                )}
-
-                {/* Upload Button */}
-                <div className="flex flex-col gap-2">
-                  <Button
-                    type="button"
-                    variant="outline"
-                    className="w-full gap-2"
-                    disabled={uploading}
-                    onClick={() => document.getElementById('image-upload')?.click()}
-                  >
-                    {uploading ? (
-                      <>
-                        <Loader2 className="w-4 h-4 animate-spin" />
-                        Enviando...
-                      </>
-                    ) : (
-                      <>
-                        <Upload className="w-4 h-4" />
-                        Enviar Nova Imagem
-                      </>
+                    {/* Image Source Info */}
+                    {!formData.image_url && fallbackImage && (
+                      <p className="text-xs text-muted-foreground text-center">
+                        ⚡ Imagem via correspondência automática (não salva no banco)
+                      </p>
                     )}
-                  </Button>
-                  <input
-                    id="image-upload"
-                    type="file"
-                    accept="image/*"
-                    onChange={handleImageUpload}
-                    className="hidden"
-                  />
+                    {formData.image_url && (
+                      <p className="text-xs text-green-600 text-center">
+                        ✓ Imagem salva no banco de dados
+                      </p>
+                    )}
 
-                  {formData.image_url && (
-                    <Button
-                      type="button"
-                      variant="ghost"
-                      className="w-full text-destructive"
-                      onClick={() => {
-                        setFormData(prev => ({ ...prev, image_url: "" }));
-                        setPreviewUrl(null);
-                      }}
-                    >
-                      Remover Imagem
-                    </Button>
-                  )}
-                </div>
+                    {/* Upload Button */}
+                    <div className="flex flex-col gap-2">
+                      <Button
+                        type="button"
+                        variant="outline"
+                        className="w-full gap-2"
+                        disabled={uploading}
+                        onClick={() => document.getElementById('image-upload')?.click()}
+                      >
+                        {uploading ? (
+                          <>
+                            <Loader2 className="w-4 h-4 animate-spin" />
+                            Enviando...
+                          </>
+                        ) : (
+                          <>
+                            <Upload className="w-4 h-4" />
+                            Enviar Nova Imagem
+                          </>
+                        )}
+                      </Button>
+                      <input
+                        id="image-upload"
+                        type="file"
+                        accept="image/*"
+                        onChange={handleImageUpload}
+                        className="hidden"
+                      />
 
-                {/* Manual URL Input */}
-                <div className="mt-4 space-y-2">
-                  <Label htmlFor="image_url" className="text-xs">
-                    Ou insira a URL da imagem
-                  </Label>
-                  <Input
-                    id="image_url"
-                    value={formData.image_url}
-                    onChange={(e) => handleChange("image_url", e.target.value)}
-                    placeholder="https://..."
-                    className="text-xs"
-                  />
-                </div>
-              </div>
+                      {formData.image_url && (
+                        <Button
+                          type="button"
+                          variant="ghost"
+                          className="w-full text-destructive"
+                          onClick={() => {
+                            setFormData(prev => ({ ...prev, image_url: "" }));
+                            setPreviewUrl(null);
+                          }}
+                        >
+                          Remover Imagem
+                        </Button>
+                      )}
+                    </div>
+
+                    {/* Manual URL Input */}
+                    <div className="space-y-2">
+                      <Label htmlFor="image_url" className="text-xs">
+                        Ou insira a URL da imagem
+                      </Label>
+                      <Input
+                        id="image_url"
+                        value={formData.image_url}
+                        onChange={(e) => handleChange("image_url", e.target.value)}
+                        placeholder="https://..."
+                        className="text-xs"
+                      />
+                    </div>
+
+                    <div className="text-xs text-muted-foreground bg-yellow-50 dark:bg-yellow-900/20 p-3 rounded border border-yellow-200 dark:border-yellow-800">
+                      <p className="font-medium mb-1">⚠️ Sistema Legado</p>
+                      <p>Use a aba "Galeria" para gerenciar múltiplas imagens com melhor controle. Esta aba mantém compatibilidade com o sistema antigo.</p>
+                    </div>
+                  </div>
+                </TabsContent>
+              </Tabs>
             </div>
           </div>
 
