@@ -167,7 +167,7 @@ const CatalogHome = () => {
     <div className="min-h-screen flex flex-col bg-background">
       <Header />
 
-      <main className="flex-1 flex flex-col pt-20">
+      <main className="flex-1 flex flex-col pt-8 md:pt-10">
         {/* Main Layout Area - Responsive layout */}
         <div className="container mx-auto px-4 md:px-6 py-4 md:py-6 flex flex-col lg:flex-row items-start gap-4 lg:gap-8">
 
