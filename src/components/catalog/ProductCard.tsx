@@ -1,6 +1,5 @@
 import { useState } from "react";
 import { CatalogItem } from "@/lib/catalogNew";
-import { ChevronDown, ChevronUp } from "lucide-react";
 import { ConsumableBadge } from "./ConsumableBadge";
 import { EquipmentLightbox } from "@/components/lightbox/EquipmentLightbox";
 
@@ -9,12 +8,8 @@ interface ProductCardProps {
 }
 
 export const ProductCard = ({ product }: ProductCardProps) => {
-    const [isExpanded, setIsExpanded] = useState(false);
     const [lightboxOpen, setLightboxOpen] = useState(false);
     const isConsumable = product.item_type === 'consumivel';
-
-    // Check if description is long (more than ~150 chars)
-    const isLongDescription = product.description && product.description.length > 150;
 
     // WhatsApp link with correct number
     const waNumber = "556298494024";
@@ -54,21 +49,9 @@ export const ProductCard = ({ product }: ProductCardProps) => {
 
                 {product.description && !isConsumable && (
                     <div className="mt-1">
-                        <p className={`text-sm text-muted-foreground ${!isExpanded && isLongDescription ? 'line-clamp-2' : ''}`}>
+                        <p className="text-sm text-muted-foreground whitespace-pre-line">
                             {product.description}
                         </p>
-                        {isLongDescription && (
-                            <button
-                                onClick={() => setIsExpanded(!isExpanded)}
-                                className="text-xs text-primary hover:underline mt-1 flex items-center gap-1 font-medium"
-                            >
-                                {isExpanded ? (
-                                    <>Ver menos <ChevronUp className="h-3 w-3" /></>
-                                ) : (
-                                    <>Ver mais <ChevronDown className="h-3 w-3" /></>
-                                )}
-                            </button>
-                        )}
                     </div>
                 )}
             </div>

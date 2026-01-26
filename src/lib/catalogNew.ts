@@ -244,7 +244,7 @@ export async function getCategoryBySlug(categorySlug: string): Promise<{ name: s
 }
 
 /**
- * Search catalog by code or description
+ * Search catalog by code, name, or description
  */
 export async function searchCatalog(query: string): Promise<SearchResult[]> {
   if (!query || query.length < 2) return [];
@@ -255,7 +255,7 @@ export async function searchCatalog(query: string): Promise<SearchResult[]> {
     .from('catalog_items')
     .select('*')
     .eq('active', true)
-    .or(`code.ilike.${searchTerm},description.ilike.${searchTerm}`)
+    .or(`code.ilike.${searchTerm},name.ilike.${searchTerm},description.ilike.${searchTerm}`)
     .order('category_order', { ascending: true })
     .order('family_order', { ascending: true })
     .order('item_order', { ascending: true })

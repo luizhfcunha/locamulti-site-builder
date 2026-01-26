@@ -60,7 +60,7 @@ export function CatalogSearch({ className }: CatalogSearchProps) {
         <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
         <Input
           type="text"
-          placeholder="Buscar por código ou descrição..."
+          placeholder="Buscar por código, nome ou especificações..."
           value={query}
           onChange={(e) => {
             setQuery(e.target.value);
@@ -102,7 +102,7 @@ export function CatalogSearch({ className }: CatalogSearchProps) {
                         <Badge variant="secondary" className="text-xs">Consumível</Badge>
                       )}
                     </div>
-                    <p className="text-sm text-muted-foreground line-clamp-2">
+                    <p className="text-sm text-muted-foreground whitespace-pre-line line-clamp-3">
                       {result.item.description}
                     </p>
                     <p className="text-xs text-muted-foreground/70 mt-1">

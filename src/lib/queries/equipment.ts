@@ -165,6 +165,11 @@ export function useAddEquipmentImage() {
       queryClient.invalidateQueries({
         queryKey: equipmentKeys.images(variables.equipmentId),
       });
+
+      // Invalidar cache de listagem do catálogo para refletir nova imagem
+      queryClient.invalidateQueries({
+        queryKey: equipmentKeys.lists(),
+      });
     },
   });
 }
@@ -185,6 +190,11 @@ export function useDeleteEquipmentImage() {
     onSuccess: (_, variables) => {
       queryClient.invalidateQueries({
         queryKey: equipmentKeys.images(variables.equipmentId),
+      });
+
+      // Invalidar cache de listagem do catálogo após deletar imagem
+      queryClient.invalidateQueries({
+        queryKey: equipmentKeys.lists(),
       });
     },
   });

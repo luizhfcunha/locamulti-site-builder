@@ -1,6 +1,8 @@
 import { useState, useEffect, useCallback, useMemo } from "react";
+import { useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
+import { equipmentKeys } from "@/lib/queries/equipment";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
@@ -39,6 +41,7 @@ interface BulkImageUploadProps {
 type ConfidenceFilter = "all" | "high" | "medium" | "low" | "none";
 
 export const BulkImageUpload = ({ onClose, onSuccess }: BulkImageUploadProps) => {
+  const queryClient = useQueryClient();
   const [matches, setMatches] = useState<ProductMatch[]>([]);
   const [uploading, setUploading] = useState(false);
   const [products, setProducts] = useState<any[]>([]);
@@ -262,6 +265,11 @@ export const BulkImageUpload = ({ onClose, onSuccess }: BulkImageUploadProps) =>
 
     // Call onSuccess if at least one upload was successful
     if (matches.some(m => m.status === "success")) {
+      // Invalidar cache de listagem do catálogo após upload em massa
+      queryClient.invalidateQueries({
+        queryKey: equipmentKeys.lists(),
+      });
+
       onSuccess();
     }
   };

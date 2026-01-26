@@ -22,6 +22,7 @@ import { findImageForProduct } from "@/utils/imageMatcher";
 interface CatalogItem {
   id: string;
   code: string;
+  name: string;
   description: string;
   category_name: string;
   category_slug: string;
@@ -84,9 +85,9 @@ export function CatalogItemList({ refreshTrigger, onEdit }: CatalogItemListProps
 
   // Filter items
   const filteredItems = items.filter(item => {
-    const matchesSearch = search === "" || 
+    const matchesSearch = search === "" ||
       item.code.toLowerCase().includes(search.toLowerCase()) ||
-      item.description.toLowerCase().includes(search.toLowerCase());
+      item.name.toLowerCase().includes(search.toLowerCase());
 
     const matchesCategory = selectedCategory === "all" || item.category_name === selectedCategory;
     const matchesFamily = selectedFamily === "all" || item.family_name === selectedFamily;
@@ -182,7 +183,7 @@ export function CatalogItemList({ refreshTrigger, onEdit }: CatalogItemListProps
               <div className="relative">
                 <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
                 <Input
-                  placeholder="Buscar por código ou descrição..."
+                  placeholder="Buscar por código ou nome do equipamento..."
                   value={search}
                   onChange={(e) => setSearch(e.target.value)}
                   className="pl-9"
@@ -277,7 +278,7 @@ export function CatalogItemList({ refreshTrigger, onEdit }: CatalogItemListProps
                 <TableRow>
                   <TableHead className="w-[60px]">Img</TableHead>
                   <TableHead className="w-[120px]">Código</TableHead>
-                  <TableHead>Descrição</TableHead>
+                  <TableHead>Nome do Equipamento</TableHead>
                   <TableHead className="w-[180px]">Categoria</TableHead>
                   <TableHead className="w-[180px]">Família</TableHead>
                   <TableHead className="w-[100px]">Tipo</TableHead>
@@ -309,8 +310,8 @@ export function CatalogItemList({ refreshTrigger, onEdit }: CatalogItemListProps
                         </code>
                       </TableCell>
                       <TableCell>
-                        <div className="max-w-[300px] truncate" title={item.description}>
-                          {item.description}
+                        <div className="max-w-[300px] truncate" title={item.name}>
+                          {item.name}
                         </div>
                       </TableCell>
                       <TableCell>

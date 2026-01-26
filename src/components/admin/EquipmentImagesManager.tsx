@@ -166,6 +166,9 @@ export function EquipmentImagesManager({
       // Invalidate queries to refresh
       queryClient.invalidateQueries({ queryKey: equipmentKeys.images(equipmentId) });
 
+      // Invalidar cache de listagem do catálogo
+      queryClient.invalidateQueries({ queryKey: equipmentKeys.lists() });
+
       toast({
         title: "Imagem principal atualizada",
         description: "A imagem foi definida como principal.",
@@ -219,6 +222,9 @@ export function EquipmentImagesManager({
 
       // Invalidate queries to refresh
       queryClient.invalidateQueries({ queryKey: equipmentKeys.images(equipmentId) });
+
+      // Invalidar cache de listagem do catálogo
+      queryClient.invalidateQueries({ queryKey: equipmentKeys.lists() });
 
       toast({
         title: "Ordem atualizada",
