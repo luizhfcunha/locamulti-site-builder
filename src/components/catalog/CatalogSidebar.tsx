@@ -20,7 +20,7 @@ const SidebarContent = ({
     activeFamily: string | null;
     expandedCategories: string[];
     toggleCategory: (slug: string) => void;
-    onFamilySelect: (categorySlug: string, familySlug: string | null) => void;
+    onFamilySelect: (categorySlug: string, targetFamilySlug: string | null) => void;
 }) => {
     return (
         <div className="py-4 pr-4">
@@ -145,19 +145,28 @@ export const CatalogSidebar = () => {
         );
     };
 
-    const handleFamilySelect = (categorySlug: string, familySlug: string | null) => {
+    const handleFamilySelect = (categorySlug: string, targetFamilySlug: string | null) => {
         if (!categorySlug) {
             // Clear all filters - go to catalog home
-            setSearchParams({});
-        } else if (familySlug) {
-            // Navigate to family page using route params (where images work)
-            navigate(`/catalogo/${categorySlug}/${familySlug}`);
+            navigate('/catalogo');
+        } else if (targetFamilySlug) {
+            // Navigate to specific family page using route params
+            navigate(`/catalogo/${categorySlug}/${targetFamilySlug}`);
         } else {
-            // Select category only - use query params for category-level view
-            const newParams = new URLSearchParams(searchParams);
-            newParams.set("categoria", categorySlug);
-            newParams.delete("familia");
-            setSearchParams(newParams);
+            // Select category only (show all items in category)
+            // Check if we're currently on a family page (route params context)
+            const currentlyOnFamilyPage = !!familiaSlug; // familiaSlug from useParams (line 113)
+
+            if (currentlyOnFamilyPage) {
+                // Navigate away from CatalogFamily to CatalogHome with query param
+                navigate(`/catalogo?categoria=${categorySlug}`);
+            } else {
+                // Already on CatalogHome, just update query params
+                const newParams = new URLSearchParams(searchParams);
+                newParams.set("categoria", categorySlug);
+                newParams.delete("familia");
+                setSearchParams(newParams);
+            }
         }
 
         // Expand the selected category if not expanded
