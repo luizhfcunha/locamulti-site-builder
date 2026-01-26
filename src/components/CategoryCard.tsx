@@ -29,24 +29,18 @@ export const CategoryCard = ({ title, icon: Icon, imageUrl, onClick, priority = 
             >
               <Icon className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 h-12 w-12 text-muted-foreground/30" />
             </div>
-            <picture>
-              <source
-                srcSet={imageUrl.replace(/\.jpg$/i, '.webp')}
-                type="image/webp"
-              />
-              <img
-                src={imageUrl}
-                alt={title}
-                width={800}
-                height={600}
-                loading={priority === 'high' ? 'eager' : 'lazy'}
-                decoding="async"
-                fetchPriority={priority}
-                onLoad={() => setIsLoaded(true)}
-                onError={() => setHasError(true)}
-                className={`w-full h-full object-cover group-hover:scale-105 transition-all duration-500 ${isLoaded ? 'opacity-100 blur-0' : 'opacity-0 blur-sm'}`}
-              />
-            </picture>
+            <img
+              src={imageUrl}
+              alt={title}
+              width={800}
+              height={600}
+              loading={priority === 'high' ? 'eager' : 'lazy'}
+              decoding="async"
+              fetchPriority={priority}
+              onLoad={() => setIsLoaded(true)}
+              onError={() => setHasError(true)}
+              className={`w-full h-full object-cover group-hover:scale-105 transition-all duration-500 ${isLoaded ? 'opacity-100 blur-0' : 'opacity-0 blur-sm'}`}
+            />
           </>
         ) : (
           <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-muted to-secondary">
