@@ -1,4 +1,3 @@
-import { useEffect, useState, useMemo } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { Helmet } from "react-helmet-async";
 import { X } from "lucide-react";
@@ -8,41 +7,22 @@ import { CatalogSidebar } from "@/components/catalog/CatalogSidebar";
 import { ProductList } from "@/components/catalog/ProductList";
 import { FilterBreadcrumb } from "@/components/catalog/FilterBreadcrumb";
 import { Button } from "@/components/ui/button";
-import { 
-  getCatalogFamilyItems,
-  type CatalogItem 
-} from "@/lib/catalogNew";
+import { useCatalogFamilyItems } from "@/lib/queries/equipment";
 
 export default function CatalogFamily() {
-  const { categoriaSlug, familiaSlug } = useParams<{ 
-    categoriaSlug: string; 
+  const { categoriaSlug, familiaSlug } = useParams<{
+    categoriaSlug: string;
     familiaSlug: string;
   }>();
   const navigate = useNavigate();
-  
-  const [allItems, setAllItems] = useState<CatalogItem[]>([]);
-  const [category, setCategory] = useState<{ name: string; slug: string } | null>(null);
-  const [family, setFamily] = useState<{ name: string; slug: string } | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
 
-  // Load family items
-  useEffect(() => {
-    async function loadData() {
-      if (!familiaSlug) return;
-      
-      setIsLoading(true);
-      
-      const data = await getCatalogFamilyItems(familiaSlug);
-      
-      // Unificar equipamentos e consumíveis, mantendo a ordem
-      const items = [...data.equipamentos, ...data.consumiveis];
-      setAllItems(items);
-      setCategory(data.category);
-      setFamily(data.family);
-      setIsLoading(false);
-    }
-    loadData();
-  }, [familiaSlug]);
+  // Use React Query hook para buscar dados com cache automático
+  const { data, isLoading } = useCatalogFamilyItems(familiaSlug || "");
+
+  // Extrair dados da resposta
+  const allItems = data ? [...data.equipamentos, ...data.consumiveis] : [];
+  const category = data?.category || null;
+  const family = data?.family || null;
 
   // Handlers
   const handleClearFilters = () => {

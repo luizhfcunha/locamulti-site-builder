@@ -1,6 +1,7 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import type { CatalogItem, EquipmentImage } from "@/lib/catalogNew";
+import { getCatalogFamilyItems } from "@/lib/catalogNew";
 
 // ===== QUERY KEYS (Centralizado para invalidação) =====
 export const equipmentKeys = {
@@ -12,6 +13,9 @@ export const equipmentKeys = {
   detail: (code: string) => [...equipmentKeys.details(), code] as const,
   images: (equipmentId: string) =>
     [...equipmentKeys.all, "images", equipmentId] as const,
+  catalogFamily: (familySlug: string) =>
+    [...equipmentKeys.lists(), "family", familySlug] as const,
+  catalogItems: () => [...equipmentKeys.all, "catalog-items"] as const,
 };
 
 // ===== HOOK 1: Lista de equipamentos (com primary image) =====
@@ -170,6 +174,11 @@ export function useAddEquipmentImage() {
       queryClient.invalidateQueries({
         queryKey: equipmentKeys.lists(),
       });
+
+      // Invalidar cache de todos os itens do catálogo (admin + público)
+      queryClient.invalidateQueries({
+        queryKey: equipmentKeys.catalogItems(),
+      });
     },
   });
 }
@@ -196,6 +205,50 @@ export function useDeleteEquipmentImage() {
       queryClient.invalidateQueries({
         queryKey: equipmentKeys.lists(),
       });
+
+      // Invalidar cache de todos os itens do catálogo (admin + público)
+      queryClient.invalidateQueries({
+        queryKey: equipmentKeys.catalogItems(),
+      });
     },
+  });
+}
+
+// ===== HOOK 6: Buscar itens de uma família para o catálogo =====
+/**
+ * Hook React Query para buscar itens de uma família
+ * Usado nas páginas do catálogo público
+ */
+export function useCatalogFamilyItems(familySlug: string) {
+  return useQuery({
+    queryKey: equipmentKeys.catalogFamily(familySlug),
+    queryFn: () => getCatalogFamilyItems(familySlug),
+    staleTime: 2 * 60 * 1000, // 2 minutos
+    gcTime: 5 * 60 * 1000, // 5 minutos
+    enabled: !!familySlug,
+  });
+}
+
+// ===== HOOK 7: Buscar todos os itens do catálogo (Admin) =====
+/**
+ * Hook React Query para buscar todos os itens do catálogo
+ * Usado na listagem admin
+ */
+export function useAllCatalogItems() {
+  return useQuery({
+    queryKey: equipmentKeys.catalogItems(),
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from("catalog_items")
+        .select("*")
+        .order("category_order", { ascending: true })
+        .order("family_order", { ascending: true })
+        .order("item_order", { ascending: true });
+
+      if (error) throw error;
+      return (data || []) as CatalogItem[];
+    },
+    staleTime: 2 * 60 * 1000, // 2 minutos
+    gcTime: 5 * 60 * 1000, // 5 minutos
   });
 }
