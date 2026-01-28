@@ -1,4 +1,5 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
@@ -6,19 +7,34 @@ import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import {
-  Search,
-  Loader2,
-  Edit,
-  Package,
+import { 
+  Search, 
+  Loader2, 
+  Edit, 
+  Package, 
   Filter,
   ImageIcon,
   ImageOff
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { findImageForProduct } from "@/utils/imageMatcher";
-import { useAllCatalogItems } from "@/lib/queries/equipment";
-import type { CatalogItem } from "@/lib/catalogNew";
+
+interface CatalogItem {
+  id: string;
+  code: string;
+  name: string;
+  description: string;
+  category_name: string;
+  category_slug: string;
+  family_name: string;
+  family_slug: string;
+  item_type: string;
+  image_url: string | null;
+  active: boolean;
+  category_order: number;
+  family_order: number;
+  item_order: number;
+}
 
 interface CatalogItemListProps {
   refreshTrigger?: number;
@@ -26,14 +42,36 @@ interface CatalogItemListProps {
 }
 
 export function CatalogItemList({ refreshTrigger, onEdit }: CatalogItemListProps) {
-  // Use React Query hook para buscar dados com cache automático e invalidação
-  const { data: items = [], isLoading: loading } = useAllCatalogItems();
-
+  const [items, setItems] = useState<CatalogItem[]>([]);
+  const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState("");
   const [selectedCategory, setSelectedCategory] = useState<string>("all");
   const [selectedFamily, setSelectedFamily] = useState<string>("all");
   const [selectedType, setSelectedType] = useState<string>("all");
   const [selectedStatus, setSelectedStatus] = useState<string>("all");
+
+  useEffect(() => {
+    fetchItems();
+  }, [refreshTrigger]);
+
+  const fetchItems = async () => {
+    setLoading(true);
+    try {
+      const { data, error } = await supabase
+        .from("catalog_items")
+        .select("*")
+        .order("category_order", { ascending: true })
+        .order("family_order", { ascending: true })
+        .order("item_order", { ascending: true });
+
+      if (error) throw error;
+      setItems(data || []);
+    } catch (error) {
+      console.error("Error fetching items:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   // Get unique categories
   const categories = [...new Set(items.map(i => i.category_name))].sort();
