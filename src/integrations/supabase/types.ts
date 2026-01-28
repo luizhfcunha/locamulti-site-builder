@@ -125,59 +125,6 @@ export type Database = {
         }
         Relationships: []
       }
-      equipment_images: {
-        Row: {
-          alt_text: string | null
-          created_at: string | null
-          equipment_id: string
-          file_size_bytes: number | null
-          height: number | null
-          id: string
-          is_primary: boolean | null
-          public_url: string
-          sort_order: number
-          storage_path: string
-          updated_at: string | null
-          width: number | null
-        }
-        Insert: {
-          alt_text?: string | null
-          created_at?: string | null
-          equipment_id: string
-          file_size_bytes?: number | null
-          height?: number | null
-          id?: string
-          is_primary?: boolean | null
-          public_url: string
-          sort_order?: number
-          storage_path: string
-          updated_at?: string | null
-          width?: number | null
-        }
-        Update: {
-          alt_text?: string | null
-          created_at?: string | null
-          equipment_id?: string
-          file_size_bytes?: number | null
-          height?: number | null
-          id?: string
-          is_primary?: boolean | null
-          public_url?: string
-          sort_order?: number
-          storage_path?: string
-          updated_at?: string | null
-          width?: number | null
-        }
-        Relationships: [
-          {
-            foreignKeyName: "equipment_images_equipment_id_fkey"
-            columns: ["equipment_id"]
-            isOneToOne: false
-            referencedRelation: "catalog_items"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
       user_roles: {
         Row: {
           created_at: string | null

@@ -75,6 +75,7 @@ export function LightboxCarousel({
                 className="max-w-full max-h-[85vh] w-auto h-auto object-contain rounded-lg shadow-2xl"
                 style={{
                   backgroundColor: "transparent",
+                  imageRendering: "high-quality",
                 }}
               />
             </div>

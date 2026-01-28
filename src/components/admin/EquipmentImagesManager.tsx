@@ -48,20 +48,13 @@ export function EquipmentImagesManager({
     if (!files || files.length === 0) return;
 
     setUploading(true);
-
-    // ✅ Verificar se JÁ existe imagem primária
-    const hasPrimaryImage = images.some(img => img.is_primary);
-
-    const uploadPromises = Array.from(files).map(async (file, index) => {
+    const uploadPromises = Array.from(files).map(async (file) => {
       try {
-        // ✅ Primeira imagem do upload será primária se não houver nenhuma
-        const shouldBePrimary = !hasPrimaryImage && index === 0;
-
         // Upload to storage
         const { path, publicUrl, error } = await uploadEquipmentImage(
           file,
           equipmentCode,
-          shouldBePrimary
+          images.length === 0 // First image is primary
         );
 
         if (error) {
@@ -79,25 +72,9 @@ export function EquipmentImagesManager({
           storagePath: path,
           publicUrl,
           altText: `${equipmentName} - ${file.name}`,
-          isPrimary: shouldBePrimary,
-          sortOrder: images.length + index,
+          isPrimary: images.length === 0,
+          sortOrder: images.length,
         });
-
-        // ✅ Fallback de sincronização se esta for a imagem primária
-        if (shouldBePrimary) {
-          try {
-            await supabase
-              .from('catalog_items')
-              .update({
-                image_url: publicUrl,
-                updated_at: new Date().toISOString()
-              })
-              .eq('id', equipmentId);
-          } catch (syncError) {
-            console.error("Sync fallback error:", syncError);
-            // Não falhar o upload por causa disso, trigger pode ter funcionado
-          }
-        }
 
         return publicUrl;
       } catch (err: any) {
@@ -122,7 +99,7 @@ export function EquipmentImagesManager({
     }
 
     setUploading(false);
-  }, [equipmentId, equipmentCode, equipmentName, images, addImageMutation]);
+  }, [equipmentId, equipmentCode, equipmentName, images.length, addImageMutation]);
 
   // Handle drag and drop file upload
   const handleDrop = useCallback((e: React.DragEvent<HTMLDivElement>) => {
@@ -174,15 +151,15 @@ export function EquipmentImagesManager({
       // Unset current primary
       const currentPrimary = images.find(img => img.is_primary);
       if (currentPrimary) {
-        await (supabase
-          .from("equipment_images") as any)
+        await supabase
+          .from("equipment_images")
           .update({ is_primary: false })
           .eq("id", currentPrimary.id);
       }
 
       // Set new primary
-      await (supabase
-        .from("equipment_images") as any)
+      await supabase
+        .from("equipment_images")
         .update({ is_primary: true })
         .eq("id", image.id);
 
@@ -240,8 +217,8 @@ export function EquipmentImagesManager({
 
       // Batch update
       for (const update of updates) {
-        await (supabase
-          .from("equipment_images") as any)
+        await supabase
+          .from("equipment_images")
           .update({ sort_order: update.sort_order })
           .eq("id", update.id);
       }
