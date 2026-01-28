@@ -27,30 +27,38 @@ export function useEquipmentList(familySlug: string) {
   return useQuery({
     queryKey: equipmentKeys.list({ familySlug }),
     queryFn: async () => {
-      // JOIN com equipment_images para pegar primary_image
+      // Buscar itens do catálogo
       const { data: items, error } = await supabase
         .from("catalog_items")
-        .select(
-          `
-          *,
-          primary_image:equipment_images!inner(
-            id,
-            public_url,
-            alt_text
-          )
-        `
-        )
+        .select("*")
         .eq("family_slug", familySlug)
         .eq("active", true)
-        .eq("equipment_images.is_primary", true)
         .order("item_order", { ascending: true });
 
       if (error) throw error;
 
-      // Transformar para formato esperado
+      // Buscar imagens primárias separadamente
+      const itemIds = (items || []).map(item => item.id);
+      
+      if (itemIds.length === 0) {
+        return [] as (CatalogItem & { primary_image: EquipmentImage | null })[];
+      }
+
+      const { data: primaryImages } = await (supabase
+        .from("equipment_images") as any)
+        .select("*")
+        .in("equipment_id", itemIds)
+        .eq("is_primary", true);
+
+      // Mapear imagens aos itens
+      const imageMap = new Map<string, EquipmentImage>();
+      (primaryImages || []).forEach((img: EquipmentImage) => {
+        imageMap.set(img.equipment_id, img);
+      });
+
       return (items || []).map((item) => ({
         ...item,
-        primary_image: item.primary_image?.[0] || null,
+        primary_image: imageMap.get(item.id) || null,
       })) as (CatalogItem & { primary_image: EquipmentImage | null })[];
     },
     staleTime: 5 * 60 * 1000, // 5 minutos (catálogo muda pouco)
@@ -67,8 +75,8 @@ export function useEquipmentImages(equipmentId: string) {
   return useQuery({
     queryKey: equipmentKeys.images(equipmentId),
     queryFn: async () => {
-      const { data, error } = await supabase
-        .from("equipment_images")
+      const { data, error } = await (supabase
+        .from("equipment_images") as any)
         .select("*")
         .eq("equipment_id", equipmentId)
         .order("sort_order", { ascending: true });
@@ -90,38 +98,30 @@ export function useEquipmentDetail(code: string) {
   return useQuery({
     queryKey: equipmentKeys.detail(code),
     queryFn: async () => {
-      // Single query com JOIN
-      const { data, error } = await supabase
+      // Buscar o item do catálogo
+      const { data: item, error: itemError } = await supabase
         .from("catalog_items")
-        .select(
-          `
-          *,
-          images:equipment_images(
-            id,
-            equipment_id,
-            public_url,
-            alt_text,
-            sort_order,
-            is_primary,
-            width,
-            height
-          )
-        `
-        )
+        .select("*")
         .eq("code", code)
         .eq("active", true)
         .maybeSingle();
 
-      if (error) throw error;
-      if (!data) return null;
+      if (itemError) throw itemError;
+      if (!item) return null;
 
-      // Ordenar imagens por sort_order
-      const images = (data.images || []).sort(
-        (a, b) => a.sort_order - b.sort_order
-      ) as EquipmentImage[];
+      // Buscar imagens separadamente
+      const { data: imagesData, error: imagesError } = await (supabase
+        .from("equipment_images") as any)
+        .select("*")
+        .eq("equipment_id", item.id)
+        .order("sort_order", { ascending: true });
+
+      if (imagesError) throw imagesError;
+
+      const images = (imagesData || []) as EquipmentImage[];
 
       return {
-        ...data,
+        ...item,
         images,
         primary_image:
           images.find((img) => img.is_primary) || images[0] || null,
@@ -148,8 +148,8 @@ export function useAddEquipmentImage() {
       isPrimary?: boolean;
       sortOrder?: number;
     }) => {
-      const { data, error } = await supabase
-        .from("equipment_images")
+      const { data, error } = await (supabase
+        .from("equipment_images") as any)
         .insert({
           equipment_id: params.equipmentId,
           storage_path: params.storagePath,
@@ -189,8 +189,8 @@ export function useDeleteEquipmentImage() {
 
   return useMutation({
     mutationFn: async (params: { imageId: string; equipmentId: string }) => {
-      const { error } = await supabase
-        .from("equipment_images")
+      const { error } = await (supabase
+        .from("equipment_images") as any)
         .delete()
         .eq("id", params.imageId);
 
