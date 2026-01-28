@@ -174,15 +174,15 @@ export function EquipmentImagesManager({
       // Unset current primary
       const currentPrimary = images.find(img => img.is_primary);
       if (currentPrimary) {
-        await supabase
-          .from("equipment_images")
+        await (supabase
+          .from("equipment_images") as any)
           .update({ is_primary: false })
           .eq("id", currentPrimary.id);
       }
 
       // Set new primary
-      await supabase
-        .from("equipment_images")
+      await (supabase
+        .from("equipment_images") as any)
         .update({ is_primary: true })
         .eq("id", image.id);
 
@@ -240,8 +240,8 @@ export function EquipmentImagesManager({
 
       // Batch update
       for (const update of updates) {
-        await supabase
-          .from("equipment_images")
+        await (supabase
+          .from("equipment_images") as any)
           .update({ sort_order: update.sort_order })
           .eq("id", update.id);
       }
