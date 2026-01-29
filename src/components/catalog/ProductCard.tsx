@@ -11,11 +11,13 @@ export const ProductCard = ({ product }: ProductCardProps) => {
     const [lightboxOpen, setLightboxOpen] = useState(false);
     const isConsumable = product.item_type === 'consumivel';
 
-    // WhatsApp link with correct number
-    const waNumber = "556298494024";
     const displayName = product.name || product.code;
-    const message = encodeURIComponent(`Olá! Gostaria de um orçamento para: ${displayName}`);
-    const waLink = `https://wa.me/${waNumber}?text=${message}`;
+
+    // ✅ Construir URL do WhatsApp corretamente (evita encoding duplo)
+    const whatsappPhone = "5562984194024";
+    const equipmentName = displayName || "equipamento";
+    const message = `Olá! Quero solicitar um orçamento sobre o equipamento: ${equipmentName}.`;
+    const waLink = `https://api.whatsapp.com/send?phone=${whatsappPhone}&text=${encodeURIComponent(message)}&utm_source=site&utm_medium=whatsapp&utm_campaign=conversao&utm_content=catalogo_equipamento`;
 
     return (
         <div className="bg-card rounded-lg border border-border/50 shadow-sm hover:shadow-md transition-all duration-200 overflow-hidden flex flex-row p-3 sm:p-4 gap-3 sm:gap-4 min-h-[100px] animate-in fade-in-50 duration-300">
