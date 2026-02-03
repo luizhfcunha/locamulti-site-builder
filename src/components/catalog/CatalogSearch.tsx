@@ -26,6 +26,14 @@ export function CatalogSearch({ className }: CatalogSearchProps) {
     try {
       const searchResults = await searchCatalog(searchQuery);
       setResults(searchResults);
+
+      // GTM Event: Catalog Search
+      window.dataLayer = window.dataLayer || [];
+      window.dataLayer.push({
+        event: 'catalog_search',
+        search_term: searchQuery,
+        result_count: searchResults.length
+      });
     } catch (error) {
       setResults([]);
     } finally {

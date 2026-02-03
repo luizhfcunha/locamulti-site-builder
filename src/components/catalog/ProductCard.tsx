@@ -19,6 +19,18 @@ export const ProductCard = ({ product }: ProductCardProps) => {
     const message = `Olá! Quero solicitar um orçamento sobre o equipamento: ${equipmentName}.`;
     const waLink = `https://api.whatsapp.com/send?phone=${whatsappPhone}&text=${encodeURIComponent(message)}&utm_source=site&utm_medium=whatsapp&utm_campaign=conversao&utm_content=catalogo_equipamento`;
 
+    // GTM Event: WhatsApp Click
+    const handleWhatsAppClick = () => {
+        window.dataLayer = window.dataLayer || [];
+        window.dataLayer.push({
+            event: 'whatsapp_click',
+            equipment_name: displayName,
+            equipment_code: product.code,
+            equipment_category: product.category || 'Não especificado',
+            click_location: 'catalogo_equipamento'
+        });
+    };
+
     return (
         <div className="bg-card rounded-lg border border-border/50 shadow-sm hover:shadow-md transition-all duration-200 overflow-hidden flex flex-row p-3 sm:p-4 gap-3 sm:gap-4 min-h-[100px] animate-in fade-in-50 duration-300">
             {/* Image Area - Fixed size - Clickable para lightbox */}
@@ -64,7 +76,8 @@ export const ProductCard = ({ product }: ProductCardProps) => {
                     href={waLink}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="flex items-center justify-center gap-2 p-3 lg:px-5 lg:py-3 bg-[#25D366] hover:bg-[#128C7E] text-white font-semibold rounded-xl transition-all duration-200 hover:scale-[1.02] shadow-md min-h-[44px]"
+                    onClick={handleWhatsAppClick}
+                    className="flex items-center justify-center gap-2 p-3 lg:px-5 lg:py-3 bg-[#25D366] hover:bg-[#128C7E] text-white font-semibent rounded-xl transition-all duration-200 hover:scale-[1.02] shadow-md min-h-[44px]"
                 >
                     <img
                         src="/lovable-uploads/c5861fea-0072-4651-9ee0-c32e148f0e85.png"

@@ -95,7 +95,16 @@ export const ContactForm = () => {
         title: "Mensagem enviada!",
         description: "Entraremos em contato em breve.",
       });
-      
+
+      // GTM Event: Form Submit
+      window.dataLayer = window.dataLayer || [];
+      window.dataLayer.push({
+        event: 'form_submit',
+        form_name: 'contato',
+        form_category: categoryLabel,
+        form_email: formData.email
+      });
+
       // Limpar formulário
       setFormData({
         name: "",

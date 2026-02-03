@@ -22,13 +22,22 @@ export function EquipmentLightbox({
 }: EquipmentLightboxProps) {
   const { data: images, isLoading, error } = useEquipmentImages(equipmentId);
 
-  // Preload primeira imagem quando modal abre
+  // Preload primeira imagem quando modal abre + GTM Event
   useEffect(() => {
     if (isOpen && images && images.length > 0) {
       const img = new Image();
       img.src = images[0].public_url;
+
+      // GTM Event: Equipment View
+      window.dataLayer = window.dataLayer || [];
+      window.dataLayer.push({
+        event: 'equipment_view',
+        equipment_name: equipmentName,
+        equipment_id: equipmentId,
+        image_count: images.length
+      });
     }
-  }, [isOpen, images]);
+  }, [isOpen, images, equipmentName, equipmentId]);
 
   // ESC key para fechar
   useEffect(() => {

@@ -29,17 +29,26 @@ export default function CatalogFamily() {
   useEffect(() => {
     async function loadData() {
       if (!familiaSlug) return;
-      
+
       setIsLoading(true);
-      
+
       const data = await getCatalogFamilyItems(familiaSlug);
-      
+
       // Unificar equipamentos e consumíveis, mantendo a ordem
       const items = [...data.equipamentos, ...data.consumiveis];
       setAllItems(items);
       setCategory(data.category);
       setFamily(data.family);
       setIsLoading(false);
+
+      // GTM Event: Category View
+      window.dataLayer = window.dataLayer || [];
+      window.dataLayer.push({
+        event: 'category_view',
+        category_name: data.category?.name || 'Não especificado',
+        family_name: data.family?.name || 'Não especificado',
+        product_count: items.length
+      });
     }
     loadData();
   }, [familiaSlug]);
