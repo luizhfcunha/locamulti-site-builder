@@ -8,18 +8,10 @@ import { ProductList } from "@/components/catalog/ProductList";
 import { FilterBreadcrumb } from "@/components/catalog/FilterBreadcrumb";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { getCatalogCategories, getCatalogFamilies, CatalogCategory, CatalogItem } from "@/lib/catalogNew";
+import { getCatalogCategories, getCatalogFamilies, CatalogCategory, CatalogItem, normalizeSearchText } from "@/lib/catalogNew";
 import { supabase } from "@/integrations/supabase/client";
 import { Category } from "@/types/catalog";
 import { X, Search } from "lucide-react";
-
-// Helper to normalize text for search (remove accents, lowercase)
-const normalizeText = (text: string): string => {
-  return text
-    .toLowerCase()
-    .normalize('NFD')
-    .replace(/[\u0300-\u036f]/g, '');
-};
 
 // Transform CatalogCategory to Category for CategoryGrid compatibility
 const transformCategories = async (catalogCategories: CatalogCategory[]): Promise<Category[]> => {
@@ -105,17 +97,25 @@ const CatalogHome = () => {
         if (selectedFamilySlug) {
           query = query.eq('family_slug', selectedFamilySlug);
         }
-        if (searchQuery) {
-          const normalizedQuery = `%${searchQuery}%`;
-          query = query.or(`code.ilike.${normalizedQuery},description.ilike.${normalizedQuery},name.ilike.${normalizedQuery}`);
-        }
 
         const { data, error } = await query;
 
         if (error) {
           setProducts([]);
         } else {
-          setProducts((data || []) as CatalogItem[]);
+          const fetched = (data || []) as CatalogItem[];
+          if (!searchQuery) {
+            setProducts(fetched);
+          } else {
+            const normalizedQuery = normalizeSearchText(searchQuery.trim());
+            const filtered = fetched.filter((item) => {
+              const code = normalizeSearchText(item.code || "");
+              const name = normalizeSearchText(item.name || "");
+              const description = normalizeSearchText(item.description || "");
+              return code.includes(normalizedQuery) || name.includes(normalizedQuery) || description.includes(normalizedQuery);
+            });
+            setProducts(filtered);
+          }
         }
       } catch (err) {
         setProducts([]);

@@ -231,7 +231,7 @@ const QuemSomos = () => {
     },
     {
       question: "Qual o horário de expediente?",
-      answer: "De segunda à sexta-feira de 7:30h às 17:30h e sábados de 8h às 11:30h."
+      answer: "Segunda a quinta-feira: 7:30h as 17:30h, sexta-feira: 7:30h as 17:00h e sabado: 8:00h as 11:30h."
     },
     {
       question: "Posso fazer retirada ou locação por terceiros?",
@@ -259,7 +259,7 @@ const QuemSomos = () => {
     },
     {
       question: "Qual o horário para devolução dos equipamentos?",
-      answer: "A locação e devolução dos equipamentos pode ser feita de segunda a sexta, das 7:30h às 17:30h, e aos sábados das 8h às 11:30h. A devolução deve ser realizada dentro do horário de funcionamento."
+      answer: "A locacao e devolucao dos equipamentos pode ser feita de segunda a quinta, das 7:30h as 17:30h, na sexta-feira das 7:30h as 17:00h, e aos sabados das 8:00h as 11:30h. A devolucao deve ser realizada dentro do horario de funcionamento."
     },
     {
       question: "E se eu não devolver o equipamento dentro do prazo?",
@@ -544,3 +544,4 @@ const QuemSomos = () => {
 };
 
 export default QuemSomos;
+

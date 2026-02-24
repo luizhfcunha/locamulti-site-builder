@@ -108,7 +108,7 @@ const SidebarContent = ({
 };
 
 export const CatalogSidebar = () => {
-    const [searchParams, setSearchParams] = useSearchParams();
+    const [searchParams] = useSearchParams();
     const navigate = useNavigate();
     const { categoriaSlug, familiaSlug } = useParams<{ categoriaSlug?: string; familiaSlug?: string }>();
     const [expandedCategories, setExpandedCategories] = useState<string[]>([]);
@@ -153,26 +153,19 @@ export const CatalogSidebar = () => {
             // Navigate to specific family page using route params
             navigate(`/catalogo/${categorySlug}/${targetFamilySlug}`);
         } else {
-            // Select category only (show all items in category)
-            // Check if we're currently on a family page (route params context)
-            const currentlyOnFamilyPage = !!familiaSlug; // familiaSlug from useParams (line 113)
-
-            if (currentlyOnFamilyPage) {
-                // Navigate away from CatalogFamily to CatalogHome with query param
-                navigate(`/catalogo?categoria=${categorySlug}`);
-            } else {
-                // Already on CatalogHome, just update query params
-                const newParams = new URLSearchParams(searchParams);
-                newParams.set("categoria", categorySlug);
-                newParams.delete("familia");
-                setSearchParams(newParams);
-            }
+            // Category-only view should always reset URL state deterministically.
+            navigate(`/catalogo?categoria=${categorySlug}`);
         }
 
         // Expand the selected category if not expanded
         if (categorySlug && !expandedCategories.includes(categorySlug)) {
             toggleCategory(categorySlug);
         }
+
+        // Ensure the user lands at the beginning of the catalog listing.
+        requestAnimationFrame(() => {
+            window.scrollTo({ top: 0, behavior: "instant" });
+        });
 
         setIsMobileOpen(false);
     };

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { CatalogItem } from "@/lib/catalogNew";
 import { ConsumableBadge } from "./ConsumableBadge";
 import { EquipmentLightbox } from "@/components/lightbox/EquipmentLightbox";
@@ -9,9 +9,39 @@ interface ProductCardProps {
 
 export const ProductCard = ({ product }: ProductCardProps) => {
     const [lightboxOpen, setLightboxOpen] = useState(false);
+    const [isDescriptionExpanded, setIsDescriptionExpanded] = useState(false);
+    const [hasDescriptionOverflow, setHasDescriptionOverflow] = useState(false);
+    const descriptionRef = useRef<HTMLParagraphElement | null>(null);
     const isConsumable = product.item_type === 'consumivel';
 
     const displayName = product.name || product.code;
+    const description = product.description?.trim() || "";
+
+    useEffect(() => {
+        setIsDescriptionExpanded(false);
+    }, [product.id]);
+
+    useEffect(() => {
+        const updateOverflowState = () => {
+            const element = descriptionRef.current;
+            if (!element || !description) {
+                setHasDescriptionOverflow(false);
+                return;
+            }
+
+            if (isDescriptionExpanded) {
+                setHasDescriptionOverflow(true);
+                return;
+            }
+
+            // Compare rendered height vs. full content height to detect clamp overflow.
+            setHasDescriptionOverflow(element.scrollHeight > element.clientHeight + 1);
+        };
+
+        updateOverflowState();
+        window.addEventListener("resize", updateOverflowState);
+        return () => window.removeEventListener("resize", updateOverflowState);
+    }, [description, isDescriptionExpanded]);
 
     // ✅ Construir URL do WhatsApp corretamente (evita encoding duplo)
     const whatsappPhone = "5562984194024";
@@ -61,11 +91,29 @@ export const ProductCard = ({ product }: ProductCardProps) => {
                     {isConsumable && <ConsumableBadge />}
                 </div>
 
-                {product.description && !isConsumable && (
+                {description && (
                     <div className="mt-1">
-                        <p className="text-sm text-muted-foreground whitespace-pre-line">
-                            {product.description}
+                        <p
+                            ref={descriptionRef}
+                            className="text-sm text-muted-foreground whitespace-pre-line"
+                            style={isDescriptionExpanded ? undefined : {
+                                display: "-webkit-box",
+                                WebkitLineClamp: 2,
+                                WebkitBoxOrient: "vertical",
+                                overflow: "hidden",
+                            }}
+                        >
+                            {description}
                         </p>
+                        {hasDescriptionOverflow && (
+                            <button
+                                type="button"
+                                onClick={() => setIsDescriptionExpanded((prev) => !prev)}
+                                className="mt-1 text-xs font-semibold text-lm-orange hover:text-lm-terrac transition-colors"
+                            >
+                                {isDescriptionExpanded ? "Ver menos" : "Ver mais"}
+                            </button>
+                        )}
                     </div>
                 )}
             </div>

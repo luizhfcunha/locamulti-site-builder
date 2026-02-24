@@ -71,6 +71,23 @@ export interface SearchResult {
 }
 
 /**
+ * Normalize search text for accent-insensitive matching.
+ */
+export function normalizeSearchText(value: string): string {
+  return value
+    .toLowerCase()
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "");
+}
+
+function matchesSearch(item: CatalogItem, normalizedQuery: string): boolean {
+  const code = normalizeSearchText(item.code || "");
+  const name = normalizeSearchText(item.name || "");
+  const description = normalizeSearchText(item.description || "");
+  return code.includes(normalizedQuery) || name.includes(normalizedQuery) || description.includes(normalizedQuery);
+}
+
+/**
  * Generate URL-friendly slug from a name
  */
 export function generateSlug(name: string): string {
@@ -249,27 +266,28 @@ export async function getCategoryBySlug(categorySlug: string): Promise<{ name: s
 export async function searchCatalog(query: string): Promise<SearchResult[]> {
   if (!query || query.length < 2) return [];
 
-  const searchTerm = `%${query}%`;
-
+  const normalizedQuery = normalizeSearchText(query.trim());
   const { data, error } = await supabase
     .from('catalog_items')
     .select('*')
     .eq('active', true)
-    .or(`code.ilike.${searchTerm},name.ilike.${searchTerm},description.ilike.${searchTerm}`)
     .order('category_order', { ascending: true })
     .order('family_order', { ascending: true })
-    .order('item_order', { ascending: true })
-    .limit(50);
+    .order('item_order', { ascending: true });
 
   if (error) {
     console.error('Error searching catalog:', error);
     return [];
   }
 
-  return (data || []).map(item => ({
-    item: item as CatalogItem,
-    matchType: item.code.toLowerCase().includes(query.toLowerCase()) ? 'code' : 'description'
-  }));
+  return (data || [])
+    .map(item => item as CatalogItem)
+    .filter(item => matchesSearch(item, normalizedQuery))
+    .slice(0, 50)
+    .map(item => ({
+      item,
+      matchType: normalizeSearchText(item.code).includes(normalizedQuery) ? 'code' : 'description'
+    }));
 }
 
 /**

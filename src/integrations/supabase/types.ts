@@ -123,7 +123,134 @@ export type Database = {
           name?: string
           updated_at?: string | null
         }
+        Relationships: [
+          {
+            foreignKeyName: "fk_catalog_items_category_slug"
+            columns: ["category_slug"]
+            isOneToOne: false
+            referencedRelation: "catalog_categories"
+            referencedColumns: ["slug"]
+          },
+          {
+            foreignKeyName: "fk_catalog_items_family"
+            columns: ["category_slug", "family_slug"]
+            isOneToOne: false
+            referencedRelation: "catalog_families"
+            referencedColumns: ["category_slug", "slug"]
+          },
+        ]
+      }
+      catalog_categories: {
+        Row: {
+          active: boolean
+          category_no: number
+          created_at: string
+          display_order: number
+          id: string
+          name: string
+          slug: string
+          updated_at: string
+        }
+        Insert: {
+          active?: boolean
+          category_no: number
+          created_at?: string
+          display_order: number
+          id?: string
+          name: string
+          slug: string
+          updated_at?: string
+        }
+        Update: {
+          active?: boolean
+          category_no?: number
+          created_at?: string
+          display_order?: number
+          id?: string
+          name?: string
+          slug?: string
+          updated_at?: string
+        }
         Relationships: []
+      }
+      catalog_families: {
+        Row: {
+          active: boolean
+          category_slug: string
+          created_at: string
+          display_order: number
+          family_no: string
+          id: string
+          name: string
+          slug: string
+          updated_at: string
+        }
+        Insert: {
+          active?: boolean
+          category_slug: string
+          created_at?: string
+          display_order: number
+          family_no: string
+          id?: string
+          name: string
+          slug: string
+          updated_at?: string
+        }
+        Update: {
+          active?: boolean
+          category_slug?: string
+          created_at?: string
+          display_order?: number
+          family_no?: string
+          id?: string
+          name?: string
+          slug?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "catalog_families_category_slug_fkey"
+            columns: ["category_slug"]
+            isOneToOne: false
+            referencedRelation: "catalog_categories"
+            referencedColumns: ["slug"]
+          },
+        ]
+      }
+      featured_carousel_items: {
+        Row: {
+          active: boolean
+          catalog_item_id: string
+          created_at: string
+          display_order: number
+          id: string
+          updated_at: string
+        }
+        Insert: {
+          active?: boolean
+          catalog_item_id: string
+          created_at?: string
+          display_order: number
+          id?: string
+          updated_at?: string
+        }
+        Update: {
+          active?: boolean
+          catalog_item_id?: string
+          created_at?: string
+          display_order?: number
+          id?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "featured_carousel_items_catalog_item_id_fkey"
+            columns: ["catalog_item_id"]
+            isOneToOne: false
+            referencedRelation: "catalog_items"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       user_roles: {
         Row: {

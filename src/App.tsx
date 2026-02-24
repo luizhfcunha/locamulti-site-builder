@@ -25,6 +25,7 @@ import AdminDashboard from "./pages/AdminDashboard";
 import ImportCatalogItems from "./pages/admin/ImportCatalogItems";
 import MissingImages from "./pages/admin/MissingImages";
 import AdminCategories from "./pages/admin/AdminCategories";
+import AdminFeaturedCarousel from "./pages/admin/AdminFeaturedCarousel";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient({
@@ -38,13 +39,31 @@ const queryClient = new QueryClient({
 });
 
 // Admin catalog page component - inline to avoid deleted file dependency
+type AdminCatalogItem = {
+  id: string;
+  code: string;
+  name: string;
+  description: string;
+  category_name: string;
+  category_slug: string;
+  category_no: number;
+  category_order: number;
+  family_name: string;
+  family_slug: string;
+  family_no: string;
+  family_order: number;
+  item_type: string;
+  item_order: number;
+  image_url: string | null;
+  active: boolean;
+};
 
 const AdminCatalogo = () => {
   const [showBulkUpload, setShowBulkUpload] = useState(false);
-  const [editingItem, setEditingItem] = useState<any>(null);
+  const [editingItem, setEditingItem] = useState<AdminCatalogItem | null>(null);
   const [refreshKey, setRefreshKey] = useState(0);
 
-  const handleEdit = (item: any) => {
+  const handleEdit = (item: AdminCatalogItem) => {
     setEditingItem(item);
   };
 
@@ -55,6 +74,27 @@ const AdminCatalogo = () => {
 
   const handleBulkSuccess = () => {
     setRefreshKey(prev => prev + 1);
+  };
+
+  const handleCreate = () => {
+    setEditingItem({
+      id: "__new__",
+      code: "",
+      name: "",
+      description: "",
+      category_name: "",
+      category_slug: "",
+      category_no: 1,
+      category_order: 1,
+      family_name: "",
+      family_slug: "",
+      family_no: "01",
+      family_order: 1,
+      item_type: "equipamento",
+      item_order: 1,
+      image_url: "",
+      active: true,
+    });
   };
 
   return (
@@ -82,7 +122,7 @@ const AdminCatalogo = () => {
         {editingItem ? (
           <CatalogItemForm item={editingItem} onClose={handleFormClose} />
         ) : (
-          <CatalogItemList refreshTrigger={refreshKey} onEdit={handleEdit} />
+          <CatalogItemList refreshTrigger={refreshKey} onEdit={handleEdit} onCreate={handleCreate} />
         )}
 
         <Dialog open={showBulkUpload} onOpenChange={setShowBulkUpload}>
@@ -162,6 +202,14 @@ const App = () => {
                     </AdminRoute>
                   }
                 />
+                <Route
+                  path="/admin/featured-carousel"
+                  element={
+                    <AdminRoute>
+                      <AdminFeaturedCarousel />
+                    </AdminRoute>
+                  }
+                />
                 {/* Redirect any unknown admin route to dashboard or login */}
                 <Route path="*" element={<Navigate to="/" replace />} />
               </>
@@ -228,6 +276,14 @@ const App = () => {
                       element={
                         <AdminRoute>
                           <AdminCategories />
+                        </AdminRoute>
+                      }
+                    />
+                    <Route
+                      path="/admin/featured-carousel"
+                      element={
+                        <AdminRoute>
+                          <AdminFeaturedCarousel />
                         </AdminRoute>
                       }
                     />

@@ -11,11 +11,20 @@ import { findImageForProduct } from "@/utils/imageMatcher";
 interface FeaturedItem {
   id: string;
   code: string;
+  name: string;
   description: string;
   image_url: string | null;
   category_name: string;
   item_type: string;
 }
+
+interface FeaturedCarouselRow {
+  id: string;
+  display_order: number;
+  catalog_item_id: string;
+  catalog_items: FeaturedItem | FeaturedItem[] | null;
+}
+
 export const FeaturedEquipmentCarousel = () => {
   const [items, setItems] = useState<FeaturedItem[]>([]);
   const [loading, setLoading] = useState(true);
@@ -32,16 +41,44 @@ export const FeaturedEquipmentCarousel = () => {
 
   useEffect(() => {
     const fetchItems = async () => {
-      const { data, error } = await supabase
+      const featuredResponse = await supabase
+        .from("featured_carousel_items")
+        .select(
+          "id, display_order, catalog_item_id, catalog_items!inner(id, code, name, description, image_url, category_name, item_type)",
+        )
+        .eq("active", true)
+        .eq("catalog_items.active", true)
+        .order("display_order", { ascending: true })
+        .limit(12);
+
+      if (!featuredResponse.error && featuredResponse.data && featuredResponse.data.length > 0) {
+        const mappedItems = (featuredResponse.data as FeaturedCarouselRow[])
+          .map((row) => {
+            const related = Array.isArray(row.catalog_items)
+              ? row.catalog_items[0]
+              : row.catalog_items;
+            return related ?? null;
+          })
+          .filter((item): item is FeaturedItem => item !== null);
+
+        if (mappedItems.length > 0) {
+          setItems(mappedItems);
+          setLoading(false);
+          return;
+        }
+      }
+
+      // Fallback: comportamento antigo caso o admin ainda nao tenha configurado itens.
+      const fallbackResponse = await supabase
         .from("catalog_items")
-        .select("id, code, description, image_url, category_name, item_type")
+        .select("id, code, name, description, image_url, category_name, item_type")
         .eq("active", true)
         .eq("item_type", "equipamento")
         .order("category_order", { ascending: true })
         .limit(12);
 
-      if (!error && data) {
-        setItems(data);
+      if (!fallbackResponse.error && fallbackResponse.data) {
+        setItems(fallbackResponse.data);
       }
       setLoading(false);
     };
@@ -68,13 +105,6 @@ export const FeaturedEquipmentCarousel = () => {
     return `https://wa.me/5562984194024?text=${encodeURIComponent(message)}`;
   };
 
-
-  // Truncate description for display
-  const getDisplayName = (description: string): string => {
-    const maxLength = 50;
-    if (description.length <= maxLength) return description;
-    return description.substring(0, maxLength).trim() + "...";
-  };
   if (loading) {
     return <section className="py-16 bg-lm-orange">
         <div className="container mx-auto px-4">
@@ -118,8 +148,8 @@ export const FeaturedEquipmentCarousel = () => {
           <div className="overflow-hidden mx-6 md:mx-10" ref={emblaRef}>
             <div className="flex">
             {items.map((item, index) => {
-                const imageUrl = item.image_url || findImageForProduct(item.code, item.description);
-                const displayName = getDisplayName(item.description);
+                const itemName = (item.name || item.description || item.code).trim();
+                const imageUrl = item.image_url || findImageForProduct(item.code, itemName);
                 
                 return (
                   <div key={item.id} className="flex-shrink-0 w-[280px] sm:w-[300px] md:w-[320px] pr-4 md:pr-6">
@@ -128,7 +158,7 @@ export const FeaturedEquipmentCarousel = () => {
                       <div className="relative aspect-square bg-white p-4">
                         <img 
                           src={imageUrl || "/placeholder.svg"} 
-                          alt={item.description} 
+                          alt={itemName} 
                           width={280}
                           height={280}
                           loading={index < 3 ? "eager" : "lazy"}
@@ -142,16 +172,16 @@ export const FeaturedEquipmentCarousel = () => {
                       {/* Product Info */}
                       <div className="p-4 flex flex-col flex-1">
                         <h3 className="font-heading font-bold text-lm-ink text-sm md:text-base uppercase line-clamp-2 mb-3">
-                          {displayName}
+                          {itemName}
                         </h3>
 
-                        <Link to={`/catalogo?q=${encodeURIComponent(item.description.split(" - ")[0])}`} className="text-lm-orange hover:text-lm-terrac font-semibold text-sm flex items-center gap-1 mb-4 transition-colors">
+                        <Link to={`/catalogo?q=${encodeURIComponent(itemName)}`} className="text-lm-orange hover:text-lm-terrac font-semibold text-sm flex items-center gap-1 mb-4 transition-colors">
                           + Detalhes do equipamento
                           <ArrowRight className="h-4 w-4" />
                         </Link>
 
                         <div className="mt-auto space-y-2">
-                          <a href={getWhatsAppMessage(item.description)} target="_blank" rel="noopener noreferrer" className="flex items-center justify-center gap-2 w-full py-2.5 bg-[#25D366] hover:bg-[#128C7E] text-white font-semibold rounded-lg transition-all duration-200 text-sm">
+                          <a href={getWhatsAppMessage(itemName)} target="_blank" rel="noopener noreferrer" className="flex items-center justify-center gap-2 w-full py-2.5 bg-[#25D366] hover:bg-[#128C7E] text-white font-semibold rounded-lg transition-all duration-200 text-sm">
                             <img src="/lovable-uploads/c5861fea-0072-4651-9ee0-c32e148f0e85.png" alt="WhatsApp" className="w-4 h-4" />
                             WhatsApp
                           </a>

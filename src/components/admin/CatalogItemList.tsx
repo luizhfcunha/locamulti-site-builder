@@ -7,17 +7,22 @@ import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { 
-  Search, 
-  Loader2, 
-  Edit, 
-  Package, 
+import {
+  Search,
+  Loader2,
+  Edit,
+  Package,
   Filter,
   ImageIcon,
-  ImageOff
+  ImageOff,
+  Plus,
+  Trash2,
+  ArrowUp,
+  ArrowDown,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { findImageForProduct } from "@/utils/imageMatcher";
+import { toast } from "@/hooks/use-toast";
 
 interface CatalogItem {
   id: string;
@@ -39,9 +44,10 @@ interface CatalogItem {
 interface CatalogItemListProps {
   refreshTrigger?: number;
   onEdit: (item: CatalogItem) => void;
+  onCreate: () => void;
 }
 
-export function CatalogItemList({ refreshTrigger, onEdit }: CatalogItemListProps) {
+export function CatalogItemList({ refreshTrigger, onEdit, onCreate }: CatalogItemListProps) {
   const [items, setItems] = useState<CatalogItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState("");
@@ -51,7 +57,7 @@ export function CatalogItemList({ refreshTrigger, onEdit }: CatalogItemListProps
   const [selectedStatus, setSelectedStatus] = useState<string>("all");
 
   useEffect(() => {
-    fetchItems();
+    void fetchItems();
   }, [refreshTrigger]);
 
   const fetchItems = async () => {
@@ -73,18 +79,15 @@ export function CatalogItemList({ refreshTrigger, onEdit }: CatalogItemListProps
     }
   };
 
-  // Get unique categories
-  const categories = [...new Set(items.map(i => i.category_name))].sort();
-  
-  // Get unique families (filtered by selected category)
+  const categories = [...new Set(items.map((i) => i.category_name))].sort();
+
   const families = [...new Set(
     items
-      .filter(i => selectedCategory === "all" || i.category_name === selectedCategory)
-      .map(i => i.family_name)
+      .filter((i) => selectedCategory === "all" || i.category_name === selectedCategory)
+      .map((i) => i.family_name),
   )].sort();
 
-  // Filter items
-  const filteredItems = items.filter(item => {
+  const filteredItems = items.filter((item) => {
     const matchesSearch = search === "" ||
       item.code.toLowerCase().includes(search.toLowerCase()) ||
       item.name.toLowerCase().includes(search.toLowerCase());
@@ -92,23 +95,96 @@ export function CatalogItemList({ refreshTrigger, onEdit }: CatalogItemListProps
     const matchesCategory = selectedCategory === "all" || item.category_name === selectedCategory;
     const matchesFamily = selectedFamily === "all" || item.family_name === selectedFamily;
     const matchesType = selectedType === "all" || item.item_type === selectedType;
-    const matchesStatus = selectedStatus === "all" || 
+    const matchesStatus = selectedStatus === "all" ||
       (selectedStatus === "active" && item.active) ||
       (selectedStatus === "inactive" && !item.active);
 
     return matchesSearch && matchesCategory && matchesFamily && matchesType && matchesStatus;
   });
 
-  // Statistics
   const stats = {
     total: items.length,
-    equipamentos: items.filter(i => i.item_type === "equipamento").length,
-    consumiveis: items.filter(i => i.item_type === "consumivel").length,
-    withImage: items.filter(i => i.image_url).length,
+    equipamentos: items.filter((i) => i.item_type === "equipamento").length,
+    consumiveis: items.filter((i) => i.item_type === "consumivel").length,
+    withImage: items.filter((i) => i.image_url).length,
   };
 
   const getItemImage = (item: CatalogItem): string | null => {
     return item.image_url || findImageForProduct(item.code, item.description) || null;
+  };
+
+  const handleDelete = async (item: CatalogItem) => {
+    const confirmed = window.confirm(`Deseja excluir o item ${item.code} - ${item.name}?`);
+    if (!confirmed) return;
+
+    try {
+      const { error } = await supabase
+        .from("catalog_items")
+        .delete()
+        .eq("id", item.id);
+
+      if (error) throw error;
+
+      toast({
+        title: "Item excluido",
+        description: "O item foi removido com sucesso.",
+      });
+
+      await fetchItems();
+    } catch (error: unknown) {
+      console.error("Error deleting item:", error);
+      const message = error instanceof Error ? error.message : "Nao foi possivel excluir o item.";
+      toast({
+        title: "Erro ao excluir",
+        description: message,
+        variant: "destructive",
+      });
+    }
+  };
+
+  const handleMoveItem = async (item: CatalogItem, direction: "up" | "down") => {
+    const siblings = items
+      .filter(
+        (entry) =>
+          entry.category_slug === item.category_slug &&
+          entry.family_slug === item.family_slug,
+      )
+      .sort((a, b) => a.item_order - b.item_order);
+
+    const currentIndex = siblings.findIndex((entry) => entry.id === item.id);
+    if (currentIndex === -1) return;
+
+    const targetIndex = direction === "up" ? currentIndex - 1 : currentIndex + 1;
+    if (targetIndex < 0 || targetIndex >= siblings.length) return;
+
+    const target = siblings[targetIndex];
+
+    try {
+      const { error: firstError } = await supabase
+        .from("catalog_items")
+        .update({ item_order: target.item_order })
+        .eq("id", item.id);
+      if (firstError) throw firstError;
+
+      const { error: secondError } = await supabase
+        .from("catalog_items")
+        .update({ item_order: item.item_order })
+        .eq("id", target.id);
+      if (secondError) throw secondError;
+
+      toast({
+        title: "Ordem atualizada",
+        description: `Item movido ${direction === "up" ? "para cima" : "para baixo"} na familia.`,
+      });
+      await fetchItems();
+    } catch (error: unknown) {
+      const message = error instanceof Error ? error.message : "Nao foi possivel reordenar item.";
+      toast({
+        title: "Erro ao reordenar",
+        description: message,
+        variant: "destructive",
+      });
+    }
   };
 
   if (loading) {
@@ -121,7 +197,6 @@ export function CatalogItemList({ refreshTrigger, onEdit }: CatalogItemListProps
 
   return (
     <div className="space-y-4">
-      {/* Statistics */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
         <Card>
           <CardContent className="pt-4">
@@ -150,7 +225,7 @@ export function CatalogItemList({ refreshTrigger, onEdit }: CatalogItemListProps
             <div className="flex items-center gap-2">
               <Package className="w-4 h-4 text-orange-500" />
               <div>
-                <p className="text-xs text-muted-foreground">Consumíveis</p>
+                <p className="text-xs text-muted-foreground">Consumiveis</p>
                 <p className="text-xl font-bold">{stats.consumiveis}</p>
               </div>
             </div>
@@ -169,7 +244,6 @@ export function CatalogItemList({ refreshTrigger, onEdit }: CatalogItemListProps
         </Card>
       </div>
 
-      {/* Filters */}
       <Card>
         <CardHeader className="pb-3">
           <CardTitle className="text-base flex items-center gap-2">
@@ -183,7 +257,7 @@ export function CatalogItemList({ refreshTrigger, onEdit }: CatalogItemListProps
               <div className="relative">
                 <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
                 <Input
-                  placeholder="Buscar por código ou nome do equipamento..."
+                  placeholder="Buscar por codigo ou nome do equipamento..."
                   value={search}
                   onChange={(e) => setSearch(e.target.value)}
                   className="pl-9"
@@ -208,10 +282,10 @@ export function CatalogItemList({ refreshTrigger, onEdit }: CatalogItemListProps
 
             <Select value={selectedFamily} onValueChange={setSelectedFamily}>
               <SelectTrigger className="w-[200px]">
-                <SelectValue placeholder="Família" />
+                <SelectValue placeholder="Familia" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="all">Todas as famílias</SelectItem>
+                <SelectItem value="all">Todas as familias</SelectItem>
                 {families.map((fam) => (
                   <SelectItem key={fam} value={fam}>{fam}</SelectItem>
                 ))}
@@ -225,7 +299,7 @@ export function CatalogItemList({ refreshTrigger, onEdit }: CatalogItemListProps
               <SelectContent>
                 <SelectItem value="all">Todos os tipos</SelectItem>
                 <SelectItem value="equipamento">Equipamento</SelectItem>
-                <SelectItem value="consumivel">Consumível</SelectItem>
+                <SelectItem value="consumivel">Consumivel</SelectItem>
               </SelectContent>
             </Select>
 
@@ -240,7 +314,7 @@ export function CatalogItemList({ refreshTrigger, onEdit }: CatalogItemListProps
               </SelectContent>
             </Select>
 
-            {(search || selectedCategory !== "all" || selectedFamily !== "all" || 
+            {(search || selectedCategory !== "all" || selectedFamily !== "all" ||
               selectedType !== "all" || selectedStatus !== "all") && (
               <Button
                 variant="ghost"
@@ -259,16 +333,19 @@ export function CatalogItemList({ refreshTrigger, onEdit }: CatalogItemListProps
         </CardContent>
       </Card>
 
-      {/* Items Table */}
       <Card>
         <CardHeader className="border-b py-3">
           <div className="flex justify-between items-center">
             <CardTitle className="text-base">
-              Itens do Catálogo
+              Itens do Catalogo
               <Badge variant="outline" className="ml-2">
                 {filteredItems.length} itens
               </Badge>
             </CardTitle>
+            <Button onClick={onCreate} className="gap-2">
+              <Plus className="w-4 h-4" />
+              Novo item
+            </Button>
           </div>
         </CardHeader>
         <CardContent className="p-0">
@@ -277,18 +354,28 @@ export function CatalogItemList({ refreshTrigger, onEdit }: CatalogItemListProps
               <TableHeader>
                 <TableRow>
                   <TableHead className="w-[60px]">Img</TableHead>
-                  <TableHead className="w-[120px]">Código</TableHead>
+                  <TableHead className="w-[120px]">Codigo</TableHead>
                   <TableHead>Nome do Equipamento</TableHead>
                   <TableHead className="w-[180px]">Categoria</TableHead>
-                  <TableHead className="w-[180px]">Família</TableHead>
+                  <TableHead className="w-[180px]">Familia</TableHead>
                   <TableHead className="w-[100px]">Tipo</TableHead>
                   <TableHead className="w-[80px]">Status</TableHead>
-                  <TableHead className="w-[80px]">Ações</TableHead>
+                  <TableHead className="w-[160px]">Acoes</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
                 {filteredItems.map((item) => {
                   const imageUrl = getItemImage(item);
+                  const siblings = filteredItems
+                    .filter(
+                      (entry) =>
+                        entry.category_slug === item.category_slug &&
+                        entry.family_slug === item.family_slug,
+                    )
+                    .sort((a, b) => a.item_order - b.item_order);
+                  const itemIndex = siblings.findIndex((entry) => entry.id === item.id);
+                  const canMoveUp = itemIndex > 0;
+                  const canMoveDown = itemIndex >= 0 && itemIndex < siblings.length - 1;
                   return (
                     <TableRow key={item.id} className={cn(!item.active && "opacity-50")}>
                       <TableCell>
@@ -325,7 +412,7 @@ export function CatalogItemList({ refreshTrigger, onEdit }: CatalogItemListProps
                         </span>
                       </TableCell>
                       <TableCell>
-                        <Badge 
+                        <Badge
                           variant={item.item_type === "equipamento" ? "default" : "secondary"}
                           className="text-xs"
                         >
@@ -333,24 +420,52 @@ export function CatalogItemList({ refreshTrigger, onEdit }: CatalogItemListProps
                         </Badge>
                       </TableCell>
                       <TableCell>
-                        <Badge 
+                        <Badge
                           variant={item.active ? "default" : "outline"}
                           className={cn(
                             "text-xs",
-                            item.active ? "bg-green-500" : "text-muted-foreground"
+                            item.active ? "bg-green-500" : "text-muted-foreground",
                           )}
                         >
                           {item.active ? "Ativo" : "Inativo"}
                         </Badge>
                       </TableCell>
                       <TableCell>
-                        <Button
-                          variant="ghost"
-                          size="icon"
-                          onClick={() => onEdit(item)}
-                        >
-                          <Edit className="w-4 h-4" />
-                        </Button>
+                        <div className="flex items-center gap-1">
+                          <Button
+                            variant="ghost"
+                            size="icon"
+                            onClick={() => void handleMoveItem(item, "up")}
+                            disabled={!canMoveUp}
+                            title="Mover para cima"
+                          >
+                            <ArrowUp className="w-4 h-4" />
+                          </Button>
+                          <Button
+                            variant="ghost"
+                            size="icon"
+                            onClick={() => void handleMoveItem(item, "down")}
+                            disabled={!canMoveDown}
+                            title="Mover para baixo"
+                          >
+                            <ArrowDown className="w-4 h-4" />
+                          </Button>
+                          <Button
+                            variant="ghost"
+                            size="icon"
+                            onClick={() => onEdit(item)}
+                          >
+                            <Edit className="w-4 h-4" />
+                          </Button>
+                          <Button
+                            variant="ghost"
+                            size="icon"
+                            onClick={() => handleDelete(item)}
+                            className="text-destructive hover:text-destructive"
+                          >
+                            <Trash2 className="w-4 h-4" />
+                          </Button>
+                        </div>
                       </TableCell>
                     </TableRow>
                   );

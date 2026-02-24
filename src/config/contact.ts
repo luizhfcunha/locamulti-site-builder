@@ -9,7 +9,8 @@ export const CONTACT = {
   whatsappFormatted: "WhatsApp (62) 9 8419-4024",
   address: "Av. Juscelino Kubitscheck, 2058 - JK Nova Capital, Anápolis - GO, 75114-225",
   googleMapsUrl: "https://maps.app.goo.gl/9AmiSnLs5FVpktxz7",
-  businessHours: "Seg a Sex • 7:30h às 17:30h • Sáb 8h às 11:30h",
-  businessHoursShort: "7:30h-17:30h",
+  businessHours: "Seg a Qui: 7:30h as 17:30h | Sex: 7:30h as 17:00h | Sab: 8:00h as 11:30h",
+  businessHoursShort: "Seg-Qui 7:30h-17:30h | Sex 7:30h-17:00h | Sab 8:00h-11:30h",
   immediateService: "Atendimento imediato",
 };
+
