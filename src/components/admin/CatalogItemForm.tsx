@@ -110,6 +110,7 @@ export function CatalogItemForm({ item, onClose }: CatalogItemFormProps) {
 
         setMasterCategories(categoriesData || []);
         setMasterFamilies(familiesData || []);
+        setLoadingStructure(false);
         return;
       } catch {
         // Fallback para ambientes sem as tabelas mestre.
