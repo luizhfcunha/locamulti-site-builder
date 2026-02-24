@@ -180,102 +180,85 @@ const QuemSomos = () => {
 
   const faqItems = [
     {
-      question: "Quais os documentos necessários para cadastro?",
-      answer: `**PESSOA JURÍDICA:**
-• Contrato Social (cópia)
-• CNPJ (cópia)
-• Inscrição Estadual (cópia)
-• Email / Endereço Completo / Endereço de Cobrança
-• Telefones de Contato / Responsáveis por cada departamento
-• Informações Comerciais (2 contatos)
-• Endereço completo da obra onde o equipamento será utilizado
-• Nome do encarregado ou responsável pela empresa
+      question: "Nunca aluguei equipamentos na LOCAMULTI, qual o procedimento?",
+      answer: `• Confirmar, em um dos canais de atendimento, se a locadora tem disponível o equipamento que você precisa.
+• Realizar o cadastro na locadora como Pessoa Física ou Pessoa Jurídica, conforme procedimentos indicados abaixo. O cadastro é realizado apenas uma vez, mas deve ser atualizado a qualquer momento quando houver alteração de dados e informações.
+• A Locamulti se responsabiliza pelos dados de todos os clientes conforme a Lei Geral de Proteção de Dados Pessoais (LGPD), Lei n° 13.709/2018.`
+    },
+    {
+      question: "Quais são as documentações necessárias para cadastro na LOCAMULTI?",
+      answer: `**Cadastro Pessoa Física:**
+• É necessário realizar um Pré-Cadastro pelo WhatsApp pessoal do cliente, através do nosso contato (62) 9 8470-4024;
+• Será solicitado o documento pessoal, CNH ou RG válidos, completos e legíveis, com foto;
+• Será solicitado o Comprovante de Endereço Residencial (Água/Luz/Gás) no nome do cliente, legível e com vencimento dentro dos últimos 3 meses;
+• Caso o comprovante não esteja no nome do cliente, deve-se apresentar um comprovante complementar no nome, vinculando-o ao mesmo endereço;
+• Após a aprovação do pré-cadastro, o cliente deverá comparecer à LOCAMULTI presencialmente para finalizar o cadastro e assinar a Ficha de Cadastro pessoa física.
 
-**PESSOA FÍSICA:**
-• RG, CNH (cópia)
-• Comprovante de Endereço Residencial atual
-• Referências Comerciais (2 contatos)
-• Referências Pessoais (2 contatos)`
+**Cadastro Pessoa Jurídica:**
+• O Cadastro deve ser realizado por e-mail, que deve ser informado em um dos canais de atendimento da locadora;
+• A Ficha de Cadastro PJ será enviada através do e-mail: financeiro@locamulti.com.br, com instruções de preenchimento;
+• Após a análise do cadastro, serão repassadas as condições comerciais e prazos de faturamento aprovados.`
     },
     {
-      question: "Quais são os tipos de locações oferecidos?",
-      answer: "Diária, Semanal, Quinzenal e Mensal, que deverá ser decidido pelo locatário na hora da emissão do contrato. A tabela de preço varia conforme o tipo de locação."
+      question: "Como funcionam os períodos e valores de locação dos equipamentos?",
+      answer: `• Trabalhamos com 5 Tabelas de Locação: Diária (24 horas), Semanal (7 dias), Quinzenal (15 dias), Mensal (30 dias) e Fim de Semana (1,5 dias - retirada às sextas após 14h, devolução na segunda às 9h);
+• Cada tabela de locação tem um valor correspondente, que pode ser consultado junto ao atendimento técnico/comercial;
+• Não fazemos pro rata dos valores dentro do período das tabelas, mas se o equipamento for devolvido antecipadamente ou prorrogado, os valores serão ajustados conforme cada tabela, sempre em benefício do cliente;
+• Não trabalhamos com meia diária, a locação mínima é a Tabela Diária.`
     },
     {
-      question: "Como funciona a Locação Diária?",
-      answer: "Corresponde a 24 horas. Se o equipamento foi locado para uma diária às 8h30min de segunda-feira, a diária terminará às 8h30min de terça-feira. Caso o equipamento não seja entregue, será cobrado o valor da diária por cada dia até a data da devolução."
+      question: "A locação dos equipamentos é com operador? Já acompanha os consumíveis?",
+      answer: `• Não. A LOCAMULTI aluga somente a máquina, bem como os acessórios necessários, mas sem operador.
+• É importante que a retirada ou o recebimento dos equipamentos seja acompanhada de pessoa com conhecimento e habilidade para o manuseio e operação das máquinas;
+• Os consumíveis são de responsabilidade do cliente. Em algumas exceções, os equipamentos são fornecidos juntamente com o consumível, e em outros casos disponibilizamos os consumíveis para venda conforme consumo.`
     },
     {
-      question: "Como funciona a Locação Semanal?",
-      answer: "O período corresponde a 7 dias. Exemplo: equipamento locado dia 10 às 8:30 horas, deverá ser entregue dia 17 às 8:30 horas."
+      question: "Após as definições técnicas e comerciais do equipamento, como faço para concluir a locação?",
+      answer: `• Confirmar com o Atendimento Técnico/Comercial a disponibilidade imediata do equipamento, realizando a reserva do mesmo;
+• Informar o Endereço de Utilização, Nome da Obra, Pessoa responsável para retirar ou receber, bem como o período previsto de utilização;
+• Os equipamentos somente serão entregues para o titular do cadastro ou para pessoas formalmente autorizadas;
+• Para Entrega e/ou Coleta na obra, consultar antes sobre custos extras com deslocamento;
+• Todos os equipamentos são testados junto com o cliente no ato da entrega/retirada, com todas as orientações sobre a operação e conservação das máquinas.`
     },
     {
-      question: "Como funciona a Locação Quinzenal?",
-      answer: "O período corresponde a 15 dias. Exemplo: equipamento locado dia 01 às 8:30 horas, deverá ser entregue dia 16 às 8:30 horas."
+      question: "Se for preciso utilizar o equipamento por mais tempo, preciso ir até a locadora para renovar o contrato?",
+      answer: `• Não é necessário comparecer na locadora para estender o período de utilização, basta informar em um dos canais de atendimento e fazer a negociação comercial conforme necessidade;
+• Os contratos são renovados automaticamente caso não ocorra devolução do equipamento;
+• Os pagamentos poderão ser realizados tanto na sede da locadora, como através de boletos, pix, links de cartões ou depósitos em conta.`
     },
     {
-      question: "Como funciona a Locação Mensal?",
-      answer: "O período corresponde a 30 dias."
+      question: "O equipamento apresentou defeito durante o funcionamento, como devo proceder?",
+      answer: `• Basta informar à locadora imediatamente, repassando as informações sobre as falhas identificadas, para que sejam tomadas as providências para reparo ou substituição por outro de mesmo modelo;
+• Nossa equipe está treinada para esclarecer quaisquer dúvidas e fornecer orientações a qualquer momento, através de um dos nossos canais de atendimento;
+• As substituições podem ser feitas na sede da locadora ou, mediante programação, na sede da obra do cliente;
+• Todas as operações de Manutenção ou Substituição serão registradas e assinadas em comprovantes específicos.`
     },
     {
-      question: "Posso mudar o tipo de locação com o contrato em andamento?",
-      answer: "Não. Se o Locatário decidir mudar o tipo de locação (ex: de diária para mensal), só poderá fazê-lo após o término do contrato em andamento, mediante solicitação por escrito ou email formal. O equipamento não precisa ser devolvido; após o vencimento do contrato em vigência, será emitido o novo contrato."
+      question: "O equipamento danificou/estragou ou foi extraviado. Qual é o procedimento adotado?",
+      answer: `**Em caso de furto ou roubo:**
+• O cliente deve abrir um boletim no órgão competente do município e informar a locadora imediatamente;
+• O cliente deve ressarcir a locadora mediante pagamento do Valor de Indenização do equipamento, conforme consta no Contrato de Locação.
+
+**Em caso de avaria:**
+• Após a devolução/coleta e análise, a locadora avaliará a extensão dos danos e os custos para reparos;
+• Se as falhas forem provenientes de vícios ocultos ou desgaste normal, a locadora se responsabiliza integralmente;
+• Se a avaria foi por má utilização ou aplicação além da capacidade do equipamento, os custos serão repassados ao cliente com relatório comprobatório.`
     },
     {
-      question: "Preciso ir até a locadora para renovar o contrato?",
-      answer: "Não é necessário. Os contratos são renovados automaticamente, e os pagamentos poderão ser feitos na sede da locadora, por boleto bancário ou depósito em conta."
+      question: "Meu contrato de locação foi na diária, mas me esqueci ou não pude devolver no horário. Como fica?",
+      answer: `• Na locação Diária, são contabilizadas 24 horas, sendo a devolução prevista para o mesmo horário da retirada no dia anterior;
+• Atraso de até 1 hora, dentro do mesmo dia: não será cobrada diária adicional;
+• Atraso de até 4 horas, dentro do mesmo dia: será cobrado adicional de 50% da tabela diária;
+• Se a devolução ultrapassar 4 horas do horário previsto, ou passar de um dia para o outro: será cobrada a diária adicional integralmente;
+• Caso a utilização seja estendida a outros períodos (semanal, quinzenal ou mensal), os valores serão complementados de acordo com cada tabela.`
     },
     {
-      question: "Como funciona a tabela de preços?",
-      answer: "O valor da locação varia conforme o tipo de locação escolhido (diário, semanal, quinzenal ou mensal). Cabe ao locatário escolher dentro do tempo estimado da sua obra ou reforma."
-    },
-    {
-      question: "Qual o horário de expediente?",
-      answer: "Segunda a quinta-feira: 7:30h as 17:30h, sexta-feira: 7:30h as 17:00h e sabado: 8:00h as 11:30h."
-    },
-    {
-      question: "Posso fazer retirada ou locação por terceiros?",
-      answer: "Se não for a própria pessoa titular do cadastro, somente será locado ou retirado equipamento com a devida autorização do responsável, seja por email, fax, ordem de serviço, ordem de compra ou autorização em papel timbrado da empresa locatária, devidamente assinado."
-    },
-    {
-      question: "E se o equipamento locado não funcionar?",
-      answer: "Todos os equipamentos são testados na presença do locatário. Caso apresente algum problema durante o período locado, a Empresa locadora deverá ser notificada de imediato para que sejam tomadas as devidas providências."
-    },
-    {
-      question: "Serão cobrados sábados, domingos e feriados?",
-      answer: "Sim, o período de locação é corrido dentro do intervalo solicitado."
-    },
-    {
-      question: "A empresa entrega e busca equipamento nas obras?",
-      answer: "Não dispomos de serviço de frete próprio da empresa. Indicamos uma empresa terceirizada, ficando a critério do locatário aceitar ou não a sugestão."
-    },
-    {
-      question: "A locação de equipamento é com operador?",
-      answer: "Não. Locamos somente a máquina, sem operador. É importante que na retirada do equipamento venha pessoa com habilidades para o manuseio da máquina. Esta pessoa receberá instruções operacionais para o melhor aproveitamento do equipamento locado."
-    },
-    {
-      question: "E se o equipamento que loquei for roubado?",
-      answer: "O responsável pelo equipamento é a pessoa Física ou Jurídica que fez o cadastro, ficando totalmente responsável pelo equipamento locado, conforme cláusulas do contrato de locação."
-    },
-    {
-      question: "Qual o horário para devolução dos equipamentos?",
-      answer: "A locacao e devolucao dos equipamentos pode ser feita de segunda a quinta, das 7:30h as 17:30h, na sexta-feira das 7:30h as 17:00h, e aos sabados das 8:00h as 11:30h. A devolucao deve ser realizada dentro do horario de funcionamento."
-    },
-    {
-      question: "E se eu não devolver o equipamento dentro do prazo?",
-      answer: "O contrato será automaticamente renovado, pelo mesmo período, com as mesmas condições."
-    },
-    {
-      question: "Já tenho um equipamento locado, posso locar mais equipamentos?",
-      answer: "Sim. Cada vez que ocorre uma nova locação, é feito um novo contrato. Cada contrato pode conter vários equipamentos."
-    },
-    {
-      question: "Posso devolver o equipamento antes do término do contrato de locação?",
-      answer: "Sim. A cobrança será proporcional ao período de utilização. A única exceção é na primeira locação, que é cobrado o período completo, independente da devolução antecipada do equipamento."
-    },
-    {
-      question: "Quais as formas de pagamento possíveis?",
-      answer: "Boleto bancário, cheque, dinheiro ou cartões de crédito e débito Visa, MasterCard e Dinner's Club."
+      question: "Quais os horários e as condições para a devolução dos equipamentos?",
+      answer: `• Segunda a Quinta-feira: 7:30h às 17:30h
+• Sexta-feira: até 17:00h
+• Sábados: 8:00h às 11:30h
+• Necessário consultar sobre datas especiais ou feriados nacionais/municipais;
+• As programações de Coleta na obra devem ser feitas com antecedência, programadas pela manhã para as coletas à tarde, ou à tarde para as coletas no próximo dia útil.`
     }
   ];
 
