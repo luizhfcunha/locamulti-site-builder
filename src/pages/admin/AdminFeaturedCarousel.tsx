@@ -6,8 +6,31 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { toast } from "@/hooks/use-toast";
-import { ChevronDown, ChevronUp, Loader2, Plus, Save, Search, X } from "lucide-react";
+import { ChevronDown, ChevronUp, GripVertical, Loader2, Plus, RefreshCw, Save, Search, X } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import {
+  DndContext,
+  closestCenter,
+  KeyboardSensor,
+  PointerSensor,
+  useSensor,
+  useSensors,
+  DragEndEvent,
+} from "@dnd-kit/core";
+import {
+  arrayMove,
+  SortableContext,
+  sortableKeyboardCoordinates,
+  useSortable,
+  verticalListSortingStrategy,
+} from "@dnd-kit/sortable";
+import { CSS } from "@dnd-kit/utilities";
 
 interface EquipmentOption {
   id: string;
@@ -32,6 +55,110 @@ interface FeaturedRow {
   active: boolean;
 }
 
+// Componente para item arrastavel
+function SortableItem({
+  row,
+  index,
+  item,
+  onRemove,
+  onClickToReplace,
+}: {
+  row: FeaturedRow;
+  index: number;
+  item: EquipmentOption | undefined;
+  onRemove: (index: number) => void;
+  onClickToReplace: (index: number) => void;
+}) {
+  const {
+    attributes,
+    listeners,
+    setNodeRef,
+    transform,
+    transition,
+    isDragging,
+  } = useSortable({ id: row.catalog_item_id });
+
+  const style = {
+    transform: CSS.Transform.toString(transform),
+    transition,
+    opacity: isDragging ? 0.5 : 1,
+    zIndex: isDragging ? 1000 : 1,
+  };
+
+  if (!item) return null;
+
+  return (
+    <div
+      ref={setNodeRef}
+      style={style}
+      className={`flex items-center gap-3 p-3 border rounded-lg bg-muted/30 hover:bg-muted/50 transition-colors ${
+        isDragging ? "shadow-lg ring-2 ring-lm-orange" : ""
+      }`}
+    >
+      {/* Drag Handle */}
+      <div
+        {...attributes}
+        {...listeners}
+        className="cursor-grab active:cursor-grabbing p-1 hover:bg-muted rounded"
+      >
+        <GripVertical className="h-5 w-5 text-muted-foreground" />
+      </div>
+
+      {/* Ordem */}
+      <div className="w-8 h-8 rounded-full bg-lm-orange/10 flex items-center justify-center flex-shrink-0">
+        <span className="text-sm font-bold text-lm-orange">{index + 1}</span>
+      </div>
+
+      {/* Item clicavel para substituir */}
+      <div
+        className="flex items-center gap-3 flex-1 min-w-0 cursor-pointer hover:bg-muted/50 rounded-lg p-2 -m-2 transition-colors"
+        onClick={() => onClickToReplace(index)}
+        title="Clique para substituir este equipamento"
+      >
+        {/* Imagem */}
+        <div className="w-16 h-16 bg-muted rounded-md overflow-hidden flex-shrink-0">
+          {item.image_url ? (
+            <img
+              src={item.image_url}
+              alt={item.name || item.description}
+              className="w-full h-full object-cover"
+            />
+          ) : (
+            <div className="w-full h-full flex items-center justify-center text-muted-foreground text-xs">
+              Sem img
+            </div>
+          )}
+        </div>
+
+        {/* Info */}
+        <div className="flex-1 min-w-0">
+          <p className="font-medium truncate">{item.name || item.description}</p>
+          <p className="text-sm text-muted-foreground truncate">
+            {item.code} - {item.category_name}
+          </p>
+          <p className="text-xs text-muted-foreground truncate">{item.family_name}</p>
+        </div>
+
+        {/* Icone de substituir */}
+        <RefreshCw className="w-4 h-4 text-muted-foreground opacity-0 group-hover:opacity-100" />
+      </div>
+
+      {/* Remover */}
+      <Button
+        variant="ghost"
+        size="icon"
+        className="text-destructive hover:text-destructive hover:bg-destructive/10 flex-shrink-0"
+        onClick={(e) => {
+          e.stopPropagation();
+          onRemove(index);
+        }}
+      >
+        <X className="w-4 h-4" />
+      </Button>
+    </div>
+  );
+}
+
 export default function AdminFeaturedCarousel() {
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
@@ -44,18 +171,31 @@ export default function AdminFeaturedCarousel() {
   const [categoryFilter, setCategoryFilter] = useState<string>("all");
   const [showAvailable, setShowAvailable] = useState(false);
 
+  // Modal para substituir item
+  const [replaceModalOpen, setReplaceModalOpen] = useState(false);
+  const [replaceIndex, setReplaceIndex] = useState<number | null>(null);
+  const [replaceSearch, setReplaceSearch] = useState("");
+  const [replaceCategoryFilter, setReplaceCategoryFilter] = useState<string>("all");
+
   const selectedIds = useMemo(() => new Set(rows.map((row) => row.catalog_item_id)), [rows]);
+
+  // Configurar sensores do drag and drop
+  const sensors = useSensors(
+    useSensor(PointerSensor, {
+      activationConstraint: {
+        distance: 8,
+      },
+    }),
+    useSensor(KeyboardSensor, {
+      coordinateGetter: sortableKeyboardCoordinates,
+    })
+  );
 
   // Equipamentos filtrados para adicionar
   const filteredOptions = useMemo(() => {
     return options.filter((item) => {
-      // Excluir itens ja selecionados
       if (selectedIds.has(item.id)) return false;
-
-      // Filtro por categoria
       if (categoryFilter !== "all" && item.category_slug !== categoryFilter) return false;
-
-      // Filtro por texto
       if (searchTerm) {
         const search = searchTerm.toLowerCase();
         const matchCode = item.code.toLowerCase().includes(search);
@@ -63,10 +203,31 @@ export default function AdminFeaturedCarousel() {
         const matchDesc = item.description?.toLowerCase().includes(search);
         if (!matchCode && !matchName && !matchDesc) return false;
       }
-
       return true;
     });
   }, [options, selectedIds, categoryFilter, searchTerm]);
+
+  // Equipamentos filtrados para substituicao (exclui apenas o item atual, nao todos os selecionados)
+  const replaceFilteredOptions = useMemo(() => {
+    if (replaceIndex === null) return [];
+    const currentItemId = rows[replaceIndex]?.catalog_item_id;
+
+    return options.filter((item) => {
+      // Permitir o item atual (para manter a selecao)
+      if (item.id === currentItemId) return false;
+      // Excluir outros itens ja selecionados
+      if (selectedIds.has(item.id)) return false;
+      if (replaceCategoryFilter !== "all" && item.category_slug !== replaceCategoryFilter) return false;
+      if (replaceSearch) {
+        const search = replaceSearch.toLowerCase();
+        const matchCode = item.code.toLowerCase().includes(search);
+        const matchName = item.name?.toLowerCase().includes(search);
+        const matchDesc = item.description?.toLowerCase().includes(search);
+        if (!matchCode && !matchName && !matchDesc) return false;
+      }
+      return true;
+    });
+  }, [options, selectedIds, replaceCategoryFilter, replaceSearch, replaceIndex, rows]);
 
   useEffect(() => {
     void loadData();
@@ -137,15 +298,46 @@ export default function AdminFeaturedCarousel() {
     );
   };
 
-  const moveRow = (index: number, direction: "up" | "down") => {
-    const newIndex = direction === "up" ? index - 1 : index + 1;
-    if (newIndex < 0 || newIndex >= rows.length) return;
+  const replaceItem = (newItemId: string) => {
+    if (replaceIndex === null) return;
 
-    setRows((prev) => {
-      const newRows = [...prev];
-      [newRows[index], newRows[newIndex]] = [newRows[newIndex], newRows[index]];
-      return newRows.map((row, idx) => ({ ...row, display_order: idx + 1 }));
+    setRows((prev) =>
+      prev.map((row, idx) =>
+        idx === replaceIndex ? { ...row, catalog_item_id: newItemId } : row
+      )
+    );
+
+    const newItem = options.find((o) => o.id === newItemId);
+    toast({
+      title: "Item substituido",
+      description: `Equipamento alterado para: ${newItem?.name || newItem?.description || "Novo item"}`,
     });
+
+    setReplaceModalOpen(false);
+    setReplaceIndex(null);
+    setReplaceSearch("");
+    setReplaceCategoryFilter("all");
+  };
+
+  const handleDragEnd = (event: DragEndEvent) => {
+    const { active, over } = event;
+
+    if (over && active.id !== over.id) {
+      setRows((items) => {
+        const oldIndex = items.findIndex((item) => item.catalog_item_id === active.id);
+        const newIndex = items.findIndex((item) => item.catalog_item_id === over.id);
+
+        const newItems = arrayMove(items, oldIndex, newIndex);
+        return newItems.map((item, idx) => ({ ...item, display_order: idx + 1 }));
+      });
+    }
+  };
+
+  const openReplaceModal = (index: number) => {
+    setReplaceIndex(index);
+    setReplaceSearch("");
+    setReplaceCategoryFilter("all");
+    setReplaceModalOpen(true);
   };
 
   const saveChanges = async () => {
@@ -159,7 +351,6 @@ export default function AdminFeaturedCarousel() {
           active: row.active,
         }));
 
-      // Deletar todos os existentes
       const { error: deleteError } = await supabase
         .from("featured_carousel_items")
         .delete()
@@ -211,7 +402,7 @@ export default function AdminFeaturedCarousel() {
         <div>
           <h1 className="font-heading text-3xl font-bold text-lm-plum">Carrossel da Home</h1>
           <p className="text-muted-foreground mt-1">
-            Selecione os equipamentos em destaque e ajuste a ordem de exibicao.
+            Arraste para reordenar. Clique no item para substituir.
           </p>
         </div>
 
@@ -236,76 +427,29 @@ export default function AdminFeaturedCarousel() {
                 <p className="text-sm">Use a busca abaixo para adicionar equipamentos.</p>
               </div>
             ) : (
-              <div className="space-y-2">
-                {rows.map((row, index) => {
-                  const item = getOptionById(row.catalog_item_id);
-                  if (!item) return null;
-
-                  return (
-                    <div
-                      key={`${row.id ?? "new"}-${index}`}
-                      className="flex items-center gap-3 p-3 border rounded-lg bg-muted/30 hover:bg-muted/50 transition-colors"
-                    >
-                      {/* Ordem */}
-                      <div className="flex flex-col items-center gap-1">
-                        <Button
-                          variant="ghost"
-                          size="icon"
-                          className="h-6 w-6"
-                          onClick={() => moveRow(index, "up")}
-                          disabled={index === 0}
-                        >
-                          <ChevronUp className="h-4 w-4" />
-                        </Button>
-                        <span className="text-sm font-medium w-6 text-center">{row.display_order}</span>
-                        <Button
-                          variant="ghost"
-                          size="icon"
-                          className="h-6 w-6"
-                          onClick={() => moveRow(index, "down")}
-                          disabled={index === rows.length - 1}
-                        >
-                          <ChevronDown className="h-4 w-4" />
-                        </Button>
-                      </div>
-
-                      {/* Imagem */}
-                      <div className="w-16 h-16 bg-muted rounded-md overflow-hidden flex-shrink-0">
-                        {item.image_url ? (
-                          <img
-                            src={item.image_url}
-                            alt={item.name || item.description}
-                            className="w-full h-full object-cover"
-                          />
-                        ) : (
-                          <div className="w-full h-full flex items-center justify-center text-muted-foreground text-xs">
-                            Sem img
-                          </div>
-                        )}
-                      </div>
-
-                      {/* Info */}
-                      <div className="flex-1 min-w-0">
-                        <p className="font-medium truncate">{item.name || item.description}</p>
-                        <p className="text-sm text-muted-foreground truncate">
-                          {item.code} - {item.category_name}
-                        </p>
-                        <p className="text-xs text-muted-foreground truncate">{item.family_name}</p>
-                      </div>
-
-                      {/* Remover */}
-                      <Button
-                        variant="ghost"
-                        size="icon"
-                        className="text-destructive hover:text-destructive hover:bg-destructive/10"
-                        onClick={() => removeRow(index)}
-                      >
-                        <X className="w-4 h-4" />
-                      </Button>
-                    </div>
-                  );
-                })}
-              </div>
+              <DndContext
+                sensors={sensors}
+                collisionDetection={closestCenter}
+                onDragEnd={handleDragEnd}
+              >
+                <SortableContext
+                  items={rows.map((r) => r.catalog_item_id)}
+                  strategy={verticalListSortingStrategy}
+                >
+                  <div className="space-y-2">
+                    {rows.map((row, index) => (
+                      <SortableItem
+                        key={row.catalog_item_id}
+                        row={row}
+                        index={index}
+                        item={getOptionById(row.catalog_item_id)}
+                        onRemove={removeRow}
+                        onClickToReplace={openReplaceModal}
+                      />
+                    ))}
+                  </div>
+                </SortableContext>
+              </DndContext>
             )}
           </CardContent>
         </Card>
@@ -385,7 +529,6 @@ export default function AdminFeaturedCarousel() {
                         key={item.id}
                         className="flex items-center gap-3 p-3 hover:bg-muted/50 transition-colors"
                       >
-                        {/* Imagem */}
                         <div className="w-12 h-12 bg-muted rounded-md overflow-hidden flex-shrink-0">
                           {item.image_url ? (
                             <img
@@ -399,16 +542,12 @@ export default function AdminFeaturedCarousel() {
                             </div>
                           )}
                         </div>
-
-                        {/* Info */}
                         <div className="flex-1 min-w-0">
                           <p className="font-medium text-sm truncate">{item.name || item.description}</p>
                           <p className="text-xs text-muted-foreground truncate">
                             {item.code} - {item.category_name}
                           </p>
                         </div>
-
-                        {/* Adicionar */}
                         <Button
                           variant="outline"
                           size="sm"
@@ -432,6 +571,115 @@ export default function AdminFeaturedCarousel() {
           </CardContent>
         </Card>
       </div>
+
+      {/* Modal para substituir item */}
+      <Dialog open={replaceModalOpen} onOpenChange={setReplaceModalOpen}>
+        <DialogContent className="max-w-2xl max-h-[80vh] overflow-hidden flex flex-col">
+          <DialogHeader>
+            <DialogTitle>Substituir Equipamento</DialogTitle>
+          </DialogHeader>
+
+          {/* Item atual */}
+          {replaceIndex !== null && (
+            <div className="p-3 bg-muted/50 rounded-lg mb-4">
+              <p className="text-xs text-muted-foreground mb-2">Item atual (posicao {replaceIndex + 1}):</p>
+              {(() => {
+                const currentItem = getOptionById(rows[replaceIndex]?.catalog_item_id);
+                if (!currentItem) return null;
+                return (
+                  <div className="flex items-center gap-3">
+                    <div className="w-12 h-12 bg-muted rounded-md overflow-hidden flex-shrink-0">
+                      {currentItem.image_url ? (
+                        <img
+                          src={currentItem.image_url}
+                          alt={currentItem.name || currentItem.description}
+                          className="w-full h-full object-cover"
+                        />
+                      ) : (
+                        <div className="w-full h-full flex items-center justify-center text-muted-foreground text-[10px]">
+                          Sem img
+                        </div>
+                      )}
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <p className="font-medium text-sm truncate">{currentItem.name || currentItem.description}</p>
+                      <p className="text-xs text-muted-foreground truncate">
+                        {currentItem.code} - {currentItem.category_name}
+                      </p>
+                    </div>
+                  </div>
+                );
+              })()}
+            </div>
+          )}
+
+          {/* Filtros do modal */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+            <div className="relative">
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+              <Input
+                placeholder="Buscar equipamento..."
+                value={replaceSearch}
+                onChange={(e) => setReplaceSearch(e.target.value)}
+                className="pl-9"
+              />
+            </div>
+            <Select value={replaceCategoryFilter} onValueChange={setReplaceCategoryFilter}>
+              <SelectTrigger>
+                <SelectValue placeholder="Categoria" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">Todas</SelectItem>
+                {categories.map((cat) => (
+                  <SelectItem key={cat.slug} value={cat.slug}>
+                    {cat.name}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+
+          {/* Lista de equipamentos para substituir */}
+          <div className="flex-1 overflow-y-auto border rounded-lg">
+            {replaceFilteredOptions.length === 0 ? (
+              <div className="text-center py-8 text-muted-foreground">
+                <p>Nenhum equipamento encontrado.</p>
+              </div>
+            ) : (
+              <div className="divide-y">
+                {replaceFilteredOptions.slice(0, 50).map((item) => (
+                  <div
+                    key={item.id}
+                    className="flex items-center gap-3 p-3 hover:bg-lm-orange/10 cursor-pointer transition-colors"
+                    onClick={() => replaceItem(item.id)}
+                  >
+                    <div className="w-12 h-12 bg-muted rounded-md overflow-hidden flex-shrink-0">
+                      {item.image_url ? (
+                        <img
+                          src={item.image_url}
+                          alt={item.name || item.description}
+                          className="w-full h-full object-cover"
+                        />
+                      ) : (
+                        <div className="w-full h-full flex items-center justify-center text-muted-foreground text-[10px]">
+                          Sem img
+                        </div>
+                      )}
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <p className="font-medium text-sm truncate">{item.name || item.description}</p>
+                      <p className="text-xs text-muted-foreground truncate">
+                        {item.code} - {item.category_name}
+                      </p>
+                    </div>
+                    <RefreshCw className="w-4 h-4 text-lm-orange" />
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+        </DialogContent>
+      </Dialog>
     </AdminLayout>
   );
 }
