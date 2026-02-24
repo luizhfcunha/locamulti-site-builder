@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { CatalogItem } from "@/lib/catalogNew";
 import { ConsumableBadge } from "./ConsumableBadge";
 import { EquipmentLightbox } from "@/components/lightbox/EquipmentLightbox";
+import { trackEvent, trackWhatsAppClick } from "@/lib/analytics";
 
 interface ProductCardProps {
     product: CatalogItem;
@@ -19,6 +20,8 @@ export const ProductCard = ({ product }: ProductCardProps) => {
 
     useEffect(() => {
         setIsDescriptionExpanded(false);
+        // Track product view no Supabase
+        trackEvent({ event_type: 'product_view', catalog_item_id: product.id });
     }, [product.id]);
 
     useEffect(() => {
@@ -49,8 +52,9 @@ export const ProductCard = ({ product }: ProductCardProps) => {
     const message = `Olá! Quero solicitar um orçamento sobre o equipamento: ${equipmentName}.`;
     const waLink = `https://api.whatsapp.com/send?phone=${whatsappPhone}&text=${encodeURIComponent(message)}&utm_source=site&utm_medium=whatsapp&utm_campaign=conversao&utm_content=catalogo_equipamento`;
 
-    // GTM Event: WhatsApp Click
+    // GTM Event + Supabase Analytics: WhatsApp Click
     const handleWhatsAppClick = () => {
+        // GTM tracking
         window.dataLayer = window.dataLayer || [];
         window.dataLayer.push({
             event: 'whatsapp_click',
@@ -59,6 +63,8 @@ export const ProductCard = ({ product }: ProductCardProps) => {
             equipment_category: product.category || 'Não especificado',
             click_location: 'catalogo_equipamento'
         });
+        // Supabase analytics
+        trackWhatsAppClick(product.id);
     };
 
     return (
