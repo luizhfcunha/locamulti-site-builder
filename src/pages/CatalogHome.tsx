@@ -1,4 +1,4 @@
-import { useState, useMemo, useEffect } from "react";
+import { useState, useMemo, useEffect, useRef } from "react";
 import { useSearchParams, useNavigate } from "react-router-dom";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
@@ -42,6 +42,7 @@ const CatalogHome = () => {
   const [categories, setCategories] = useState<Category[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchInput, setSearchInput] = useState("");
+  const contentAreaRef = useRef<HTMLDivElement>(null);
 
   // URL Params
   const selectedCategorySlug = searchParams.get("categoria");
@@ -52,6 +53,16 @@ const CatalogHome = () => {
   useEffect(() => {
     setSearchInput(searchQuery);
   }, [searchQuery]);
+
+  // Scroll to top when category or family changes
+  useEffect(() => {
+    // Scroll the content area to top
+    if (contentAreaRef.current) {
+      contentAreaRef.current.scrollTo({ top: 0, behavior: "instant" });
+    }
+    // Also scroll the window to top
+    window.scrollTo({ top: 0, behavior: "instant" });
+  }, [selectedCategorySlug, selectedFamilySlug, searchQuery]);
 
   // Fetch categories from Supabase
   useEffect(() => {
@@ -175,7 +186,10 @@ const CatalogHome = () => {
           <CatalogSidebar />
 
           {/* Content Area - Responsive scroll */}
-          <div className="flex-1 w-full lg:min-w-0 lg:overflow-y-auto lg:max-h-[calc(100vh-8rem)] lg:pr-2">
+          <div
+            ref={contentAreaRef}
+            className="flex-1 w-full lg:min-w-0 lg:overflow-y-auto lg:max-h-[calc(100vh-8rem)] lg:pr-2"
+          >
             {isGridView ? (
               /* SCENARIO 1: CATEGORY GRID */
               <div>

@@ -1,4 +1,4 @@
-import { useEffect, useState, useMemo } from "react";
+import { useEffect, useState, useRef } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { Helmet } from "react-helmet-async";
 import { X } from "lucide-react";
@@ -14,16 +14,25 @@ import {
 } from "@/lib/catalogNew";
 
 export default function CatalogFamily() {
-  const { categoriaSlug, familiaSlug } = useParams<{ 
-    categoriaSlug: string; 
+  const { categoriaSlug, familiaSlug } = useParams<{
+    categoriaSlug: string;
     familiaSlug: string;
   }>();
   const navigate = useNavigate();
-  
+  const contentAreaRef = useRef<HTMLDivElement>(null);
+
   const [allItems, setAllItems] = useState<CatalogItem[]>([]);
   const [category, setCategory] = useState<{ name: string; slug: string } | null>(null);
   const [family, setFamily] = useState<{ name: string; slug: string } | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+
+  // Scroll to top when family changes
+  useEffect(() => {
+    if (contentAreaRef.current) {
+      contentAreaRef.current.scrollTo({ top: 0, behavior: "instant" });
+    }
+    window.scrollTo({ top: 0, behavior: "instant" });
+  }, [familiaSlug]);
 
   // Load family items
   useEffect(() => {
@@ -87,7 +96,10 @@ export default function CatalogFamily() {
             <CatalogSidebar />
 
             {/* Content Area - Responsive scroll */}
-            <div className="flex-1 w-full lg:min-w-0 lg:overflow-y-auto lg:max-h-[calc(100vh-8rem)] lg:pr-2">
+            <div
+              ref={contentAreaRef}
+              className="flex-1 w-full lg:min-w-0 lg:overflow-y-auto lg:max-h-[calc(100vh-8rem)] lg:pr-2"
+            >
               {/* Header Section */}
               <div className="mb-6 space-y-4">
                 <div className="flex flex-col gap-2">
